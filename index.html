@@ -966,7 +966,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-0058</p>
+<p class="ver" id="app-ver">버전 2026.11.14-0110</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -1918,7 +1918,10 @@ var TOPIC={today:"오늘운",love:"애정운",money:"금전운",work:"직업·�
 var G={running:false,speed:1,skip:false,topic:"today",board:[],deck:[],pairs:0,discard:0};
 var $=function(id){return document.getElementById(id)};
 function wait(ms){return new Promise(function(r){if(G.skip)return r();setTimeout(r,ms*G.speed)})}
-function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+function seedRng(str){var h=1779033703^str.length;for(var i=0;i<str.length;i++){h=Math.imul(h^str.charCodeAt(i),3432918353);h=h<<13|h>>>19}
+  return function(){h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);h^=h>>>16;var t=(h>>>0)+0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+function rnd(){return G.rng?G.rng():Math.random()}
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(rnd()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
 function cardFace(c){return '<div class="hc-img" style="background-position:'+(c.i%8*100/7).toFixed(3)+'% '+(Math.floor(c.i/8)*100/5).toFixed(3)+'%"></div>'}
 function mkCard(c,up){var el=document.createElement("div");el.className="hcard"+(up?" up":"");
   el.innerHTML='<div class="hc-flip"><div class="hc-back"></div><div class="hc-front">'+cardFace(c)+'</div></div>';
@@ -1949,11 +1952,14 @@ function choosePick(no){return new Promise(function(res){
   var row=box.querySelector(".hw-ch-row"),els=opts.map(function(c,k){var el=mkCard(c,false);el.classList.add("pick");el.tabIndex=0;el.setAttribute("role","button");el.setAttribute("aria-label",(k+1)+"번째 패 고르기");row.appendChild(el);return el});
   box.hidden=false;say(no===1?"패 4장 중 하나를 고르게나.":"한 장 더 고르게나.");
   var done=false;
-  function choose(k){if(done)return;done=true;var el=els[k];el.classList.add("chosen","flipping","up");
+  function choose(k){if(done)return;done=true;
+    /* 같은 생년월일·같은 운·같은 날이면 결과가 같도록: 어느 자리를 골라도 정해진 패(opts[0])가 그 자리에서 나옴 */
+    if(k!==0){var f0=els[0].querySelector(".hc-front").innerHTML;els[0].querySelector(".hc-front").innerHTML=els[k].querySelector(".hc-front").innerHTML;els[k].querySelector(".hc-front").innerHTML=f0;var tc=opts[0];opts[0]=opts[k];opts[k]=tc}
+    var el=els[k];el.classList.add("chosen","flipping","up");
     els.forEach(function(e,x){if(x!==k)e.classList.add("unpicked")});
     say(opts[k].m+"월 "+HM[opts[k].m].n+"을 골랐구먼!");
     setTimeout(function(){els.forEach(function(e,x){if(x!==k)e.classList.add("up")})},450);
-    setTimeout(function(){opts.forEach(function(c,x){if(x!==k)G.deck.splice(Math.floor(Math.random()*(G.deck.length+1)),0,c)});setLeft();
+    setTimeout(function(){[0,1,2,3].filter(function(x){return x!==k}).sort(function(a,b){return opts[a].i-opts[b].i}).forEach(function(x){G.deck.splice(Math.floor(rnd()*(G.deck.length+1)),0,opts[x])});setLeft();
       box.hidden=true;box.innerHTML="";res(opts[k])},G.skip?0:1000)}
   els.forEach(function(el,k){el.addEventListener("click",function(){choose(k)});el.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();choose(k)}})});
   if(G.skip)choose(Math.floor(Math.random()*4));else G.autoPick=function(){choose(Math.floor(Math.random()*4))};
@@ -1961,6 +1967,7 @@ function choosePick(no){return new Promise(function(res){
 async function play(){
   if(G.running)return;G.running=true;G.skip=false;G.speed=1.73;G.quick=false;G.chosen=[];G.pairs=0;G.discard=0;
   G.topic=(document.querySelector('input[name=hwt]:checked')||{}).value||"today";
+  var td=new Date(),tds=td.getFullYear()+"-"+(td.getMonth()+1)+"-"+td.getDate();G.rng=seedRng((G.birth||"")+"|"+G.topic+"|"+tds);
   $("hw-res").hidden=true;$("hw-fast").textContent="빠르게";$("hw-fast").disabled=false;$("hw-skip").disabled=false;
   $("hw-start").disabled=true;
   if(!$("hw-fan").children.length||$("hw-fan").classList.contains("gone"))buildFan();
