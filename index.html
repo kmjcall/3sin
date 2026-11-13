@@ -181,6 +181,9 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 .hw-rows{display:flex;flex-direction:column;gap:8px}
 .hw-row{flex-wrap:nowrap}
 .hw-row span{white-space:nowrap}
+.hw-row label{flex:1 1 0;min-width:0}
+.hw-row span{display:block;text-align:center}
+.hw-row:first-child label:last-child{flex-grow:1.35}
 @media (max-width:480px){.hw-pick{padding-inline:14px}.hw-row{gap:5px}.hw-row span{padding:8px 9px;font-size:13px}}
 @media (max-width:380px){.hw-pick{padding-inline:12px}.hw-row{gap:4px}.hw-row span{padding:8px 8px;font-size:12.5px}}
 #s-hwatu{margin-top:-18px;gap:6px}
@@ -942,7 +945,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-0005</p>
+<p class="ver" id="app-ver">버전 2026.11.14-0007</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
