@@ -243,7 +243,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 .hw-fan .hcard.fan.spin{z-index:2}
 
 .hr-p{flex:none;width:34px;height:51px;border-radius:5px;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.5)}
-.hcard.quick .hc-flip{transition:transform .09s linear}
+.hcard.quick .hc-flip{transition:transform .14s linear}
 .hw-choose{display:flex;flex-direction:column;align-items:center;gap:10px;padding:14px 10px;border:1px solid rgba(242,206,120,.5);border-radius:14px;background:rgba(0,0,0,.2)}
 .hw-ch-t{margin:0;font-weight:800;color:#F7DE8E;font-size:16px;text-align:center;word-break:keep-all}
 .hw-ch-row{display:flex;justify-content:center;gap:clamp(8px,3vw,24px);max-width:100%}
@@ -960,7 +960,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-0018</p>
+<p class="ver" id="app-ver">버전 2026.11.14-0022</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -1914,7 +1914,7 @@ function choosePick(no){return new Promise(function(res){
   if(G.skip)choose(Math.floor(Math.random()*4));else G.autoPick=function(){choose(Math.floor(Math.random()*4))};
 })}
 async function play(){
-  if(G.running)return;G.running=true;G.skip=false;G.speed=1;G.quick=false;G.pairs=0;G.discard=0;
+  if(G.running)return;G.running=true;G.skip=false;G.speed=1.73;G.quick=false;G.pairs=0;G.discard=0;
   G.topic=(document.querySelector('input[name=hwt]:checked')||{}).value||"today";
   $("hw-res").hidden=true;$("hw-fast").textContent="빠르게";$("hw-fast").disabled=false;$("hw-skip").disabled=false;
   $("hw-start").disabled=true;
@@ -1993,7 +1993,7 @@ async function gatherFan(){var f=$("hw-fan");if(!f||!f.children.length)return;
 }
 new MutationObserver(function(){if(!$("s-hwatu").hidden&&!G.running){buildFan()}}).observe($("s-hwatu"),{attributes:true,attributeFilter:["hidden"]});
 $("hw-start").addEventListener("click",function(){play()});
-$("hw-fast").addEventListener("click",function(){G.speed=G.speed===1?.3:1;this.textContent=G.speed===1?"빠르게":"천천히"});
+$("hw-fast").addEventListener("click",function(){G.speed=G.speed>1?.5:1.73;this.textContent=G.speed>1?"빠르게":"천천히"});
 $("hw-skip").addEventListener("click",function(){G.skip=true;G.speed=0;if(G.autoPick&&!$("hw-choose").hidden){G.autoPick()}});
 $("hw-res").addEventListener("click",function(e){
   if(e.target.id==="hw-again"){$("hw-res").hidden=true;$("hw-play").hidden=true;buildFan();document.querySelector(".hw-pick").scrollIntoView({behavior:"smooth",block:"center"});return}
