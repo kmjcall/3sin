@@ -176,6 +176,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 .upl-row{display:flex;flex-wrap:wrap;gap:8px}
 .upl input{position:absolute;inset:0;opacity:0;cursor:pointer}
 .btn{word-break:keep-all}
+.ver{margin:4px 0 0;font-size:11px;color:var(--muted);opacity:.6;text-align:center}
 .btn{transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease,border-color .18s ease,color .18s ease}
 @media (hover:hover) and (pointer:fine){
   .btn:not(:disabled):hover,.upl.btn:hover{transform:translateY(-3px);box-shadow:0 0 0 2px #F2CE78,0 10px 22px -8px rgba(0,0,0,.75),0 0 18px rgba(242,206,120,.35)}
@@ -801,6 +802,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
+<p class="ver" id="app-ver">버전 2026.11.13-1820</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -1376,13 +1378,6 @@ function shareText(){
   return t;
 }
 function copyFallback(txt){var ta=document.createElement("textarea");ta.value=txt;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy")}catch(e){}document.body.removeChild(ta)}
-function doShare(msgId){
-  var txt=shareText(),msg=document.getElementById(msgId);
-  function copied(){msg.hidden=false;msg.textContent="결과를 복사했어요. 카카오톡 대화창에 붙여넣기 하면 보내져요."}
-  if(navigator.share){navigator.share({title:"삼신 사주·관상 결과",text:txt}).then(function(){msg.hidden=false;msg.textContent="보낼 곳을 고르면 결과가 전송돼요. 카카오톡을 골라주세요."}).catch(function(err){if(err&&err.name==="AbortError")return;tryCopy()});return}
-  tryCopy();
-  function tryCopy(){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(copied,function(){copyFallback(txt);copied()})}else{copyFallback(txt);copied()}}
-}
 /* 부족한 기운 채우기 · 조심할 것 · 귀인 (사주·관상 공통, 재미로 보는 풀이) */
 var EL_INFO=[
  {mean:"새로 시작하고 뻗어 나가는 힘",num:"3·8",time:"봄, 아침",
