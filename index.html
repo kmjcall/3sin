@@ -966,7 +966,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-0050</p>
+<p class="ver" id="app-ver">버전 2026.11.14-0051</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -2018,7 +2018,7 @@ function showResult(){
     (mine?'<h4 class="hr-h">끝까지 남은 패</h4>'+mine:'')+(lines?'<ul class="hr-list">'+lines+'</ul>':'')+(kind.length?'<div class="rm-box"><h4>남은 패의 종류로 보면</h4><p>'+kind.join("</p><p>")+'</p></div>':'')+
     (picksH?'<h4 class="hr-h">네가 직접 고른 패</h4><ul class="hr-list">'+picksH+'</ul>':'')+zH+adv+
     '<p class="note">짝 맞춘 패 '+G.pairs+'쌍'+(G.discard?' · 짝 없이 치운 패 '+G.discard+'장':'')+' · 남은 패 '+k+'장</p>'+
-    '<button class="btn gray" type="button" id="hw-share">카톡으로 결과 보내고 액받이 아이템 받기</button><p class="note" id="hw-share-msg" hidden></p>'+
+    '<button class="btn gray" type="button" id="hw-share">카톡으로 결과 보내고 액운템 받기</button><p class="note" id="hw-share-msg" hidden></p>'+
     '<button class="btn" type="button" id="hw-again">다른 운도 떼어 보기</button>';
   $("hw-res").hidden=false;$("hw-res").scrollIntoView({behavior:"smooth",block:"start"});
   G.last={bs:bs,tn:tn,score:score,head:head,over:over,tip:tip,ms:k===0?[BIG[t]]:ms.map(function(m){return m+"월 "+HM[m].n+": "+MEAN[t][m]})};
