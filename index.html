@@ -178,6 +178,11 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 .upl input{position:absolute;inset:0;opacity:0;cursor:pointer}
 .btn{word-break:keep-all}
 /* 화투점 */
+.hw-rows{display:flex;flex-direction:column;gap:8px}
+.hw-row{flex-wrap:nowrap}
+.hw-row span{white-space:nowrap}
+@media (max-width:480px){.hw-pick{padding-inline:14px}.hw-row{gap:5px}.hw-row span{padding:8px 9px;font-size:13px}}
+@media (max-width:380px){.hw-pick{padding-inline:12px}.hw-row{gap:4px}.hw-row span{padding:8px 8px;font-size:12.5px}}
 #s-hwatu{margin-top:-18px;gap:6px}
 #s-hwatu .sec-head{margin-bottom:0}
 #s-hwatu .lead{margin:0;line-height:1.5}
@@ -896,16 +901,20 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
   <p class="lead">궁금한 것을 하나 고르고 패를 떼 보게나, 오늘의 운세를 맞춰주겠네.</p>
   <div class="hw-fan" id="hw-fan" aria-hidden="true"></div>
   <div class="panel hw-pick">
-    <div class="seg" role="radiogroup" aria-label="궁금한 운">
+    <div class="hw-rows">
+    <div class="seg hw-row" role="radiogroup" aria-label="궁금한 운">
       <label><input type="radio" name="hwt" value="today" checked><span>오늘운</span></label>
       <label><input type="radio" name="hwt" value="love"><span>애정운</span></label>
       <label><input type="radio" name="hwt" value="money"><span>금전운</span></label>
       <label><input type="radio" name="hwt" value="work"><span>직업/사업운</span></label>
+    </div>
+    <div class="seg hw-row" role="radiogroup" aria-label="궁금한 운 (계속)">
       <label><input type="radio" name="hwt" value="health"><span>건강운</span></label>
       <label><input type="radio" name="hwt" value="rel"><span>관계운</span></label>
       <label><input type="radio" name="hwt" value="travel"><span>여행운</span></label>
       <label><input type="radio" name="hwt" value="home"><span>가정운</span></label>
       <label><input type="radio" name="hwt" value="chance"><span>기회운</span></label>
+    </div>
     </div>
     <button class="btn" type="button" id="hw-start">패 섞고 떼기 시작</button>
   </div>
@@ -933,7 +942,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-0002</p>
+<p class="ver" id="app-ver">버전 2026.11.14-0004</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
