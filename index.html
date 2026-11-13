@@ -805,13 +805,13 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
 <script>
 (function(){
 "use strict";
 /* ───── 서버(Supabase, 서울 리전) 설정: 프로젝트 주소와 공개 키를 넣으면 실제 저장·매칭이 켜짐 ───── */
 var SHOP_URL=""; /* 액받이 아이템 쇼핑몰 주소 — 생기면 여기에 넣음, 부족한 오행이 ?el=목/화/토/금/수 로 붙어서 넘어감 */
-var SB_URL="", SB_KEY="";
+var SB_URL="https://hfnofuqvxuorjnogjuhb.supabase.co", SB_KEY="sb_publishable_G4STnZ980ljQbJVJqTYBxQ_BEoIk1Xz";
 var sb=null;try{if(SB_URL&&SB_KEY&&window.supabase)sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true}})}catch(e){sb=null}
 var STEMS="甲乙丙丁戊己庚辛壬癸".split(""), STEMS_KO="갑을병정무기경신임계".split("");
 var BR="子丑寅卯辰巳午未申酉戌亥".split(""), BR_KO="자축인묘진사오미신유술해".split("");
