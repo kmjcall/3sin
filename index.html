@@ -961,7 +961,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-0031</p>
+<p class="ver" id="app-ver">버전 2026.11.14-0032</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -1901,7 +1901,7 @@ async function refill(i){
 async function nextCard(){if(G.picks&&G.picks.length&&G.deck.length<=G.picks[0]&&G.deck.length>=4){G.picks.shift();G.pickNo++;var q=G.quick;var c=await choosePick(G.pickNo);G.quick=q;return {c:c,chosen:true}}return {c:G.deck.pop(),chosen:false}}
 function choosePick(no){return new Promise(function(res){
   var opts=[G.deck.pop(),G.deck.pop(),G.deck.pop(),G.deck.pop()],box=$("hw-choose");setLeft();
-  box.innerHTML='<p class="hw-ch-t">'+(no===1?"자, 여기서 네 손으로 한 장 골라 보게나!":"마지막으로 한 장 더 골라 보게나!")+'</p><div class="hw-ch-row"></div>';
+  box.innerHTML='<p class="hw-ch-t">'+(no===1?"자, 여기서 직접 한 장 골라 보게나!":"마지막으로 한 장 더 골라 보게나!")+'</p><div class="hw-ch-row"></div>';
   var row=box.querySelector(".hw-ch-row"),els=opts.map(function(c,k){var el=mkCard(c,false);el.classList.add("pick");el.tabIndex=0;el.setAttribute("role","button");el.setAttribute("aria-label",(k+1)+"번째 패 고르기");row.appendChild(el);return el});
   box.hidden=false;say(no===1?"패 4장 중 하나를 고르게나.":"한 장 더 고르게나.");
   var done=false;
