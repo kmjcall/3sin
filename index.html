@@ -185,6 +185,10 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 .btn:focus-visible,.upl.btn:focus-within{outline:none;box-shadow:0 0 0 2px var(--paper,#1b1612),0 0 0 4px #F2CE78}
 @media (prefers-reduced-motion:reduce){.btn:not(:disabled):hover,.btn:not(:disabled):active{transform:none}}
 
+.charm{display:flex;flex-direction:column;gap:10px;word-break:keep-all;border-color:rgba(242,206,120,.45)}
+.charm .note{margin:0}
+.charm.pulse{animation:charmpulse 1.6s ease-out}
+@keyframes charmpulse{0%{box-shadow:0 0 0 0 rgba(242,206,120,.8)}40%{box-shadow:0 0 0 6px rgba(242,206,120,.35)}100%{box-shadow:0 0 0 0 rgba(242,206,120,0)}}
 .remedy{display:flex;flex-direction:column;gap:10px;word-break:keep-all}
 .rm-lead{margin:0;line-height:1.7}
 .rm-grid{display:grid;gap:10px}
@@ -641,6 +645,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
   </div>
   <div class="fortune" id="r-fortune"></div>
   <div class="panel remedy" id="r-remedy"></div>
+  <div class="panel charm" id="r-charm"></div>
   <button class="btn gray" type="button" id="r-share">카톡으로 결과 보내고 액받이 아이템 받기</button>
   <p class="note" id="r-share-msg" aria-live="polite" hidden></p>
   <button class="btn" type="button" data-go="face">다음 단계: 무료관상 보기</button>
@@ -676,6 +681,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
     <div class="panel"><h3 class="h2" style="font-size:16px">관상 총평</h3><p class="callout" id="fc-sum"></p><div class="fc-age" id="fc-age" hidden></div></div>
     <div class="fparts" id="fc-parts"></div>
     <div class="panel remedy" id="fc-remedy"></div>
+    <div class="panel charm" id="fc-charm"></div>
     <div class="fc-next">
       <button class="btn gray" type="button" id="fc-share">카톡으로 결과 보내고 액받이 아이템 받기</button>
       <button class="btn" type="button" data-go="match">궁합매칭 바로 보기</button>
@@ -1397,6 +1403,11 @@ function remedyHTML(o){ /* o:{title,lead,w,ex,extra,src} */
     '</div>'+
     '<p class="note rm-fine">재미로 보는 풀이예요. 건강이 걱정되면 꼭 병원에 가보세요.</p>';
 }
+function charmHTML(w){var it=EL_ITEM[w],nm=S.me?S.me.n:"";
+  return '<p class="eyebrow">액받이 아이템</p><h3 class="h2" style="font-size:17px">'+(nm?esc(nm)+'님은 ':'')+EL[w].k+'('+EL[w].h+') 기운을 채우면 좋아요</h3>'+
+    '<p class="rm-lead">"'+EL[w].k+' 기운이 모자라니 이걸 곁에 두거라. 액은 막고 복은 들어오느니라."</p>'+
+    '<dl class="shop-dl"><dt>행운의 색</dt><dd>'+it.c+'</dd><dt>곁에 둘 물건</dt><dd>'+it.t+'</dd><dt>좋은 방향</dt><dd>'+it.d+'</dd></dl>'+
+    '<p class="note">삼신 액받이 아이템 가게는 곧 문을 열어요. 열리면 아래 버튼에서 바로 들어갈 수 있어요.</p>'}
 function renderRemedy(){
   var s=S.me.s,c=s.c,w=lackEl(),mx=0;for(var i=1;i<5;i++)if(c[i]>c[mx])mx=i;
   var empt=c.map(function(n,i){return n===0?i:-1}).filter(function(i){return i>=0});
@@ -1405,6 +1416,7 @@ function renderRemedy(){
   var ex=c[mx]>=3&&mx!==w?mx:null;
   if(ex!=null)lead+=" 반대로 <b>"+EL[mx].k+"("+EL[mx].h+") 기운은 넘쳐서</b> 그 기운 탓에 생기는 일을 조심해야 하느니라.";
   var extra='<p>몸에서는 '+EL_INFO[w].body+(ex!=null?'과 '+EL_INFO[ex].body:'')+' 쪽을 아끼거라.</p>';
+  document.getElementById("r-charm").innerHTML=charmHTML(w);
   document.getElementById("r-remedy").innerHTML=remedyHTML({src:"사주로 본 부족한 기운",title:"채워야 할 기운, 조심해야 할 것",lead:lead,w:w,ex:ex,extra:extra});
 }
 var FACE_EL={"이마":1,"눈·눈썹":0,"코":2,"광대":3,"입·입술":4,"턱":4};
@@ -1424,6 +1436,7 @@ function renderFaceRemedy(parts){
   var low=parts.slice().sort(function(a,b){return a.score-b.score})[0],w=FACE_EL[low.n];if(w==null)w=lackEl();
   var lead="네 얼굴에서 가장 기운이 약한 자리는 <b>"+low.n+"</b>("+low.topic.split(" · ")[0]+")이니라. 관상에서 "+jo(low.n,"은","는")+" "+EL[w].k+"("+EL[w].h+") 기운의 자리라, 이 기운을 곁에 채우면 얼굴의 빈 곳이 메워지느니라.";
   var extra='<p>'+FACE_CARE[low.n]+'</p><p class="rm-fix"><b>얼굴로 채우는 법</b> '+FACE_FIX[low.n]+'</p>';
+  document.getElementById("fc-charm").innerHTML=charmHTML(w);
   document.getElementById("fc-remedy").innerHTML=remedyHTML({src:"관상으로 본 부족한 기운",title:low.n+" 기운 보완하기",lead:lead,w:w,ex:null,extra:extra});
 }
 document.addEventListener("click",function(e){var b=e.target.closest("[data-shop]");if(b)openShop(+b.dataset.shop)});
@@ -1437,15 +1450,9 @@ function lackEl(){var c=(S.me&&S.me.s&&S.me.s.c)||null,w=0;if(c)for(var i=1;i<5;
 function openShop(w0){
   var w=w0!=null&&!isNaN(w0)?w0:lackEl();
   if(SHOP_URL){location.href=SHOP_URL+(SHOP_URL.indexOf("?")<0?"?":"&")+"el="+encodeURIComponent(EL[w].k);return}
-  var m=document.getElementById("shop-pop");
-  if(!m){m=document.createElement("div");m.id="shop-pop";m.className="shop-back";m.innerHTML='<div class="shop-panel" role="dialog" aria-modal="true" aria-labelledby="shop-t"><button class="shop-x" type="button" aria-label="닫기">×</button><p class="eyebrow">액받이 아이템</p><h3 class="h2" id="shop-t"></h3><div class="shop-body"></div><p class="note">삼신 액받이 아이템 가게는 곧 문을 열어요. 열리면 이 버튼에서 바로 들어갈 수 있어요.</p><button class="btn" type="button" data-close>알겠어요</button></div>';
-    document.body.appendChild(m);
-    m.addEventListener("click",function(e){if(e.target===m||e.target.closest(".shop-x,[data-close]"))m.hidden=true});
-    document.addEventListener("keydown",function(e){if(e.key==="Escape")m.hidden=true})}
-  var it=EL_ITEM[w],nm=S.me?S.me.n:"";
-  m.querySelector("#shop-t").textContent=(nm?nm+"님은 ":"")+EL[w].k+"("+EL[w].h+") 기운을 채우면 좋아요";
-  m.querySelector(".shop-body").innerHTML='<p>"'+EL[w].k+' 기운이 모자라니 이걸 곁에 두거라. 액은 막고 복은 들어오느니라."</p><dl class="shop-dl"><dt>행운의 색</dt><dd>'+it.c+'</dd><dt>곁에 둘 물건</dt><dd>'+it.t+'</dd><dt>좋은 방향</dt><dd>'+it.d+'</dd></dl>';
-  m.hidden=false;m.querySelector("[data-close]").focus();
+  var card=document.getElementById(document.getElementById("s-face")&&!document.getElementById("s-face").hidden?"fc-charm":"r-charm");
+  if(!card)return;card.scrollIntoView({behavior:"smooth",block:"center"});
+  card.classList.remove("pulse");void card.offsetWidth;card.classList.add("pulse");
 }
 function shareShop(btnId,msgId){document.getElementById(btnId).addEventListener("click",function(){
   var btn=this,msg=document.getElementById(msgId),txt=shareText();
