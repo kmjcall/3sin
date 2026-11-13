@@ -966,7 +966,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-0046</p>
+<p class="ver" id="app-ver">버전 2026.11.14-0050</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -1929,7 +1929,7 @@ async function removePair(i,drawEl){var slot=G.board[i];
   slot.el.remove();if(drawEl)drawEl.remove();G.board[i]={c:null,el:null,cell:slot.cell};G.pairs++;setLeft()}
 function findMatch(m,except){for(var i=0;i<G.board.length;i++){if(i!==except&&G.board[i].c&&G.board[i].c.m===m)return i}return -1}
 async function refill(i){
-  if(!G.deck.length)return;var nx=await nextCard(),c=nx.c;setLeft();var el=mkCard(c,nx.chosen);el.classList.add("deal");
+  if(G.deck.length<=G.keep)return;var nx=await nextCard(),c=nx.c;setLeft();var el=mkCard(c,nx.chosen);el.classList.add("deal");
   G.board[i].cell.appendChild(el);G.board[i].c=c;G.board[i].el=el;
   if(nx.chosen){var q=G.quick;G.quick=false;el.classList.add("flipping");await wait(350);el.classList.remove("flipping");G.quick=q}
   else{await wait(T(180,10));await flip(el)}
@@ -1972,19 +1972,20 @@ async function play(){
   for(i=0;i<16;i++){(function(el,d){setTimeout(function(){el.classList.add("flipping","up");setTimeout(function(){el.classList.remove("flipping")},560)},d)})(G.board[i].el,G.skip?0:i*22*G.speed)}
   await wait(16*22+520);
   G.quick=true;G.picks=[22,11];G.pickNo=0;
-  while(G.deck.length){
+  G.keep=2;
+  while(G.deck.length>G.keep){
     var nx=await nextCard(),d=nx.c,chosen=nx.chosen;
     setLeft();var de=mkCard(d,chosen);var slot=$("hw-draw");slot.innerHTML="";slot.appendChild(de);
     if(chosen){G.quick=false;de.classList.add("flipping");await wait(350);de.classList.remove("flipping")}
     else{await wait(20);await flip(de)}
     var j=findMatch(d.m,-1);
     if(j>=0){say(d.m+"월 "+HM[d.m].n+"! 짝이 맞았구먼.");await removePair(j,de);
-      if(G.deck.length){await refill(j)}}
+      if(G.deck.length>G.keep){await refill(j)}}
     else{say(d.m+"월 "+HM[d.m].n+"은 짝이 없구먼.");de.classList.add("toss");G.discard++;await wait(T(380,40))}
     if(chosen){await wait(150);G.quick=true}
   }
   G.quick=false;
-  $("hw-draw").innerHTML="";say("패를 다 뗐네. 남은 패로 풀어 보겠네.");await wait(300);
+  $("hw-draw").innerHTML="";say("마지막 두 장은 하늘의 뜻이라 덮어 두겠네.");await wait(700);say("패를 다 뗐네. 남은 패로 풀어 보겠네.");await wait(300);
   G.running=false;$("hw-start").disabled=false;$("hw-fast").disabled=true;$("hw-skip").disabled=true;showResult();
 }
 function showResult(){
