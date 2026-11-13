@@ -966,7 +966,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-0051</p>
+<p class="ver" id="app-ver">버전 2026.11.14-0058</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -1907,6 +1907,10 @@ var TIP={
  travel:[["일정·예약 두 번 확인","여유 있는 경비 챙기기"],["무리한 일정","빗길·밤길 운전"]],
  home:[["식구와 함께 밥 먹기","어른께 안부 전화"],["홧김에 하는 말","집안 돈 문제 혼자 결정"]],
  chance:[["새로운 모임·제안에 귀 기울이기","배우고 싶던 것 시작하기"],["남 말에 휩쓸린 결정","준비 없이 뛰어들기"]]};
+var ZTRAIT=["눈치 빠르고 부지런해 작은 기회도 놓치지 않는","우직하고 성실해 한번 맡은 일은 끝까지 해내는","배짱 있고 앞장서기를 좋아하는","부드럽고 눈썰미가 좋아 사람을 편하게 하는","기운이 크고 꿈이 높은","지혜롭고 속이 깊어 한 수 앞을 내다보는","활달하고 발이 넓어 어디서든 사람을 모으는","온순하고 정이 많아 남을 잘 챙기는","재주 많고 머리 회전이 빠른","꼼꼼하고 부지런해 맺고 끊음이 분명한","의리 있고 믿음직해 한번 맺은 인연을 지키는","너그럽고 복이 많아 먹을 것 걱정 없는"];
+var YUKHAP=[1,0,11,10,9,8,7,6,5,4,3,2];
+function todayBranch(){var d=new Date(),a=Math.floor((14-(d.getMonth()+1))/12),y=d.getFullYear()+4800-a,m=d.getMonth()+1+12*a-3;
+  var jdn=d.getDate()+Math.floor((153*m+2)/5)+365*y+Math.floor(y/4)-Math.floor(y/100)+Math.floor(y/400)-32045;return (((jdn-2451545+54)%60)+60)%60%12}
 var ZOD=["쥐","소","범","토끼","용","뱀","말","양","원숭이","닭","개","돼지"];
 var SAMHAP=[[0,4,8],[1,5,9],[2,6,10],[3,7,11]];
 var BIG={today:"오늘은 무엇을 해도 막힘이 없겠네. 미뤄 둔 일을 시작하기 딱 좋은 날일세.",money:"돈길이 활짝 뚫렸구먼. 들어올 돈은 들어오고 새는 돈은 막히니, 미뤄 둔 계획을 시작해도 좋네.",love:"마음 가는 사람이 있으면 먼저 손을 내밀게나. 서로 짝이 딱딱 맞는 운일세.",work:"하는 일마다 아귀가 맞아떨어지네. 승진·계약·새 일 모두 밀어붙여도 좋겠구먼.",wish:"바라던 일이 이루어질 때가 왔네. 망설이지 말고 한 발 내딛게나.",health:"몸도 마음도 막힌 데 없이 가뿐하겠네. 지금 습관을 잘 지키게나.",rel:"사람 사이가 술술 풀리네. 만나고 싶은 사람이 있으면 지금 연락하게.",travel:"길이 활짝 열렸네. 떠나고 싶은 곳이 있으면 떠나게나.",home:"집안이 화목하고 막힘이 없구먼. 식구들과 좋은 시간을 보내게.",chance:"큰 기회가 문 앞에 와 있네. 망설이지 말고 잡게나."};
@@ -2006,8 +2010,13 @@ function showResult(){
   var band=score>=85?0:score>=70?1:2,over=OVER[t]?OVER[t][band]:"";
   var picksH=(G.chosen||[]).map(function(c,x){return '<li><span class="hr-p">'+cardFace(c)+'</span><div><b>'+(x+1)+'번째로 고른 패 · '+c.m+'월 '+HM[c.m].n+'</b> <small>'+(c.d?"쌍피":c.k==="T"?c.r:KN[c.k])+'</small><p>네 손이 직접 고른 패라 지금 네 마음이 담겼구먼. '+MDESC[c.m]+' '+(x===0?"요즘 네가 바라는 것":"앞으로 다가올 일")+'은 이 기운과 닿아 있네.</p></div></li>'}).join("");
   var bt=G.birth?G.birth.split("-").map(Number):null;
-  var zH="";if(bt){var zi=((bt[0]-4)%12+12)%12,grp=SAMHAP.filter(function(g){return g.indexOf(zi)>=0})[0].filter(function(x){return x!==zi}).map(function(x){return ZOD[x]+"띠"});
-    zH='<div class="rm-box"><h4>'+ZOD[zi]+'띠로 보면</h4><p>'+bt[0]+'년생 '+ZOD[zi]+'띠는 '+grp.join("·")+'와 손발이 잘 맞는 삼합(三合)일세. '+tn+'에서 도움이 필요하면 '+grp.join("이나 ")+' 사람을 찾아가 보게. 행운의 숫자는 '+(bt[1]%9+1)+'과 '+(bt[2]%9+1)+'이니라.</p></div>'}
+  var zH="";if(bt){var zy=(bt[1]<2||(bt[1]===2&&bt[2]<4))?bt[0]-1:bt[0],zi=((zy-4)%12+12)%12,Z=function(x){return ZOD[x]+"띠"};
+    var grp=SAMHAP.filter(function(g){return g.indexOf(zi)>=0})[0].filter(function(x){return x!==zi}),yh=YUKHAP[zi],ch=(zi+6)%12,tb=todayBranch();
+    var good=[yh].concat(grp),tday=good.indexOf(tb)>=0||tb===zi?"오늘은 일진(日辰)이 "+Z(tb)+" 날이라 너와 기운이 잘 맞는 날일세. ":tb===ch?"오늘은 일진이 "+Z(tb)+" 날이라 너와 부딪히는 기운이 있으니 한 박자 쉬어 가게. ":"오늘 일진은 "+Z(tb)+" 날이라 무난하게 흘러가겠네. ";
+    zH='<div class="rm-box"><h4>'+Z(zi)+'로 보면</h4><p>'+zy+'년생 '+Z(zi)+'는 '+ZTRAIT[zi]+' 기운을 타고났네. '+tday+tn+'은 이 타고난 기운을 살릴수록 더 잘 풀리느니라.</p>'+
+      '<p><b>오늘 곁에 두면 좋은 띠</b> '+Z(yh)+' (육합, 마음이 척척 맞는 짝), '+grp.map(Z).join("·")+' (삼합, 일을 함께하면 힘이 되는 사이)</p>'+
+      '<p><b>오늘 부딪히기 쉬운 띠</b> '+Z(ch)+' (충), 다투기보다 한 발 물러서면 오히려 득이 되네.</p>'+
+      '<p><b>행운의 숫자</b> '+(bt[1]%9+1)+', '+(bt[2]%9+1)+'</p></div>'}
   var luckM=(G.chosen&&G.chosen[0])?G.chosen[0].m:(rem[0]?rem[0].m:((bt?bt[1]:1)));
   var tip=TIP[t]||TIP.today;
   var adv='<div class="rm-box"><h4>할배의 당부</h4><p><b>해 볼 것</b> '+tip[0].join(", ")+'</p><p><b>삼갈 것</b> '+tip[1].join(", ")+'</p><p><b>기운 좋은 때</b> '+luckM+'월 '+HM[luckM].n+'의 기운이 들어오는 때, 그리고 '+(G.pairs>=20?"이번 주 안":"이번 달 안")+'이 좋겠네.</p></div>';
