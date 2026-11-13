@@ -1301,7 +1301,7 @@ document.getElementById("fc-file").addEventListener("change",onPhoto);
 document.getElementById("fc-cam").addEventListener("change",onPhoto);
 (function(){
   var cam=document.getElementById("fc-cam"),box=document.getElementById("fc-wc"),v=document.getElementById("fc-wc-v"),msg=document.getElementById("fc-wc-msg"),shot=document.getElementById("fc-wc-shot"),stream=null;
-  var isPC=window.matchMedia&&matchMedia("(hover:hover) and (pointer:fine)").matches&&!("ontouchstart" in window)&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia;
+  var ua=navigator.userAgent||"",isMob=(navigator.userAgentData&&navigator.userAgentData.mobile)||/Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1),isPC=!isMob&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia;
   if(!isPC)return;
   function stop(){if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}v.srcObject=null;box.hidden=true}
   cam.addEventListener("click",function(e){
