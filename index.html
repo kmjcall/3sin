@@ -909,7 +909,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
       <label><input type="radio" name="hwt" value="today" checked><span>오늘운</span></label>
       <label><input type="radio" name="hwt" value="love"><span>애정운</span></label>
       <label><input type="radio" name="hwt" value="money"><span>금전운</span></label>
-      <label><input type="radio" name="hwt" value="work"><span>직업/사업운</span></label>
+      <label><input type="radio" name="hwt" value="work"><span>직업·사업운</span></label>
     </div>
     <div class="seg hw-row" role="radiogroup" aria-label="궁금한 운 (계속)">
       <label><input type="radio" name="hwt" value="health"><span>건강운</span></label>
@@ -945,7 +945,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-0007</p>
+<p class="ver" id="app-ver">버전 2026.11.14-0008</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -1854,7 +1854,7 @@ var MEAN={
  home:["","집안에 반가운 소식이 들어오겠네","식구끼리 마음이 잘 맞겠네","가족 나들이를 하면 웃음꽃이 피네","작은 말다툼이 생기니 한 박자 쉬고 말하게","온 식구가 둘러앉아 밥 먹을 일이 많겠네","집안에 경사가 있겠네","살림이 넉넉해지는 운일세","밤에 나누는 이야기로 정이 깊어지네","어른께 술 한 잔 따라 드리면 복이 오네","집안에 변화가 오니 미리 의논하게","집안 재물이 든든해지겠네","뜻밖의 손님이 집에 찾아오겠네"],
  chance:["","기다리던 기회의 소식이 오겠네","사람을 통해 기회가 들어오네","밖으로 나서야 기회가 보이네","남의 말에 휘둘리면 기회를 놓치니 조심하게","모임 자리에서 기회가 생기네","기쁜 기회가 활짝 열리겠네","잡으면 크게 커지는 기회일세, 망설이지 말게","때를 기다리면 둥근 달처럼 기회가 차오르네","느긋한 자리에서 뜻밖의 제안이 오겠네","변화 속에 기회가 숨어 있네","재물이 따르는 기회가 오겠네","생각지 못한 데서 기회가 굴러오겠네"]};
 var BIG={today:"오늘은 무엇을 해도 막힘이 없겠네. 미뤄 둔 일을 시작하기 딱 좋은 날일세.",money:"돈길이 활짝 뚫렸구먼. 들어올 돈은 들어오고 새는 돈은 막히니, 미뤄 둔 계획을 시작해도 좋네.",love:"마음 가는 사람이 있으면 먼저 손을 내밀게나. 서로 짝이 딱딱 맞는 운일세.",work:"하는 일마다 아귀가 맞아떨어지네. 승진·계약·새 일 모두 밀어붙여도 좋겠구먼.",wish:"바라던 일이 이루어질 때가 왔네. 망설이지 말고 한 발 내딛게나.",health:"몸도 마음도 막힌 데 없이 가뿐하겠네. 지금 습관을 잘 지키게나.",rel:"사람 사이가 술술 풀리네. 만나고 싶은 사람이 있으면 지금 연락하게.",travel:"길이 활짝 열렸네. 떠나고 싶은 곳이 있으면 떠나게나.",home:"집안이 화목하고 막힘이 없구먼. 식구들과 좋은 시간을 보내게.",chance:"큰 기회가 문 앞에 와 있네. 망설이지 말고 잡게나."};
-var TOPIC={today:"오늘운",love:"애정운",money:"금전운",work:"직업/사업운",health:"건강운",rel:"관계운",travel:"여행운",home:"가정운",chance:"기회운",wish:"소망운"};
+var TOPIC={today:"오늘운",love:"애정운",money:"금전운",work:"직업·사업운",health:"건강운",rel:"관계운",travel:"여행운",home:"가정운",chance:"기회운",wish:"소망운"};
 var G={running:false,speed:1,skip:false,topic:"today",board:[],deck:[],pairs:0,discard:0};
 var $=function(id){return document.getElementById(id)};
 function wait(ms){return new Promise(function(r){if(G.skip)return r();setTimeout(r,ms*G.speed)})}
