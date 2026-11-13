@@ -1306,7 +1306,12 @@ function shareText(){
     if(S.face.age!=null)t+="AI 예측 나이 "+S.face.age+"세 · 실제 만 "+s.age+"세\n";
     ps.forEach(function(p){t+="["+p.n+"] "+p.score+"점 — "+p.topic+"\n"+p.txt+"\n\n"});
   }
-  t+="청담동 삼신할매한테 나도 봐달라고 하기 → "+location.href.split("#")[0];
+  var U="https://www.3sin.co.kr/";
+  t+="━━━━━━━━━━━━━━━\n";
+  t+="👵 청담동 삼신할매한테 나도 봐달라고 하기\n→ "+U+"\n\n";
+  t+="👴 청학동 삼신할배한테 나도 봐달라고 하기\n→ "+U+"\n\n";
+  t+="👶 이태원 애기동자한테 나도 봐달라고 하기\n→ "+U+"\n";
+  t+="━━━━━━━━━━━━━━━";
   return t;
 }
 function copyFallback(txt){var ta=document.createElement("textarea");ta.value=txt;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{document.execCommand("copy")}catch(e){}document.body.removeChild(ta)}
