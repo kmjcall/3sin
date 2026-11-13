@@ -1471,6 +1471,7 @@ function openShop(w0){
   if(!card)return;card.scrollIntoView({behavior:"smooth",block:"center"});
   card.classList.remove("pulse");void card.offsetWidth;card.classList.add("pulse");
 }
+function isMobileDevice(){var ua=navigator.userAgent||"";return !!((navigator.userAgentData&&navigator.userAgentData.mobile)||/Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1))}
 function shareShop(btnId,msgId){document.getElementById(btnId).addEventListener("click",function(){
   var btn=this,msg=document.getElementById(msgId),txt=shareText();
   if(btn.disabled)return;btn.disabled=true;
@@ -1478,8 +1479,8 @@ function shareShop(btnId,msgId){document.getElementById(btnId).addEventListener(
   function toShop(t){say(t);setTimeout(function(){btn.disabled=false;openShop(btn.id==="fc-share"&&S.face&&S.face.parts?FACE_EL[S.face.parts.slice().sort(function(a,b){return a.score-b.score})[0].n]:null)},1000)}
   function copyThen(){var t="결과를 복사했어요. 카카오톡 대화창에 붙여넣기 하면 보내져요.";
     if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(function(){toShop(t)},function(){copyFallback(txt);toShop(t)});else{copyFallback(txt);toShop(t)}}
-  /* 휴대폰: 공유창으로 카카오톡에 바로 보냄 → 1초 뒤 액받이 아이템. 공유창이 없으면(PC) 복사 */
-  if(navigator.share){
+  /* 휴대폰: 공유창으로 카카오톡에 바로 보냄 → 1초 뒤 액받이 아이템. PC는 윈도우 공유창이 카톡을 못 찾는 경우가 많아 항상 복사 */
+  if(navigator.share&&isMobileDevice()){
     navigator.share({title:"삼신 사주·관상 결과",text:txt}).then(function(){toShop("카톡으로 결과를 보냈어요.")}).catch(function(err){
       if(err&&err.name==="AbortError"){btn.disabled=false;say("보내기를 취소했어요. 다시 누르면 카카오톡을 고를 수 있어요.");return}
       copyThen()});
