@@ -176,6 +176,15 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 .upl-row{display:flex;flex-wrap:wrap;gap:8px}
 .upl input{position:absolute;inset:0;opacity:0;cursor:pointer}
 .btn{word-break:keep-all}
+.btn{transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease,border-color .18s ease,color .18s ease}
+@media (hover:hover) and (pointer:fine){
+  .btn:not(:disabled):hover,.upl.btn:hover{transform:translateY(-3px);box-shadow:0 0 0 2px #F2CE78,0 10px 22px -8px rgba(0,0,0,.75),0 0 18px rgba(242,206,120,.35)}
+  .btn.ghost:not(:disabled):hover{background:rgba(217,174,82,.12);color:#F7DE8E}
+}
+.btn:not(:disabled):active{transform:translateY(0) scale(.98);box-shadow:0 0 0 2px #F2CE78}
+.btn:focus-visible,.upl.btn:focus-within{outline:none;box-shadow:0 0 0 2px var(--paper,#1b1612),0 0 0 4px #F2CE78}
+@media (prefers-reduced-motion:reduce){.btn:not(:disabled):hover,.btn:not(:disabled):active{transform:none}}
+
 .remedy{display:flex;flex-direction:column;gap:10px;word-break:keep-all}
 .rm-lead{margin:0;line-height:1.7}
 .rm-grid{display:grid;gap:10px}
