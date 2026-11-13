@@ -177,6 +177,54 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 .upl-row{display:flex;flex-wrap:wrap;gap:8px}
 .upl input{position:absolute;inset:0;opacity:0;cursor:pointer}
 .btn{word-break:keep-all}
+/* 화투점 */
+.hw-pick{gap:12px}
+.hw-top{display:flex;justify-content:center;gap:18px;align-items:flex-end}
+.hw-pile{display:flex;flex-direction:column;align-items:center;gap:6px}
+.hw-lbl{font-size:12px;color:var(--muted)}
+.hw-deck,.hw-draw,.hw-done{width:62px;aspect-ratio:2/3;border-radius:8px;position:relative}
+.hw-deck{background:repeating-linear-gradient(45deg,#8E1B22 0 6px,#A5242C 6px 12px);border:2px solid #E9D6B0;box-shadow:2px 2px 0 #6c1218,4px 4px 0 #4e0d12}
+.hw-deck.empty{background:none;border:2px dashed var(--line);box-shadow:none}
+.hw-draw{border:2px dashed var(--line)}
+.hw-draw .hcard{position:absolute;inset:0;width:auto}
+.hw-done{border:1px solid var(--line);background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.hw-done b{font-size:24px;color:#F2CE78}.hw-done small{color:var(--muted);font-size:12px;margin-top:2px}
+.hw-say{margin:0;text-align:center;min-height:1.6em;color:#F2CE78;font-weight:600;word-break:keep-all}
+.hw-board{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:420px;width:100%;margin:0 auto}
+.hw-cell{aspect-ratio:2/3;border-radius:8px;background:rgba(0,0,0,.18);position:relative}
+.hw-ctrl{display:flex;justify-content:center;gap:8px}
+.hcard{position:absolute;inset:0;perspective:600px}
+.hcard.deal{animation:hwdeal .28s ease-out}
+@keyframes hwdeal{from{transform:translateY(-30px) scale(.8);opacity:0}to{transform:none;opacity:1}}
+.hc-flip{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .32s ease}
+.hcard.up .hc-flip{transform:rotateY(180deg)}
+.hc-back,.hc-front{position:absolute;inset:0;border-radius:8px;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
+.hc-back{background:repeating-linear-gradient(45deg,#8E1B22 0 6px,#A5242C 6px 12px);border:2px solid #E9D6B0}
+.hc-front{transform:rotateY(180deg);background:#FBF4E4;border:2px solid var(--mc);color:#2a1f17}
+.hc-in{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.hc-m{position:absolute;top:3px;left:5px;font-size:11px;font-weight:800;color:var(--mc)}
+.hc-p{font-size:clamp(20px,6.5vw,32px);line-height:1}
+.hc-s{position:absolute;right:4px;top:42%;font-size:clamp(14px,4.4vw,20px)}
+.hc-rib{position:absolute;left:50%;top:18%;transform:translateX(-50%);writing-mode:vertical-rl;font-style:normal;font-size:10px;font-weight:800;color:#fff;padding:3px 2px;border-radius:3px;min-height:34px;letter-spacing:1px}
+.r-hong{background:#C4282F}.r-chung{background:#2D4F9E}.r-cho{background:#B0402F}.r-tti{background:#7A1E24}
+.hc-k{position:absolute;bottom:14px;font-size:10px;font-weight:800;padding:1px 6px;border-radius:999px;background:var(--mc);color:#fff}
+.hc-k.k-K{background:#C8912F;box-shadow:0 0 6px rgba(242,206,120,.8)}
+.hc-n{position:absolute;bottom:2px;font-size:9px;color:#6b5a48}
+.hcard.match .hc-front{box-shadow:0 0 0 3px #F2CE78,0 0 16px rgba(242,206,120,.9)}
+.hcard.gone{transition:transform .3s,opacity .3s;transform:scale(.4) translateY(-30px);opacity:0}
+.hcard.toss{transition:transform .35s,opacity .35s;transform:translateX(40px) rotate(15deg);opacity:0}
+.hw-res{gap:12px;word-break:keep-all}
+.hr-sc{color:#F2CE78;font-size:30px;margin-left:6px}.hr-of{color:var(--muted);font-size:14px}
+.hr-cards{display:flex;flex-wrap:wrap;gap:6px}
+.hr-cards .hcard{position:relative;inset:auto;width:52px;aspect-ratio:2/3;display:block}
+.hr-cards .hcard .hc-flip{transition:none}
+.hr-cards .hc-p{font-size:22px}.hr-cards .hc-s{font-size:14px}.hr-cards .hc-rib{min-height:24px;font-size:8px}.hr-cards .hc-k{font-size:9px;bottom:12px}
+.hr-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.hr-list li{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
+.hr-p{flex:none;width:36px;height:36px;border-radius:10px;background:#FBF4E4;border:2px solid var(--mc);display:flex;align-items:center;justify-content:center;font-size:20px}
+.hr-list b{font-size:15px}.hr-list small{color:var(--muted);margin-left:4px}.hr-list p{margin:2px 0 0;line-height:1.6}
+@media (prefers-reduced-motion:reduce){.hc-flip{transition:none}.hcard.deal{animation:none}}
+
 .hd-mall{appearance:none;cursor:pointer;flex:none;margin-left:auto;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;border:1px solid rgba(242,206,120,.45);background:transparent;color:#F2CE78;border-radius:999px;padding:7px 14px;font-size:13px;font-weight:700;line-height:1.15;transition:background-color .18s,border-color .18s,transform .18s}
 .hd-mall:hover{background:rgba(242,206,120,.1);border-color:#F2CE78}
 .hd-mall:focus-visible{outline:2px solid #F2CE78;outline-offset:2px}
@@ -596,7 +644,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
   <div class="hero">
     <div class="god-btns" role="group" aria-label="삼신 고르기">
         <button class="gbtn g-saju" type="button" data-god="0" data-go="input">무료사주</button>
-        <button class="gbtn g-hwatu" type="button" data-god="1">화투점</button>
+        <button class="gbtn g-hwatu" type="button" data-god="1" data-go="hwatu">화투점</button>
         <button class="gbtn g-tarot" type="button" data-god="2">타로점</button>
       </div>
     <figure class="scene" id="scene">
@@ -820,6 +868,34 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <!-- 내 연결함 -->
+<section id="s-hwatu" hidden>
+  <div class="sec-head">
+    <div><p class="eyebrow">청학동 삼신할배 · 화투점</p><h2 class="h2">허허, 무엇이 궁금한가?</h2></div>
+  </div>
+  <p class="lead">궁금한 것을 하나 고르고 패를 떼 보게나. 16장을 펼쳐 두고 남은 패를 한 장씩 뒤집어 같은 달끼리 짝을 맞춰 치우고, 끝까지 남은 패로 운을 풀어 주겠네.</p>
+  <div class="panel hw-pick">
+    <div class="seg" role="radiogroup" aria-label="궁금한 운">
+      <label><input type="radio" name="hwt" value="today" checked><span>오늘의 운수</span></label>
+      <label><input type="radio" name="hwt" value="money"><span>재물운</span></label>
+      <label><input type="radio" name="hwt" value="love"><span>애정운</span></label>
+      <label><input type="radio" name="hwt" value="work"><span>직장·사업운</span></label>
+      <label><input type="radio" name="hwt" value="wish"><span>소망운</span></label>
+    </div>
+    <button class="btn" type="button" id="hw-start">패 섞고 떼기 시작</button>
+  </div>
+  <div class="panel hw-play" id="hw-play" hidden>
+    <div class="hw-top">
+      <div class="hw-pile"><div class="hw-deck" id="hw-deck" aria-hidden="true"></div><span class="hw-lbl">남은 패 <b id="hw-left">32</b></span></div>
+      <div class="hw-pile"><div class="hw-draw" id="hw-draw"></div><span class="hw-lbl">뒤집은 패</span></div>
+      <div class="hw-pile"><div class="hw-done" id="hw-done"><b id="hw-pairs">0</b><small>짝</small></div><span class="hw-lbl">짝 맞춘 패</span></div>
+    </div>
+    <p class="hw-say" id="hw-say" aria-live="polite"></p>
+    <div class="hw-board" id="hw-board"></div>
+    <div class="hw-ctrl"><button class="btn ghost sm" type="button" id="hw-fast">빠르게</button><button class="btn ghost sm" type="button" id="hw-skip">결과 바로 보기</button></div>
+  </div>
+  <div class="panel hw-res" id="hw-res" hidden></div>
+  <p class="foot">화투점은 재미로 보는 풀이예요. 중요한 결정은 스스로 충분히 생각해서 내리세요.</p>
+</section>
 <section id="s-inbox" hidden>
   <div class="sec-head">
     <div><p class="eyebrow">내 연결함</p><h2 class="h2">내가 본 사주, 나에게 온 인연</h2></div>
@@ -831,7 +907,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.13-2318</p>
+<p class="ver" id="app-ver">버전 2026.11.13-2350</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -1010,10 +1086,10 @@ function namePyr(a,b){
 
 /* 상태와 화면 */
 var S={me:null,match:null,face:null,faceScore:0,nameScore:0};
-var SCREENS=["home","input","result","face","match","name","connect","inbox"], STEPNO={home:0,input:1,result:1,face:2,match:3,name:4,connect:5,inbox:0};
+var SCREENS=["home","input","result","face","match","name","connect","inbox","hwatu"], STEPNO={hwatu:0,home:0,input:1,result:1,face:2,match:3,name:4,connect:5,inbox:0};
 var NAV={cur:"home",stack:[]};
 function go(id,isBack){if(window.__wcStop)window.__wcStop();
-  if(id!=="home"&&id!=="input"&&id!=="inbox"&&!S.me) id="input";
+  if(id!=="home"&&id!=="input"&&id!=="inbox"&&id!=="hwatu"&&!S.me) id="input";
   else if((id==="match"||id==="name"||id==="connect")&&!S.face) id="face";
   else if((id==="name"||id==="connect")&&!S.match) id="match";
   if(!isBack&&id!==NAV.cur){NAV.stack.push(NAV.cur);if(NAV.stack.length>30)NAV.stack.shift()}
@@ -1707,6 +1783,122 @@ document.getElementById("go-mall").addEventListener("click",function(){
   var t=document.getElementById("mini-toast");if(!t){t=document.createElement("div");t.id="mini-toast";t.className="mini-toast";t.setAttribute("role","status");document.body.appendChild(t)}
   t.textContent="삼신몰은 곧 문을 열어요. 조금만 기다려 주세요!";t.hidden=false;clearTimeout(t._h);t._h=setTimeout(function(){t.hidden=true},2500);
 });
+/* ===== 청학동 삼신할배 화투점 ===== */
+(function(){
+var HM=[null,
+ {n:"송학",p:"🌲",col:"#2F6B3A"},{n:"매조",p:"🌺",col:"#B0304A"},{n:"벚꽃",p:"🌸",col:"#C2547A"},{n:"흑싸리",p:"🌿",col:"#2B2B2B"},
+ {n:"난초",p:"🌱",col:"#3E6E4E"},{n:"모란",p:"🏵️",col:"#B23A48"},{n:"홍싸리",p:"🍂",col:"#A8452F"},{n:"공산",p:"🌕",col:"#55405F"},
+ {n:"국진",p:"🌼",col:"#B88A1E"},{n:"단풍",p:"🍁",col:"#B4471E"},{n:"오동",p:"🌳",col:"#4E5B2E"},{n:"비",p:"☔",col:"#2E4A6B"}];
+/* 종류: K광 Y열끗 T띠 P피 (s:그림, r:띠 종류, d:쌍피) */
+var DECK_DEF=[
+ [1,"K","🦢"],[1,"T","","홍단"],[1,"P"],[1,"P"],
+ [2,"Y","🐦"],[2,"T","","홍단"],[2,"P"],[2,"P"],
+ [3,"K","🏮"],[3,"T","","홍단"],[3,"P"],[3,"P"],
+ [4,"Y","🐦"],[4,"T","","초단"],[4,"P"],[4,"P"],
+ [5,"Y","🌉"],[5,"T","","초단"],[5,"P"],[5,"P"],
+ [6,"Y","🦋"],[6,"T","","청단"],[6,"P"],[6,"P"],
+ [7,"Y","🐗"],[7,"T","","초단"],[7,"P"],[7,"P"],
+ [8,"K","🌕"],[8,"Y","🕊️"],[8,"P"],[8,"P"],
+ [9,"Y","🍶"],[9,"T","","청단"],[9,"P"],[9,"P"],
+ [10,"Y","🦌"],[10,"T","","청단"],[10,"P"],[10,"P"],
+ [11,"K","🦚"],[11,"P","","",1],[11,"P"],[11,"P"],
+ [12,"K","🧑"],[12,"Y","🐦"],[12,"T","","띠"],[12,"P","","",1]];
+var KN={K:"광",Y:"열끗",T:"띠",P:"피"};
+var MEAN={
+ today:["","반가운 소식이 들어오겠네","좋은 사람이 곁에 오겠네","바깥에 나가면 즐거운 일이 피겠네","말 한마디에 구설이 붙으니 입을 아끼게","먹을 복, 잔칫집 같은 날일세","경사스럽고 기쁜 일이 생기겠네","멧돼지처럼 힘센 운이 따르네","급하게 말고 기다리면 달처럼 차오르네","술 한잔, 풍류에 마음이 풀리겠네","잎이 지듯 근심이 스치니 마음을 다잡게","주머니가 두둑해질 자리가 있네","뜻밖의 손님, 뜻밖의 일이 찾아오겠네"],
+ money:["","기다리던 돈 소식이 들어오겠네","사람을 통해 돈이 들어오겠네","놀고 즐기다 지갑이 가벼워지니 조심하게","말 때문에 돈이 새니 계약·보증은 입조심","먹고 쓰는 돈이 나가도 복으로 돌아오네","뜻밖의 재물로 기뻐할 일이 있네","멧돼지가 재물을 몰고 오는 돈복일세","밤에 궁리한 일이 돈이 되니 서두르지 말게","술자리에서 돈이 오가니 셈을 분명히 하게","돈이 나뭇잎처럼 떨어지니 지출을 줄이게","오동이니 큰돈 들어올 자리가 있네","생각지 못한 데서 돈이 굴러오겠네"],
+ love:["","기다리던 그 사람에게서 연락이 오겠네","마음에 둔 님과 가까워지겠네","밖으로 나서면 인연이 벚꽃처럼 피겠네","말 한마디에 오해가 생기니 조심하게","함께 밥 먹는 자리에서 정이 들겠네","사랑이 모란처럼 활짝 피는 때일세","든든한 짝을 만나겠네","은근한 정이 달빛처럼 깊어지겠네","술 한잔에 마음이 열리지만 과음은 조심하게","마음이 식을 수 있으니 정성을 쏟게","넉넉한 마음이 좋은 인연을 부르네","생각지 못한 사람이 다가오겠네"],
+ work:["","합격·승진 같은 좋은 소식이 오겠네","좋은 동료나 귀인을 만나겠네","출장·바깥 활동에서 기회가 오겠네","구설수가 있으니 말과 글을 아끼게","모임·회식 자리에서 기회가 오겠네","인정받고 칭찬 들을 일이 있네","힘 있게 밀어붙이면 성과가 나네","때를 기다리면 차오르니 서두르지 말게","사람 사귀는 자리에서 길이 열리네","변화가 오니 미리 준비해 두게","보상과 수입이 따라오겠네","갑자기 일이 몰려오니 우산을 준비하게"],
+ wish:["","바라던 일에 기쁜 소식이 오겠네","도와줄 사람이 나타나겠네","밖으로 나서야 이루어지네","남의 말에 흔들리지 말아야 이루네","작은 잔치처럼 기쁜 일로 이루어지네","경사스러운 일로 이루어지겠네","운이 따라 힘있게 이루어지네","조금만 기다리면 둥글게 채워지네","느긋하게 즐기면 풀리겠네","한 번 꺾였다가 다시 피는 운일세","재물이 받쳐줘서 이루어지네","예상 못한 데서 길이 열리겠네"]};
+var TOPIC={today:"오늘의 운수",money:"재물운",love:"애정운",work:"직장·사업운",wish:"소망운"};
+var G={running:false,speed:1,skip:false,topic:"today",board:[],deck:[],pairs:0,discard:0};
+var $=function(id){return document.getElementById(id)};
+function wait(ms){return new Promise(function(r){if(G.skip)return r();setTimeout(r,ms*G.speed)})}
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+function cardFace(c){var h=HM[c.m];
+  var badge=c.k==="T"?'<i class="hc-rib r-'+({홍단:"hong",청단:"chung",초단:"cho",띠:"tti"})[c.r]+'">'+(c.r==="띠"?"":c.r)+'</i>':"";
+  return '<div class="hc-in"><span class="hc-m">'+c.m+'월</span><span class="hc-p">'+h.p+'</span>'+(c.s?'<span class="hc-s">'+c.s+'</span>':'')+badge+
+    '<span class="hc-k k-'+c.k+'">'+(c.d?"쌍피":KN[c.k])+'</span><span class="hc-n">'+h.n+'</span></div>'}
+function mkCard(c,up){var el=document.createElement("div");el.className="hcard"+(up?" up":"");el.style.setProperty("--mc",HM[c.m].col);
+  el.innerHTML='<div class="hc-flip"><div class="hc-back"></div><div class="hc-front">'+cardFace(c)+'</div></div>';
+  el.setAttribute("aria-label",c.m+"월 "+HM[c.m].n+" "+(c.d?"쌍피":KN[c.k]));return el}
+function say(t){$("hw-say").textContent=t}
+function flip(el){el.classList.add("up");return wait(330)}
+function setLeft(){$("hw-left").textContent=G.deck.length;$("hw-deck").classList.toggle("empty",!G.deck.length);$("hw-pairs").textContent=G.pairs}
+async function removePair(i,drawEl){var slot=G.board[i];
+  slot.el.classList.add("match");if(drawEl)drawEl.classList.add("match");await wait(450);
+  slot.el.classList.add("gone");if(drawEl)drawEl.classList.add("gone");await wait(300);
+  slot.el.remove();if(drawEl)drawEl.remove();G.board[i]={c:null,el:null,cell:slot.cell};G.pairs++;setLeft()}
+function findMatch(m,except){for(var i=0;i<G.board.length;i++){if(i!==except&&G.board[i].c&&G.board[i].c.m===m)return i}return -1}
+async function refill(i){
+  if(!G.deck.length)return;var c=G.deck.pop();setLeft();var el=mkCard(c,false);el.classList.add("deal");
+  G.board[i].cell.appendChild(el);G.board[i].c=c;G.board[i].el=el;await wait(180);await flip(el);
+  var j=findMatch(c.m,i);
+  if(j>=0){say(c.m+"월 "+HM[c.m].n+"끼리 또 짝이 맞았구먼!");G.board[j].el.classList.add("match");await removePair(i,null);
+    var sj=G.board[j];sj.el.classList.add("gone");await wait(250);sj.el.remove();G.board[j]={c:null,el:null,cell:sj.cell};
+    await refill(i);await refill(j)}
+}
+async function play(){
+  if(G.running)return;G.running=true;G.skip=false;G.speed=1;G.pairs=0;G.discard=0;
+  G.topic=(document.querySelector('input[name=hwt]:checked')||{}).value||"today";
+  $("hw-res").hidden=true;$("hw-play").hidden=false;$("hw-fast").textContent="빠르게";$("hw-fast").disabled=false;$("hw-skip").disabled=false;
+  var deck=shuffle(DECK_DEF.map(function(d){return {m:d[0],k:d[1],s:d[2]||"",r:d[3]||"",d:d[4]||0}}));
+  var board=$("hw-board");board.innerHTML="";$("hw-draw").innerHTML="";G.board=[];
+  for(var i=0;i<16;i++){var cell=document.createElement("div");cell.className="hw-cell";board.appendChild(cell);G.board.push({c:null,el:null,cell:cell})}
+  G.deck=deck;setLeft();$("hw-play").scrollIntoView({behavior:"smooth",block:"start"});
+  say("패를 섞어서 16장을 엎어 놓겠네…");
+  for(i=0;i<16;i++){var c=G.deck.pop(),el=mkCard(c,false);el.classList.add("deal");G.board[i].cell.appendChild(el);G.board[i].c=c;G.board[i].el=el;setLeft();await wait(70)}
+  await wait(400);say("자, 펼친 패를 하나씩 뒤집어 보세.");
+  for(i=0;i<16;i++){await flip(G.board[i].el);await wait(40)}
+  await wait(300);
+  while(G.deck.length){
+    var d=G.deck.pop();setLeft();var de=mkCard(d,false);var slot=$("hw-draw");slot.innerHTML="";slot.appendChild(de);
+    await wait(120);await flip(de);var j=findMatch(d.m,-1);
+    if(j>=0){say(d.m+"월 "+HM[d.m].n+"! 짝이 맞았구먼.");await removePair(j,de);
+      if(G.deck.length){say("빈자리에 새 패를 놓고 뒤집어 보세.");await refill(j)}}
+    else{say(d.m+"월 "+HM[d.m].n+"은 짝이 없구먼. 옆으로 치워 두세.");de.classList.add("toss");G.discard++;await wait(380)}
+  }
+  $("hw-draw").innerHTML="";say("패를 다 뗐네. 남은 패로 풀어 보겠네.");await wait(600);
+  G.running=false;$("hw-fast").disabled=true;$("hw-skip").disabled=true;showResult();
+}
+function showResult(){
+  var rem=G.board.filter(function(b){return b.c}).map(function(b){return b.c}),k=rem.length,t=G.topic,tn=TOPIC[t];
+  var score=Math.max(35,Math.min(98,97-k*6+(rem.some(function(c){return c.k==="K"})?2:0)));
+  var head=k===0?"패가 하나도 안 남았네! 막힌 데 없이 술술 풀리는 대길(大吉)일세.":k<=2?"남은 패가 "+k+"장뿐이니 막힌 것이 거의 없구먼. 아주 좋은 운일세.":k<=4?"남은 패가 "+k+"장, 대체로 순탄한 운일세. 남은 패가 일러주는 것만 챙기면 되겠네.":k<=6?"남은 패가 "+k+"장이라 이것저것 걸리는 게 있구먼. 서두르지 말고 하나씩 풀어 가게.":"남은 패가 "+k+"장이나 되니 아직 때가 덜 왔네. 급히 움직이기보다 기다리며 준비하게.";
+  var by={};rem.forEach(function(c){(by[c.m]=by[c.m]||[]).push(c)});
+  var ms=Object.keys(by).map(Number).sort(function(a,b){var w=function(m){return by[m].length*10+by[m].filter(function(c){return c.k==="K"||c.k==="Y"}).length};return w(b)-w(a)}).slice(0,5);
+  var lines=ms.map(function(m){var cs=by[m],tags=cs.map(function(c){return c.d?"쌍피":c.k==="T"?c.r:KN[c.k]}).join("·");
+    return '<li><span class="hr-p" style="--mc:'+HM[m].col+'">'+HM[m].p+'</span><div><b>'+m+'월 '+HM[m].n+'</b> <small>'+tags+'</small><p>'+MEAN[t][m]+(cs.length>=2?" 같은 달이 "+cs.length+"장이나 남았으니 이 기운이 특히 세다네.":"")+'</p></div></li>'}).join("");
+  var cnt={K:0,Y:0,T:0,P:0};rem.forEach(function(c){cnt[c.k]+=c.d?2:1});
+  var kind=[];
+  if(cnt.K)kind.push("<b>광이 "+cnt.K+"장</b> 남아 큰 힘이 곁에 머무네. 윗사람이나 귀인의 덕을 보겠구먼.");
+  if(cnt.Y)kind.push("<b>열끗이 "+cnt.Y+"장</b>이니 사람을 만나거나 움직일 일이 생기겠네.");
+  if(cnt.T){var r=rem.filter(function(c){return c.k==="T"}).map(function(c){return c.r});
+    kind.push("<b>띠가 "+cnt.T+"장</b>"+(r.indexOf("홍단")>=0?", 그중 홍단이 있어 마음을 주고받을 약속이 생기고":"")+(r.indexOf("청단")>=0?", 청단이 있어 공부·명예에 좋은 매듭이 지어지고":"")+(r.indexOf("초단")>=0?", 초단이 있어 묵은 걱정이 풀리고":"")+" 약속·문서 일이 이어지겠네.")}
+  if(cnt.P)kind.push("<b>피가 "+cnt.P+"장</b>이니 자잘한 일이 많겠지만, 작은 것이 모여 살림이 되는 법일세.");
+  var mine=rem.length?'<div class="hr-cards">'+rem.map(function(c){return mkCard(c,true).outerHTML}).join("")+'</div>':"";
+  $("hw-res").innerHTML='<p class="eyebrow">청학동 삼신할배의 '+tn+' 풀이</p><h3 class="h2" style="font-size:19px">'+tn+' <span class="hr-sc">'+score+'</span><small class="hr-of"> / 100점</small></h3>'+
+    '<p class="rm-lead">"'+head+'"</p>'+mine+(lines?'<ul class="hr-list">'+lines+'</ul>':'')+(kind.length?'<div class="rm-box"><h4>남은 패의 종류로 보면</h4><p>'+kind.join("</p><p>")+'</p></div>':'')+
+    '<p class="note">짝 맞춘 패 '+G.pairs+'쌍'+(G.discard?' · 짝 없이 치운 패 '+G.discard+'장':'')+' · 남은 패 '+k+'장</p>'+
+    '<button class="btn gray" type="button" id="hw-share">카톡으로 화투점 결과 보내기</button><p class="note" id="hw-share-msg" hidden></p>'+
+    '<button class="btn" type="button" id="hw-again">다른 운도 떼어 보기</button>';
+  $("hw-res").hidden=false;$("hw-res").scrollIntoView({behavior:"smooth",block:"start"});
+  G.last={tn:tn,score:score,head:head,ms:ms.map(function(m){return m+"월 "+HM[m].n+": "+MEAN[t][m]})};
+}
+function hwText(){var L=G.last,U="https://www.3sin.co.kr/";
+  return "[삼신 화투점] 청학동 삼신할배의 "+L.tn+" 풀이\n\n"+L.tn+" "+L.score+"점\n\""+L.head+"\"\n\n"+L.ms.map(function(x){return "· "+x}).join("\n")+
+   "\n\n━━━━━━━━━━━━━━━\n👵 청담동 삼신할매한테 나도 봐달라고 하기\n→ "+U+"\n\n👴 청학동 삼신할배한테 나도 봐달라고 하기\n→ "+U+"\n\n👶 이태원 삼신동자한테 나도 봐달라고 하기\n→ "+U+"\n━━━━━━━━━━━━━━━"}
+$("hw-start").addEventListener("click",function(){play()});
+$("hw-fast").addEventListener("click",function(){G.speed=G.speed===1?.3:1;this.textContent=G.speed===1?"빠르게":"천천히"});
+$("hw-skip").addEventListener("click",function(){G.skip=true;G.speed=0});
+$("hw-res").addEventListener("click",function(e){
+  if(e.target.id==="hw-again"){$("hw-res").hidden=true;$("hw-play").hidden=true;document.querySelector(".hw-pick").scrollIntoView({behavior:"smooth",block:"center"});return}
+  if(e.target.id==="hw-share"){var txt=hwText(),msg=$("hw-share-msg");
+    if(navigator.share&&isMobileDevice()){navigator.share({title:"삼신 화투점 결과",text:txt}).then(function(){msg.hidden=false;msg.textContent="카톡으로 결과를 보냈어요."}).catch(function(){});return}
+    var done=function(){msg.hidden=false;msg.textContent="결과를 복사했어요. 카카오톡 대화창에 붙여넣기 하면 보내져요.";copyToast(function(){})};
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(done,function(){copyFallback(txt);done()});else{copyFallback(txt);done()}}
+});
+})();
 /* 내 연결함 */
 function renderInbox(){
   var body=document.getElementById("ib-body"),out=document.getElementById("ib-out");
@@ -2330,9 +2522,9 @@ function jobItems(cat){
   scene.addEventListener("pointercancel",function(){sx=null});
   document.querySelector(".god-btns").addEventListener("click",function(e){
     var b=e.target.closest(".gbtn");if(!b)return;var g=+b.dataset.god;
-    if(g===0)return;
+    if(g!==2)return;
     var d=show(g);clearTimeout(timer);
-    toast.textContent=g===1?"할배 화투점은 곧 문을 연다네. 조금만 기다리거라.":"동자 타로점은 곧 열려요! 조금만 기다려요.";toast.hidden=false;
+    toast.textContent="동자 타로점은 곧 열려요! 조금만 기다려요.";toast.hidden=false;
     clearTimeout(tt);tt=setTimeout(function(){toast.hidden=true},2600);
     loop(d+4000);
   });
