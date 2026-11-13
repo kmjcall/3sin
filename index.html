@@ -202,6 +202,9 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 .hw-draw .hcard{position:absolute;inset:0;width:auto}
 .hw-done{border:1px solid var(--line);background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
 .hw-done b{font-size:24px;color:#F2CE78}.hw-done small{color:var(--muted);font-size:12px;margin-top:2px}
+.hw-say.pop{animation:hwsaypop .42s cubic-bezier(.2,.9,.3,1.3)}
+@keyframes hwsaypop{0%{transform:translateY(10px) scale(.96);opacity:0}60%{transform:translateY(-4px) scale(1.04);opacity:1}100%{transform:none}}
+@media (prefers-reduced-motion:reduce){.hw-say.pop{animation:none}}
 .hw-say{margin:0;text-align:center;min-height:1.6em;color:#F2CE78;font-weight:600;word-break:keep-all}
 .hw-board{display:grid;grid-template-columns:repeat(4,1fr);row-gap:clamp(10px,3vw,16px);column-gap:clamp(22px,7vw,40px);max-width:396px;width:92%;margin:0 auto}
 .hw-cell{aspect-ratio:2/3;border-radius:8px;background:rgba(0,0,0,.18);position:relative}
@@ -961,7 +964,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-0032</p>
+<p class="ver" id="app-ver">버전 2026.11.14-0033</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -1879,7 +1882,7 @@ function cardFace(c){return '<div class="hc-img" style="background-position:'+(c
 function mkCard(c,up){var el=document.createElement("div");el.className="hcard"+(up?" up":"");
   el.innerHTML='<div class="hc-flip"><div class="hc-back"></div><div class="hc-front">'+cardFace(c)+'</div></div>';
   el.setAttribute("aria-label",c.m+"월 "+HM[c.m].n+" "+(c.d?"쌍피":KN[c.k]));return el}
-function say(t){$("hw-say").textContent=t}
+function say(t){var e=$("hw-say");if(e.textContent===t)return;e.textContent=t;e.classList.remove("pop");void e.offsetWidth;if(t)e.classList.add("pop")}
 function flip(el,slow){if(G.quick&&!slow){el.classList.add("quick","up");return wait(60)}el.classList.add("flipping","up");return wait(560).then(function(){el.classList.remove("flipping")})}
 function T(n,q){return G.quick?q:n}
 function setLeft(){$("hw-left").textContent=G.deck.length;$("hw-deck").classList.toggle("empty",!G.deck.length);$("hw-pairs").textContent=G.pairs}
