@@ -175,6 +175,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 .upl{position:relative;display:inline-block}
 .upl-row{display:flex;flex-wrap:wrap;gap:8px}
 .upl input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.btn{word-break:keep-all}
 .wc{display:flex;flex-direction:column;gap:10px;margin-top:4px}
 .wc[hidden]{display:none}
 .wc-view{position:relative;width:100%;max-width:420px;aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:#000;border:1px solid var(--line)}
@@ -641,7 +642,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
     <div class="panel"><h3 class="h2" style="font-size:16px">관상 총평</h3><p class="callout" id="fc-sum"></p><div class="fc-age" id="fc-age" hidden></div></div>
     <div class="fparts" id="fc-parts"></div>
     <div class="fc-next">
-      <button class="btn gray" type="button" id="fc-share">카톡으로 사주·관상 결과 보내기</button>
+      <button class="btn gray" type="button" id="fc-share">카톡으로 사주·관상 결과 보내고 액받이 아이템 받기</button>
       <button class="btn" type="button" data-go="match">궁합매칭 바로 보기</button>
       <p class="note" id="fc-share-msg" aria-live="polite" hidden></p>
     </div>
@@ -1316,9 +1317,8 @@ function doShare(msgId){
   tryCopy();
   function tryCopy(){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(copied,function(){copyFallback(txt);copied()})}else{copyFallback(txt);copied()}}
 }
-document.getElementById("fc-share").addEventListener("click",function(){doShare("fc-share-msg")});
-document.getElementById("r-share").addEventListener("click",function(){
-  var btn=this,msg=document.getElementById("r-share-msg"),txt=shareText();
+function shareShop(btnId,msgId){document.getElementById(btnId).addEventListener("click",function(){
+  var btn=this,msg=document.getElementById(msgId),txt=shareText();
   if(btn.disabled)return;btn.disabled=true;
   function go(){
     msg.hidden=false;msg.textContent="결과를 복사했어요. 카카오톡 대화창에 붙여넣기 하면 보내져요.";
@@ -1331,7 +1331,8 @@ document.getElementById("r-share").addEventListener("click",function(){
         else msg.textContent="결과를 복사했어요. 카카오톡 대화창에 붙여넣기 하면 보내져요. 액받이 아이템은 할매가 곧 골라 놓을 테니 조금만 기다리거라.";
       },2000)},2000)}
   if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(go,function(){copyFallback(txt);go()});else{copyFallback(txt);go()}
-});
+});}
+shareShop("r-share","r-share-msg");shareShop("fc-share","fc-share-msg");
 
 function pyrHTML(r,title){
   var h='<div><h3>'+title+'</h3><div class="pyr-wrap"><div class="pyr"><div class="r syl">'+r.syl.map(function(s){return '<span class="c '+s[1]+'">'+esc(s[0])+"</span>"}).join("")+"</div>";
