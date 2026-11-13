@@ -802,7 +802,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.13-1820</p>
+<p class="ver" id="app-ver">버전 2026.11.13-1822</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -1096,7 +1096,7 @@ function renderMatches(){
   if(!list.length){document.getElementById("r-matches").innerHTML='<div class="panel"><p>아직 맞는 분이 없어요. 새 회원이 들어오면 다시 찾아보세요.</p></div>';return}
   document.getElementById("r-matches").innerHTML=list.map(function(m,i){
     var p=m.p,ds=p.s.P[1];
-    return '<article class="mcard'+(tierOf(m.total).i===0?" heaven":"")+'"><div class="mhead">'+ava(p)+'<div style="min-width:0"><div class="mname">'+esc(p.n)+(p.real?'':'<span class="tag-ex">예시</span>')+'</div><div class="mmeta">'+(p.g==="M"?"남성":"여성")+' · 만 '+p.s.age+"세 · "+esc(p.reg)+" · "+esc(p.job)+'</div></div><div class="score"><b>'+m.total+'</b><span>궁합 점수</span><em class="tier t'+tierOf(m.total).i+'">'+tierOf(m.total).n+'</em></div></div>'+
+    return '<article class="mcard'+(tierOf(m.total).i===0?" heaven":"")+'"><div class="mhead">'+ava(p)+'<div style="min-width:0"><div class="mname">'+esc(p.n)+'</div><div class="mmeta">'+(p.g==="M"?"남성":"여성")+' · 만 '+p.s.age+"세 · "+esc(p.reg)+" · "+esc(p.job)+'</div></div><div class="score"><b>'+m.total+'</b><span>궁합 점수</span><em class="tier t'+tierOf(m.total).i+'">'+tierOf(m.total).n+'</em></div></div>'+
       '<div class="mscore"><span>사주 궁합 <b>'+m.c.score+'</b></span><span>관상 궁합 <b>'+m.f.score+'</b></span><span>'+"첫인상 "+p.imp+" · 나이 차 "+m.f.gap+"살 · "+m.d+(m.pen?" <b class=\"pen\">거리 −"+m.pen+"</b>":"")+"</span></div>"+
       '<p class="mintro">'+esc(p.intro)+' <span class="mpillar">'+STEMS[ds.s]+BR[ds.b]+"일주</span></p>"+
       '<ul class="reasons">'+m.c.reasons.slice(0,3).map(function(r){return '<li class="'+r[0]+'">'+(r[0]==="plus"?"+ ":"– ")+r[1]+"</li>"}).join("")+'<li class="'+(m.f.score>=80?"plus":"minus")+'">'+(m.f.score>=80?"+ ":"– ")+m.f.text+"</li></ul>"+
