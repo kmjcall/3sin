@@ -176,6 +176,26 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 .upl-row{display:flex;flex-wrap:wrap;gap:8px}
 .upl input{position:absolute;inset:0;opacity:0;cursor:pointer}
 .btn{word-break:keep-all}
+.btn.copied{background:#3E9E5C!important;border-color:#3E9E5C!important;color:#fff!important}
+.ct-back{position:fixed;inset:0;z-index:60;background:rgba(10,7,4,.7);display:flex;align-items:center;justify-content:center;padding:16px}
+.ct-back[hidden]{display:none}
+.ct-panel{width:100%;max-width:380px;background:var(--paper) var(--grain);border:1px solid rgba(242,206,120,.5);border-radius:20px;padding:26px 20px 18px;text-align:center;word-break:keep-all;box-shadow:0 24px 60px -18px rgba(0,0,0,.9);animation:ctin .25s ease-out}
+@keyframes ctin{from{transform:translateY(12px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+.ct-check{width:72px;height:72px;margin:0 auto 10px}
+.ct-check svg{width:100%;height:100%;fill:none;stroke:#5CC27C;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+.ct-check circle{stroke-dasharray:151;stroke-dashoffset:151}
+.ct-check path{stroke-dasharray:40;stroke-dashoffset:40}
+.ct-check.go circle{animation:ctdraw .45s ease-out forwards}
+.ct-check.go path{animation:ctdraw .3s .4s ease-out forwards}
+@keyframes ctdraw{to{stroke-dashoffset:0}}
+.ct-panel h3{margin:0 0 4px;font-size:22px}
+.ct-sub{margin:0 0 14px;color:var(--muted)}
+.ct-steps{text-align:left;margin:0 0 16px;padding:12px 14px 12px 34px;border-radius:12px;background:var(--surface);border:1px solid var(--line);line-height:1.9}
+.ct-steps kbd{display:inline-block;padding:0 7px;border-radius:6px;border:1px solid var(--line);background:rgba(255,255,255,.08);font:inherit;font-weight:700;line-height:1.5}
+.ct-back .ct-mo{display:none}.ct-back.mobile .ct-mo{display:list-item}.ct-back.mobile .ct-pc{display:none}
+.ct-panel .btn{width:100%}
+@media (prefers-reduced-motion:reduce){.ct-panel{animation:none}.ct-check circle,.ct-check path{stroke-dashoffset:0}.ct-check.go circle,.ct-check.go path{animation:none}}
+
 .ver{margin:4px 0 0;font-size:11px;color:var(--muted);opacity:.6;text-align:center}
 .btn{transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease,border-color .18s ease,color .18s ease}
 @media (hover:hover) and (pointer:fine){
@@ -802,7 +822,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.13-1826</p>
+<p class="ver" id="app-ver">버전 2026.11.13-2245</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -1467,14 +1487,30 @@ function openShop(w0){
   if(!card)return;card.scrollIntoView({behavior:"smooth",block:"center"});
   card.classList.remove("pulse");void card.offsetWidth;card.classList.add("pulse");
 }
+function copyToast(onClose){
+  var m=document.getElementById("copy-toast");
+  if(!m){m=document.createElement("div");m.id="copy-toast";m.className="ct-back";
+    m.innerHTML='<div class="ct-panel" role="alertdialog" aria-modal="true" aria-labelledby="ct-t"><div class="ct-check" aria-hidden="true"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M15 27l7 7 15-16"/></svg></div><h3 id="ct-t">결과를 복사했어요!</h3><p class="ct-sub">이제 카카오톡에 붙여넣기만 하면 돼요</p><ol class="ct-steps"><li>보낼 사람의 <b>카카오톡 대화창</b>을 열어요</li><li class="ct-pc">입력칸을 누르고 <kbd>Ctrl</kbd> + <kbd>V</kbd></li><li class="ct-mo">입력칸을 <b>길게 눌러 붙여넣기</b></li><li><b>전송</b>을 누르면 끝!</li></ol><button class="btn" type="button" data-ct-ok>알겠어요</button></div>';
+    document.body.appendChild(m);
+    var close=function(){if(m.hidden)return;m.hidden=true;var f=m._cb;m._cb=null;f&&f()};
+    m.addEventListener("click",function(e){if(e.target===m||e.target.closest("[data-ct-ok]"))close()});
+    document.addEventListener("keydown",function(e){if(!m.hidden&&(e.key==="Escape"||e.key==="Enter"))close()})}
+  m.classList.toggle("mobile",isMobileDevice());m._cb=onClose;m.hidden=false;
+  var c=m.querySelector(".ct-check");c.classList.remove("go");void c.offsetWidth;c.classList.add("go");
+  setTimeout(function(){m.querySelector("[data-ct-ok]").focus({preventScroll:true})},50);
+}
 function isMobileDevice(){var ua=navigator.userAgent||"";return !!((navigator.userAgentData&&navigator.userAgentData.mobile)||/Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1))}
 function shareShop(btnId,msgId){document.getElementById(btnId).addEventListener("click",function(){
   var btn=this,msg=document.getElementById(msgId),txt=shareText();
   if(btn.disabled)return;btn.disabled=true;
   function say(t){msg.hidden=false;msg.textContent=t}
   function toShop(t){say(t);setTimeout(function(){btn.disabled=false;openShop(btn.id==="fc-share"&&S.face&&S.face.parts?FACE_EL[S.face.parts.slice().sort(function(a,b){return a.score-b.score})[0].n]:null)},1000)}
-  function copyThen(){var t="결과를 복사했어요. 카카오톡 대화창에 붙여넣기 하면 보내져요.";
-    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(function(){toShop(t)},function(){copyFallback(txt);toShop(t)});else{copyFallback(txt);toShop(t)}}
+  function copied(){var t="결과를 복사했어요. 카카오톡 대화창에 붙여넣기 하면 보내져요.";say(t);
+    var label=btn.textContent;btn.classList.add("copied");btn.textContent="✓ 복사 완료!";
+    setTimeout(function(){btn.classList.remove("copied");btn.textContent=label},3000);
+    copyToast(function(){btn.disabled=false;openShop(btn.id==="fc-share"&&S.face&&S.face.parts?FACE_EL[S.face.parts.slice().sort(function(a,b){return a.score-b.score})[0].n]:null)})}
+  function copyThen(){
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(copied,function(){copyFallback(txt);copied()});else{copyFallback(txt);copied()}}
   /* 휴대폰: 공유창으로 카카오톡에 바로 보냄 → 1초 뒤 액받이 아이템. PC는 윈도우 공유창이 카톡을 못 찾는 경우가 많아 항상 복사 */
   if(navigator.share&&isMobileDevice()){
     navigator.share({title:"삼신 사주·관상 결과",text:txt}).then(function(){toShop("카톡으로 결과를 보냈어요.")}).catch(function(err){
