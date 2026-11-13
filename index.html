@@ -1417,7 +1417,7 @@ function showAuth(boxId,lead,onOk,onCancel){
   box.innerHTML='<h3 class="h2" style="font-size:16px">이메일로 본인 확인</h3><p class="note">'+esc(lead)+'</p>'+
     '<div class="field"><label for="'+boxId+'-em">이메일</label><input class="input" type="email" id="'+boxId+'-em" autocomplete="email" placeholder="you@example.com"></div>'+
     '<button class="btn" type="button" data-a="send">인증번호 받기</button>'+
-    '<div class="field" data-a="codewrap" hidden><label for="'+boxId+'-cd">메일로 받은 6자리 인증번호</label><input class="input" id="'+boxId+'-cd" inputmode="numeric" maxlength="6" autocomplete="one-time-code"></div>'+
+    '<div class="field" data-a="codewrap" hidden><label for="'+boxId+'-cd">메일로 받은 인증번호</label><input class="input" id="'+boxId+'-cd" inputmode="numeric" maxlength="10" autocomplete="one-time-code"></div>'+
     '<button class="btn" type="button" data-a="verify" hidden>확인</button>'+
     '<p class="err" data-a="err" hidden></p>'+(onCancel?'<button class="btn ghost sm" type="button" data-a="cancel">돌아가기</button>':'');
   var q=function(a){return box.querySelector('[data-a="'+a+'"]')},em=document.getElementById(boxId+"-em"),cd=document.getElementById(boxId+"-cd");
@@ -1427,7 +1427,7 @@ function showAuth(boxId,lead,onOk,onCancel){
     q("send").disabled=true;sb.auth.signInWithOtp({email:v,options:{shouldCreateUser:true}}).then(function(r){q("send").disabled=false;
       if(r.error){fail("인증번호를 보내지 못했어요. ("+r.error.message+")");return}
       q("err").hidden=true;q("codewrap").hidden=false;q("verify").hidden=false;q("send").textContent="인증번호 다시 받기";cd.focus()})});
-  q("verify").addEventListener("click",function(){var v=cd.value.trim();if(!/^\d{6}$/.test(v)){fail("6자리 숫자를 입력해주세요.");return}
+  q("verify").addEventListener("click",function(){var v=cd.value.trim();v=v.replace(/\D/g,"");if(!/^\d{6,10}$/.test(v)){fail("메일에 있는 숫자를 그대로 입력해주세요.");return}
     q("verify").disabled=true;sb.auth.verifyOtp({email:em.value.trim(),token:v,type:"email"}).then(function(r){q("verify").disabled=false;
       if(r.error){fail("인증번호가 맞지 않아요. 메일을 다시 확인해주세요.");return}
       box.hidden=true;box.innerHTML="";onOk&&onOk()})});
