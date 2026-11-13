@@ -182,7 +182,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
   .btn.ghost:not(:disabled):hover{background:rgba(217,174,82,.12);color:#F7DE8E}
 }
 .btn:not(:disabled):active{transform:translateY(0) scale(.98);box-shadow:0 0 0 2px #F2CE78}
-.btn:focus-visible,.upl.btn:focus-within{outline:none;box-shadow:0 0 0 2px var(--paper,#1b1612),0 0 0 4px #F2CE78}
+.btn:focus-visible,.upl.btn:has(input:focus-visible){outline:none;box-shadow:0 0 0 2px var(--paper,#1b1612),0 0 0 4px #F2CE78}
 @media (prefers-reduced-motion:reduce){.btn:not(:disabled):hover,.btn:not(:disabled):active{transform:none}}
 
 .charm{display:flex;flex-direction:column;gap:10px;word-break:keep-all;border-color:rgba(242,206,120,.45)}
