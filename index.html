@@ -244,7 +244,8 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 
 .hr-p{flex:none;width:34px;height:51px;border-radius:5px;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.5)}
 .hcard.quick .hc-flip{transition:transform .14s linear}
-.hw-choose{display:flex;flex-direction:column;align-items:center;gap:10px;padding:14px 10px;border:1px solid rgba(242,206,120,.5);border-radius:14px;background:rgba(0,0,0,.2)}
+.hw-choose{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:55;width:min(calc(100vw - 32px),460px);display:flex;flex-direction:column;align-items:center;gap:12px;padding:20px 14px;border:1px solid rgba(242,206,120,.6);border-radius:18px;background:var(--paper) var(--grain);box-shadow:0 0 0 100vmax rgba(10,7,4,.62),0 24px 60px -16px rgba(0,0,0,.9);animation:ctin .25s ease-out}
+.hw-choose[hidden]{display:none}
 .hw-ch-t{margin:0;font-weight:800;color:#F7DE8E;font-size:16px;text-align:center;word-break:keep-all}
 .hw-ch-row{display:flex;justify-content:center;gap:clamp(8px,3vw,24px);max-width:100%}
 .hw-ch-row .hcard.pick{position:relative;inset:auto;flex:none;width:clamp(52px,15vw,82px);aspect-ratio:2/3;cursor:pointer;transition:transform .2s,opacity .35s}
@@ -960,7 +961,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-0022</p>
+<p class="ver" id="app-ver">버전 2026.11.14-0024</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -1902,14 +1903,14 @@ function choosePick(no){return new Promise(function(res){
   var opts=[G.deck.pop(),G.deck.pop(),G.deck.pop(),G.deck.pop()],box=$("hw-choose");setLeft();
   box.innerHTML='<p class="hw-ch-t">'+(no===1?"자, 여기서 네 손으로 한 장 골라 보게나!":"마지막으로 한 장 더 골라 보게나!")+'</p><div class="hw-ch-row"></div>';
   var row=box.querySelector(".hw-ch-row"),els=opts.map(function(c,k){var el=mkCard(c,false);el.classList.add("pick","deal");el.tabIndex=0;el.setAttribute("role","button");el.setAttribute("aria-label",(k+1)+"번째 패 고르기");row.appendChild(el);return el});
-  box.hidden=false;box.scrollIntoView({behavior:"smooth",block:"center"});say(no===1?"패 4장 중 하나를 고르게나.":"한 장 더 고르게나.");
+  box.hidden=false;say(no===1?"패 4장 중 하나를 고르게나.":"한 장 더 고르게나.");
   var done=false;
   function choose(k){if(done)return;done=true;var el=els[k];el.classList.add("chosen","flipping","up");
     els.forEach(function(e,x){if(x!==k)e.classList.add("unpicked")});
     say(opts[k].m+"월 "+HM[opts[k].m].n+"을 골랐구먼!");
     setTimeout(function(){els.forEach(function(e,x){if(x!==k)e.classList.add("up")})},450);
     setTimeout(function(){opts.forEach(function(c,x){if(x!==k)G.deck.splice(Math.floor(Math.random()*(G.deck.length+1)),0,c)});setLeft();
-      box.hidden=true;box.innerHTML="";$("hw-play").scrollIntoView({behavior:"smooth",block:"start"});res(opts[k])},G.skip?0:1000)}
+      box.hidden=true;box.innerHTML="";res(opts[k])},G.skip?0:1000)}
   els.forEach(function(el,k){el.addEventListener("click",function(){choose(k)});el.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();choose(k)}})});
   if(G.skip)choose(Math.floor(Math.random()*4));else G.autoPick=function(){choose(Math.floor(Math.random()*4))};
 })}
