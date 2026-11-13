@@ -415,6 +415,13 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 .auth{gap:10px}
 .inbox{display:flex;flex-direction:column;gap:10px}
 .inbox .h2 .cnt{font-family:var(--f-num);font-size:13px;color:var(--cobalt);margin-left:4px}
+.au-tabs{margin-bottom:4px}
+.note.ok{color:var(--gold,#E2B24C)}
+.ib-card.hist{appearance:none;text-align:left;cursor:pointer;color:inherit;font:inherit;width:100%;gap:4px}
+.ib-card.hist:hover{border-color:var(--cobalt)}
+.hist-d{font-size:13px;color:var(--muted)}
+.hist-go{font-size:13px;color:var(--cobalt);font-weight:600}
+.hist-banner{margin:6px 0 0;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-size:14px;color:var(--muted)}
 .ib-card{background:var(--surface) var(--grain);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
 .ib-card.st-accepted{border-color:#E2B24C;box-shadow:0 0 0 1px rgba(226,178,76,.4)}
 .ib-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
@@ -572,6 +579,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
   <div>
     <p class="eyebrow">STEP 1 · 사주풀이 결과</p>
     <h2 class="h2" id="r-title"></h2>
+    <p class="hist-banner" id="r-asof" hidden></p>
   </div>
   <div class="panel">
     <div class="pillars" id="r-pillars"></div>
@@ -733,10 +741,10 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 <!-- 내 연결함 -->
 <section id="s-inbox" hidden>
   <div class="sec-head">
-    <div><p class="eyebrow">내 연결함</p><h2 class="h2">나에게 온 인연, 내가 보낸 인연</h2></div>
+    <div><p class="eyebrow">내 연결함</p><h2 class="h2">내가 본 사주, 나에게 온 인연</h2></div>
     <button class="backbtn" type="button" id="ib-out" hidden>로그아웃</button>
   </div>
-  <p class="lead">상대가 수락했는지, 누가 나에게 연결을 신청했는지 여기서 확인해요. 두 사람이 모두 수락하면 서로의 연락처가 열려요.</p>
+  <p class="lead">예전에 본 사주를 날짜별로 다시 보고, 누가 나에게 연결을 신청했는지·상대가 수락했는지도 여기서 확인해요. 두 사람이 모두 수락하면 서로의 연락처가 열려요.</p>
   <div class="panel auth" id="ib-auth" hidden></div>
   <div id="ib-body" class="inbox"></div>
 </section>
@@ -835,6 +843,8 @@ var JEOL=[6,4,6,5,6,6,7,8,8,8,7,7];
 function mod(a,n){return ((a%n)+n)%n}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 
+var AS_OF=null; /* 사주 기록 다시 보기: 그때 날짜 기준으로 운세 계산 */
+function NOW(){return AS_OF?new Date(AS_OF):new Date()}
 function saju(y,m,d,hour){
   var sy=(m<2||(m===2&&d<4))?y-1:y;
   var yi=mod(sy-4,60), yS=yi%10, yB=yi%12;
@@ -847,7 +857,7 @@ function saju(y,m,d,hour){
   var P=[hp,{s:dS,b:dB},{s:mS,b:mB},{s:yS,b:yB}];
   var c=[0,0,0,0,0];
   P.forEach(function(p){if(p){c[Math.floor(p.s/2)]++;c[BR_EL[p.b]]++}});
-  var now=new Date(), age=now.getFullYear()-y-((now.getMonth()+1<m||(now.getMonth()+1===m&&now.getDate()<d))?1:0);
+  var now=NOW(), age=now.getFullYear()-y-((now.getMonth()+1<m||(now.getMonth()+1===m&&now.getDate()<d))?1:0);
   return {P:P,dS:dS,dB:dB,yB:yB,c:c,total:hp?8:6,age:age,hour:hour};
 }
 function stemEl(s){return Math.floor(s/2)}
@@ -937,7 +947,7 @@ function go(id,isBack){if(window.__wcStop)window.__wcStop();
   window.scrollTo(0,0);
 }
 document.addEventListener("click",function(e){var t=e.target.closest("[data-go]");if(t){go(t.dataset.go)}});
-document.getElementById("go-home").addEventListener("click",function(){go("home")});
+document.getElementById("go-home").addEventListener("click",function(){AS_OF=null;go("home")});
 document.getElementById("go-back").addEventListener("click",function(){var p=NAV.stack.pop();go(p||"home",true)});
 
 function pillarHTML(p,label,me){
@@ -958,16 +968,18 @@ document.getElementById("f-saju").addEventListener("submit",function(e){
   else if(!/^[가-힣]{2,5}$/.test(name))msg="이름은 한글 2–5자로 입력하세요.";
   else if(!/^\d{4}-\d{2}-\d{2}$/.test(birth))msg="생년월일을 선택하세요.";
   var t=birth.split("-").map(Number);
+  AS_OF=null;
   if(!msg){var sj=saju(t[0],t[1],t[2],hour);if(sj.age<19)msg="만 19세 이상만 이용할 수 있어요.";if(t[0]<1950)msg="1950년 이후 출생만 계산할 수 있어요."}
   err.hidden=!msg;err.textContent=msg;if(msg)return;
   S.me={n:name,g:f.gender.value,target:f.gender.value==="M"?"F":"M",d:birth,s:sj};
   S.match=null;S.face=null;
-  renderResult();go("result");
+  renderResult();go("result");saveHistory();
 });
 
 function renderResult(){
   var me=S.me,s=me.s;
   document.getElementById("r-title").textContent=me.n+"님의 사주팔자";
+  var ab=document.getElementById("r-asof");if(AS_OF){var v=new Date(AS_OF);ab.hidden=false;ab.textContent=v.getFullYear()+"년 "+(v.getMonth()+1)+"월 "+v.getDate()+"일에 본 사주예요. 올해·이번 달 운세도 그날 기준으로 보여드려요.";}else ab.hidden=true;
   document.getElementById("r-pillars").innerHTML=pillarHTML(s.P[0],"시주")+pillarHTML(s.P[1],"일주 · 나",true)+pillarHTML(s.P[2],"월주")+pillarHTML(s.P[3],"년주");
   var d=me.d.split("-");
   document.getElementById("r-pillar-note").textContent="양력 "+d[0]+"년 "+(+d[1])+"월 "+(+d[2])+"일 "+(s.hour>=0?HOUR_KO[s.hour]:"시간 모름")+" · "+ANIMAL[s.yB]+"띠 · 만 "+s.age+"세";
@@ -1380,7 +1392,7 @@ document.getElementById("f-connect").addEventListener("submit",function(e){
   if(!sb){finishConnect(pend,"demo");return}
   sb.auth.getSession().then(function(r){
     if(r.data&&r.data.session){saveAll(pend)}
-    else{e.target.hidden=true;showAuth("cn-auth","연결 신청을 저장하려면 이메일로 본인 확인을 해주세요. 같은 이메일로 다시 들어오면 내 연결함에서 수락 여부를 볼 수 있어요.",function(){saveAll(pend)},function(){e.target.hidden=false})}
+    else{e.target.hidden=true;showAuth("cn-auth","연결 신청을 저장하려면 로그인해 주세요. 처음이면 회원가입을 눌러주세요. 다음부터는 같은 아이디로 내 연결함에서 수락 여부를 볼 수 있어요.",function(){saveAll(pend)},function(){e.target.hidden=false})}
   });
 });
 function sajuSummary(){var me=S.me,s=me.s,A=FX.A||analyze(me),sc={};CATS.forEach(function(c){sc[c.k]=lifeOf(A,c.k).score});
@@ -1391,7 +1403,7 @@ function saveAll(pend){
   var err=document.getElementById("cn-err"),form=document.getElementById("f-connect");
   document.getElementById("cn-auth").hidden=true;form.hidden=false;
   var btn=form.querySelector('button[type="submit"]');btn.disabled=true;btn.textContent="저장 중…";
-  var me=S.me,uid;
+  var me=S.me,uid;saveHistory();
   sb.auth.getUser().then(function(r){
     uid=r.data.user.id;
     return sb.from("members").upsert({id:uid,name:me.n,gender:me.g,birth_date:me.d,birth_hour:me.s.hour,sido:me.sido,sigungu:me.gu||"",job:me.job,job_detail:me.jobname||null,
@@ -1411,38 +1423,106 @@ function finishConnect(pend,mode){
   document.getElementById("cn-done-note").textContent=mode==="saved"?"신청과 내 정보가 저장됐어요. 상대가 수락하면 내 연결함에서 연락처를 볼 수 있어요.":mode==="example"?"내 정보는 저장됐어요. 다만 이 상대는 예시 회원이라 실제 신청은 가지 않아요.":"시범판이라 실제로 전달하지 않고, 입력한 연락처도 저장하지 않아요.";
   document.getElementById("cn-done").hidden=false;
 }
-/* 이메일 인증번호 로그인 (Supabase Auth, 무료) */
+/* 아이디(이메일)·비밀번호 로그인 + 가입 시 1회 이메일 인증 (Supabase Auth, 무료) */
 function showAuth(boxId,lead,onOk,onCancel){
-  var box=document.getElementById(boxId);box.hidden=false;
-  box.innerHTML='<h3 class="h2" style="font-size:16px">이메일로 본인 확인</h3><p class="note">'+esc(lead)+'</p>'+
-    '<div class="field"><label for="'+boxId+'-em">이메일</label><input class="input" type="email" id="'+boxId+'-em" autocomplete="email" placeholder="you@example.com"></div>'+
-    '<button class="btn" type="button" data-a="send">인증번호 받기</button>'+
-    '<div class="field" data-a="codewrap" hidden><label for="'+boxId+'-cd">메일로 받은 인증번호</label><input class="input" id="'+boxId+'-cd" inputmode="numeric" maxlength="10" autocomplete="one-time-code"></div>'+
-    '<button class="btn" type="button" data-a="verify" hidden>확인</button>'+
-    '<p class="err" data-a="err" hidden></p>'+(onCancel?'<button class="btn ghost sm" type="button" data-a="cancel">돌아가기</button>':'');
-  var q=function(a){return box.querySelector('[data-a="'+a+'"]')},em=document.getElementById(boxId+"-em"),cd=document.getElementById(boxId+"-cd");
-  function fail(t){var e=q("err");e.hidden=false;e.textContent=t}
-  q("send").addEventListener("click",function(){var v=em.value.trim();if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){fail("이메일 주소를 확인해주세요.");return}
-    if(!sb){fail("지금은 시범판이라 로그인이 열려 있지 않아요. 서버(Supabase)를 연결하면 바로 쓸 수 있어요.");return}
-    q("send").disabled=true;sb.auth.signInWithOtp({email:v,options:{shouldCreateUser:true}}).then(function(r){q("send").disabled=false;
+  var box=document.getElementById(boxId);box.hidden=false;var mode="login";
+  function F(id,label,type,ac,ph,extra){return '<div class="field" data-f="'+id+'"><label for="'+boxId+'-'+id+'">'+label+'</label><input class="input" type="'+type+'" id="'+boxId+'-'+id+'" autocomplete="'+ac+'"'+(ph?' placeholder="'+ph+'"':'')+(extra||'')+'></div>'}
+  box.innerHTML='<div class="fx-tabs au-tabs" role="tablist"><button type="button" data-m="login" class="on">로그인</button><button type="button" data-m="join">회원가입</button><button type="button" data-m="find">비밀번호 찾기</button></div>'+
+    '<p class="note" data-a="lead">'+esc(lead)+'</p>'+
+    F("em","아이디(이메일)","email","username","you@example.com")+
+    F("pw","비밀번호","password","current-password","")+
+    F("pw2","비밀번호 확인","password","new-password","")+
+    '<button class="btn" type="button" data-a="go">로그인</button>'+
+    '<div data-a="codebox" hidden>'+F("cd","메일로 받은 인증번호","text","one-time-code",""," inputmode=\"numeric\" maxlength=\"10\"")+
+      '<div data-a="npw" hidden>'+F("npw","새 비밀번호 (8자 이상)","password","new-password","")+'</div>'+
+      '<button class="btn" type="button" data-a="verify">확인</button><button class="btn ghost sm" type="button" data-a="resend">인증번호 다시 받기</button></div>'+
+    '<p class="note ok" data-a="ok" hidden></p><p class="err" data-a="err" hidden></p>'+(onCancel?'<button class="btn ghost sm" type="button" data-a="cancel">돌아가기</button>':'');
+  var q=function(a){return box.querySelector('[data-a="'+a+'"]')},fd=function(f){return box.querySelector('[data-f="'+f+'"]')},I=function(f){return document.getElementById(boxId+"-"+f)};
+  var pending=null; /* 'signup' | 'recovery' */
+  function fail(t){q("ok").hidden=true;var e=q("err");e.hidden=!t;e.textContent=t||""}
+  function ok(t){q("err").hidden=true;var e=q("ok");e.hidden=!t;e.textContent=t||""}
+  function setMode(m){mode=m;pending=null;fail("");ok("");
+    box.querySelectorAll(".au-tabs button").forEach(function(x){x.classList.toggle("on",x.dataset.m===m)});
+    fd("pw").hidden=m==="find";fd("pw2").hidden=m!=="join";q("go").hidden=false;q("codebox").hidden=true;q("npw").hidden=true;
+    I("pw").autocomplete=m==="join"?"new-password":"current-password";
+    q("go").textContent=m==="login"?"로그인":m==="join"?"가입하고 인증번호 받기":"인증번호 받기";
+    q("lead").textContent=m==="login"?lead:m==="join"?"아이디로 쓸 이메일과 비밀번호를 정해주세요. 처음 한 번만 메일 인증번호로 본인 확인을 하고, 다음부터는 아이디와 비밀번호로 바로 들어와요.":"가입한 이메일로 인증번호를 보내드려요. 인증 후 새 비밀번호를 정하면 돼요."}
+  box.querySelector(".au-tabs").addEventListener("click",function(e){var t=e.target.closest("button");if(t)setMode(t.dataset.m)});
+  function emailOk(){var v=I("em").value.trim();if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){fail("아이디(이메일) 주소를 확인해주세요.");return null}return v}
+  function askCode(kind,msg){pending=kind;q("codebox").hidden=false;q("npw").hidden=kind!=="recovery";q("go").hidden=true;ok(msg);I("cd").value="";I("cd").focus()}
+  function done(){box.hidden=true;box.innerHTML="";onOk&&onOk()}
+  q("go").addEventListener("click",function(){
+    if(!sb){fail("지금은 시범판이라 로그인이 열려 있지 않아요.");return}
+    var em=emailOk();if(!em)return;var pw=I("pw").value,btn=q("go");
+    if(mode==="login"){if(!pw){fail("비밀번호를 입력해주세요.");return}
+      btn.disabled=true;sb.auth.signInWithPassword({email:em,password:pw}).then(function(r){btn.disabled=false;
+        if(!r.error){done();return}
+        var m=(r.error.message||"").toLowerCase();
+        if(m.indexOf("not confirmed")>=0){sb.auth.resend({type:"signup",email:em}).then(function(){askCode("signup","아직 가입 인증이 안 끝났어요. 메일로 보낸 인증번호를 넣어주세요.")});return}
+        fail(m.indexOf("invalid")>=0?"아이디 또는 비밀번호가 맞지 않아요. 처음이면 회원가입을, 비밀번호를 잊었으면 비밀번호 찾기를 눌러주세요.":"로그인하지 못했어요. ("+r.error.message+")")});return}
+    if(mode==="join"){
+      if(pw.length<8){fail("비밀번호는 8자 이상으로 정해주세요.");return}
+      if(pw!==I("pw2").value){fail("비밀번호 확인이 서로 달라요.");return}
+      btn.disabled=true;sb.auth.signUp({email:em,password:pw}).then(function(r){btn.disabled=false;
+        if(r.error){fail(/already|registered/i.test(r.error.message)?"이미 가입된 아이디예요. 로그인해 주세요.":"가입하지 못했어요. ("+r.error.message+")");return}
+        if(r.data&&r.data.session){done();return}
+        if(r.data&&r.data.user&&r.data.user.identities&&r.data.user.identities.length===0){setMode("login");I("em").value=em;fail("이미 가입된 아이디예요. 비밀번호로 로그인해 주세요.");return}
+        askCode("signup","메일로 보낸 인증번호를 넣으면 가입이 끝나요. 메일이 안 보이면 스팸함도 확인해주세요.")});return}
+    btn.disabled=true;sb.auth.resetPasswordForEmail(em).then(function(r){btn.disabled=false;
       if(r.error){fail("인증번호를 보내지 못했어요. ("+r.error.message+")");return}
-      q("err").hidden=true;q("codewrap").hidden=false;q("verify").hidden=false;q("send").textContent="인증번호 다시 받기";cd.focus()})});
-  q("verify").addEventListener("click",function(){var v=cd.value.trim();v=v.replace(/\D/g,"");if(!/^\d{6,10}$/.test(v)){fail("메일에 있는 숫자를 그대로 입력해주세요.");return}
-    q("verify").disabled=true;sb.auth.verifyOtp({email:em.value.trim(),token:v,type:"email"}).then(function(r){q("verify").disabled=false;
-      if(r.error){fail("인증번호가 맞지 않아요. 메일을 다시 확인해주세요.");return}
-      box.hidden=true;box.innerHTML="";onOk&&onOk()})});
+      askCode("recovery","메일로 보낸 인증번호와 새 비밀번호를 넣어주세요.")});
+  });
+  q("verify").addEventListener("click",function(){
+    var em=emailOk();if(!em)return;var v=I("cd").value.replace(/\D/g,"");
+    if(!/^\d{6,10}$/.test(v)){fail("메일에 있는 숫자를 그대로 입력해주세요.");return}
+    if(pending==="recovery"&&I("npw").value.length<8){fail("새 비밀번호는 8자 이상으로 정해주세요.");return}
+    var btn=q("verify");btn.disabled=true;
+    sb.auth.verifyOtp({email:em,token:v,type:pending==="recovery"?"recovery":"email"}).then(function(r){
+      if(r.error){btn.disabled=false;fail("인증번호가 맞지 않거나 시간이 지났어요. 다시 받아주세요.");return}
+      if(pending!=="recovery"){btn.disabled=false;done();return}
+      return sb.auth.updateUser({password:I("npw").value}).then(function(u){btn.disabled=false;
+        if(u.error){fail("새 비밀번호를 저장하지 못했어요. ("+u.error.message+")");return}done()});
+    });
+  });
+  q("resend").addEventListener("click",function(){var em=emailOk();if(!em)return;var b=q("resend");b.disabled=true;
+    (pending==="recovery"?sb.auth.resetPasswordForEmail(em):sb.auth.resend({type:"signup",email:em})).then(function(r){b.disabled=false;
+      if(r.error)fail("다시 보내지 못했어요. 1분쯤 뒤에 다시 눌러주세요.");else ok("인증번호를 다시 보냈어요.")})});
   if(onCancel)q("cancel").addEventListener("click",function(){box.hidden=true;box.innerHTML="";onCancel()});
+  setMode("login");
 }
+/* 내가 본 사주 기록 (로그인한 경우에만, 같은 날 같은 사람은 한 번만) */
+function saveHistory(){
+  if(!sb||!S.me||AS_OF)return;var me=S.me;
+  sb.auth.getSession().then(function(r){if(!(r.data&&r.data.session))return;
+    sb.from("saju_history").upsert({name:me.n,gender:me.g,birth_date:me.d,birth_hour:me.s.hour},{onConflict:"user_id,name,gender,birth_date,birth_hour,viewed_on",ignoreDuplicates:true}).then(function(){})});
+}
+document.getElementById("ib-body").addEventListener("click",function(e){
+  var b=e.target.closest("[data-hist]");if(!b)return;
+  var h=JSON.parse(decodeURIComponent(b.dataset.hist)),t=h.d.split("-").map(Number);
+  AS_OF=h.at;var sj=saju(t[0],t[1],t[2],h.h);
+  S.me={n:h.n,g:h.g,target:h.g==="M"?"F":"M",d:h.d,s:sj};S.match=null;S.face=null;
+  renderResult();go("result");
+});
 /* 내 연결함 */
 function renderInbox(){
   var body=document.getElementById("ib-body"),out=document.getElementById("ib-out");
-  if(!sb){out.hidden=true;body.innerHTML="";showAuth("ib-auth","연결 신청할 때 쓴 이메일로 로그인하면, 나에게 온 신청과 내가 보낸 신청의 수락 여부를 볼 수 있어요.",renderInbox);return}
+  if(!sb){out.hidden=true;body.innerHTML="";showAuth("ib-auth","아이디(이메일)와 비밀번호로 로그인하면, 예전에 본 사주와 연결 신청·수락 여부를 볼 수 있어요.",renderInbox);return}
   body.innerHTML='<p class="note">불러오는 중…</p>';
   sb.auth.getSession().then(function(r){
-    if(!(r.data&&r.data.session)){out.hidden=true;body.innerHTML="";showAuth("ib-auth","연결 신청할 때 썼던 이메일로 확인하면 내 연결함이 열려요.",renderInbox);return}
-    out.hidden=false;
+    if(!(r.data&&r.data.session)){out.hidden=true;body.innerHTML="";showAuth("ib-auth","아이디(이메일)와 비밀번호로 로그인하면 내가 본 사주와 내 연결함이 열려요.",renderInbox);return}
+    out.hidden=false;saveHistory();
+    body.innerHTML='<div id="ib-hist"><p class="note">사주 기록 불러오는 중…</p></div><div id="ib-req"><p class="note">연결 신청 불러오는 중…</p></div>';
+    sb.from("saju_history").select("id,name,gender,birth_date,birth_hour,viewed_at").order("viewed_at",{ascending:false}).limit(50).then(function(h){
+      var el=document.getElementById("ib-hist");if(!el)return;
+      if(h.error){el.innerHTML='<h3 class="h2" style="font-size:16px">내가 본 사주</h3><p class="note">사주 기록을 불러오지 못했어요.</p>';return}
+      var rows=h.data||[];
+      el.innerHTML='<h3 class="h2" style="font-size:16px">내가 본 사주 <small class="cnt">'+rows.length+'</small></h3>'+(rows.length?rows.map(function(r){
+        var v=new Date(r.viewed_at),bd=r.birth_date.split("-");
+        return '<button type="button" class="ib-card hist" data-hist="'+encodeURIComponent(JSON.stringify({n:r.name,g:r.gender,d:r.birth_date,h:r.birth_hour,at:r.viewed_at}))+'"><span class="hist-d">'+v.getFullYear()+'년 '+(v.getMonth()+1)+'월 '+v.getDate()+'일에 봄</span><b>'+esc(r.name)+'</b><span class="mmeta">'+(r.gender==="M"?"남":"여")+' · '+bd[0]+'.'+bd[1]+'.'+bd[2]+' · '+(r.birth_hour>=0?HOUR_KO[r.birth_hour]:"시간 모름")+'</span><span class="hist-go">그때 사주 다시 보기 ›</span></button>'}).join(""):'<p class="note">아직 저장된 사주가 없어요. 로그인한 채로 무료사주를 보면 여기에 날짜별로 쌓여요.</p>');
+    });
     sb.rpc("my_requests").then(function(x){
-      if(x.error){body.innerHTML='<div class="panel"><p class="err">불러오지 못했어요. ('+esc(x.error.message)+')</p></div>';return}
+      var req=document.getElementById("ib-req");if(!req)return;
+      if(x.error){req.innerHTML='<div class="panel"><p class="err">연결 신청을 불러오지 못했어요. ('+esc(x.error.message)+')</p></div>';return}
       var rows=x.data||[],rec=rows.filter(function(r){return r.direction==="received"}),sent=rows.filter(function(r){return r.direction==="sent"});
       var ST={pending:"기다리는 중",accepted:"수락됨",declined:"거절됨"};
       function card(r){
@@ -1452,7 +1532,7 @@ function renderInbox(){
         return '<article class="ib-card st-'+r.status+'"><div class="ib-top"><b>'+esc(r.other_name)+'</b><span class="ib-st">'+ST[r.status]+'</span></div>'+
           '<p class="mmeta">만 '+r.other_age+'세 · '+esc(r.other_sido+" "+r.other_sigungu)+' · '+esc(r.other_job||"")+(r.other_impression?' · 첫인상 '+esc(r.other_impression):'')+(r.score?' · 삼신 지수 '+r.score+'점':'')+'</p>'+act+'</article>';
       }
-      body.innerHTML='<h3 class="h2" style="font-size:16px">나에게 온 신청 <small class="cnt">'+rec.length+'</small></h3>'+(rec.length?rec.map(card).join(""):'<p class="note">아직 받은 신청이 없어요.</p>')+
+      req.innerHTML='<h3 class="h2" style="font-size:16px">나에게 온 신청 <small class="cnt">'+rec.length+'</small></h3>'+(rec.length?rec.map(card).join(""):'<p class="note">아직 받은 신청이 없어요.</p>')+
         '<h3 class="h2" style="font-size:16px">내가 보낸 신청 <small class="cnt">'+sent.length+'</small></h3>'+(sent.length?sent.map(card).join(""):'<p class="note">아직 보낸 신청이 없어요.</p>');
     });
   });
@@ -1576,7 +1656,7 @@ function lifeOf(A,k){
     var st=["살뜰히 챙기면서 앞장서 이끄는 연애를 하는구먼","좋으면 바로 다가가는 직진형이구먼","믿음이 쌓여야 맘을 여는, 뚝배기 같은 연애를 하는구먼","담백하고 한결같은 연애를 하는구먼","속정이 깊고 상대 맘을 귀신같이 읽는구먼"][e];
     var n=G[A.spouse];
     var flowT=n===0?"팔자에 짝 기운이 숨어 있어서 인연이 늦게 오거나, 네가 직접 찾아 나서야 만나는 게야. 짝 기운이 들어오는 해에 인연이 닿느니라.":n===1?"짝 기운이 하나로 또렷하니 한 사람이랑 깊게 가는 인연이여.":"짝 기운이 여럿이라 인연이 많고 고를 데도 많구먼. 조건보다 맘 편한 사람을 고르거라.";
-    var se=A.male?(e+2)%5:(e+3)%5, now=new Date().getFullYear(), yrs=[];
+    var se=A.male?(e+2)%5:(e+3)%5, now=NOW().getFullYear(), yrs=[];
     for(var y=now;y<now+15&&yrs.length<3;y++){var p=pillarOf(y);if(stemEl(p.s)===se||BR_EL[p.b]===se||(s.dB+p.b)%12===1)yrs.push(y+"년(만 "+(y-A.by)+"세)")}
     var dg=grp(e,BR_EL[s.dB]);
     var cp=["동무처럼 어깨 나란히 하는 부부","짝을 살뜰히 챙기고 표현하는 부부","알뜰살뜰 실속 있는 부부","서로 받들지만 가끔 날이 서는 부부","짝한테 기대고 위로받는 부부"][dg];
@@ -1733,11 +1813,11 @@ function scoreBar(v){return '<div class="fx-score"><b>'+v+'</b><span>점</span><
 function secHTML(sec){return sec.map(function(x){return '<section class="fx-sec"><h5>'+x[0]+'</h5><p>'+esc(x[1])+'</p></section>'}).join("")}
 function avgOf(A,p){return Math.round(CATS.slice(0,9).reduce(function(t,cc){return t+periodOf(A,cc,p,"").score},0)/9)}
 function nextOpen(scope){
-  var n=new Date(),y=n.getFullYear(),m=n.getMonth()+1,d=n.getDate();
+  var n=NOW(),y=n.getFullYear(),m=n.getMonth()+1,d=n.getDate();
   if(scope==="year"){var ny=(m>2||(m===2&&d>=4))?y+1:y;return ny+"년 운은 "+ny+"년 입춘(2월 4일 무렵)에 열리느니라. 그때 다시 오거라."}
   var nm=d>=JEOL[m-1]?m%12+1:m;return nm+"월 운은 "+nm+"월 "+JEOL[nm-1]+"일 무렵 절기가 바뀔 때 열리느니라. 그때 다시 오거라."
 }
-function curYM(){var n=new Date(),y=n.getFullYear(),m=n.getMonth()+1,d=n.getDate();var sy=(m<2||(m===2&&d<4))?y-1:y;var sm=d>=JEOL[m-1]?m:(m===1?12:m-1);return {y:sy,m:sm}}
+function curYM(){var n=NOW(),y=n.getFullYear(),m=n.getMonth()+1,d=n.getDate();var sy=(m<2||(m===2&&d<4))?y-1:y;var sm=d>=JEOL[m-1]?m:(m===1?12:m-1);return {y:sy,m:sm}}
 function renderFx(){
   var A=FX.A,c=FX.c,box=document.getElementById("fx-body"),h="",cur=curYM();
   FX.y=cur.y;FX.m=cur.m;
@@ -1770,7 +1850,7 @@ function renderFx(){
 }
 document.getElementById("r-fortune").addEventListener("click",function(e){
   var b=e.target.closest("[data-fx]");if(!b)return;
-  FX.c=CATS[+b.dataset.fx];FX.scope="life";FX.y=new Date().getFullYear();FX.m=new Date().getMonth()+1;
+  FX.c=CATS[+b.dataset.fx];FX.scope="life";FX.y=NOW().getFullYear();FX.m=NOW().getMonth()+1;
   renderFx();var o=document.getElementById("fx");o.hidden=false;document.body.style.overflow="hidden";o.querySelector(".fx-panel").scrollTop=0;
   document.getElementById("fx-close").focus({preventScroll:true});
 });
