@@ -2289,5 +2289,18 @@ new MutationObserver(mark).observe(f,{childList:true,subtree:true});mark()})();
 function set(){document.documentElement.style.setProperty("--hd-h",Math.round(t.offsetHeight+(parseFloat(getComputedStyle(t).top)||0))+"px")}
 set();addEventListener("resize",set);var fx=document.getElementById("fx");if(fx)new MutationObserver(function(){if(!fx.hidden){set();requestAnimationFrame(set)}}).observe(fx,{attributes:true,attributeFilter:["hidden"]})})();
 </script>
+<script>
+/* 날짜·시간·직업·지역 선택창 위치: 보통 화면에선 가운데, 미리보기처럼 화면이 아주 길게 늘어난 경우엔 누른 칸 바로 아래 */
+(function(){var last=null;
+document.addEventListener("pointerdown",function(e){last=e.target.closest("button,input,select,.input,[role=button]")||e.target},true);
+function place(back){var sh=back.querySelector(".wheel-sheet");if(!sh)return;sh.style.marginTop="";back.style.alignItems="";
+  var vh=window.innerHeight,scr=(window.screen&&screen.height)||vh;
+  if(vh<=scr*1.15)return;
+  back.style.alignItems="flex-start";
+  var r=last&&last.getBoundingClientRect?last.getBoundingClientRect():null,h=sh.offsetHeight,top=r?r.bottom+8:80;
+  top=Math.max(8,Math.min(top,vh-h-24));sh.style.marginTop=(top-16)+"px"}
+document.querySelectorAll(".wheel-back").forEach(function(b){new MutationObserver(function(){if(!b.hidden)place(b)}).observe(b,{attributes:true,attributeFilter:["hidden"]})});
+})();
+</script>
 
 </html>
