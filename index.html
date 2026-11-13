@@ -964,7 +964,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-0033</p>
+<p class="ver" id="app-ver">버전 2026.11.14-0035</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -1970,7 +1970,7 @@ function showResult(){
   $("hw-res").innerHTML='<p class="eyebrow">'+bs+'청학동 삼신할배의 '+tn+' 풀이</p><h3 class="h2" style="font-size:19px">'+tn+' <span class="hr-sc">'+score+'</span><small class="hr-of"> / 100점</small></h3>'+
     '<p class="rm-lead">"'+head+'"</p>'+(k===0?'<div class="rm-box"><h4>'+tn+'</h4><p>'+BIG[t]+'</p></div>':'')+mine+(lines?'<ul class="hr-list">'+lines+'</ul>':'')+(kind.length?'<div class="rm-box"><h4>남은 패의 종류로 보면</h4><p>'+kind.join("</p><p>")+'</p></div>':'')+
     '<p class="note">짝 맞춘 패 '+G.pairs+'쌍'+(G.discard?' · 짝 없이 치운 패 '+G.discard+'장':'')+' · 남은 패 '+k+'장</p>'+
-    '<button class="btn gray" type="button" id="hw-share">카톡으로 화투점 결과 보내기</button><p class="note" id="hw-share-msg" hidden></p>'+
+    '<button class="btn gray" type="button" id="hw-share">카톡으로 결과 보내고 액받이 아이템 받기</button><p class="note" id="hw-share-msg" hidden></p>'+
     '<button class="btn" type="button" id="hw-again">다른 운도 떼어 보기</button>';
   $("hw-res").hidden=false;$("hw-res").scrollIntoView({behavior:"smooth",block:"start"});
   G.last={bs:bs,tn:tn,score:score,head:head,ms:k===0?[BIG[t]]:ms.map(function(m){return m+"월 "+HM[m].n+": "+MEAN[t][m]})};
@@ -2003,8 +2003,9 @@ $("hw-skip").addEventListener("click",function(){G.skip=true;G.speed=0;if(G.auto
 $("hw-res").addEventListener("click",function(e){
   if(e.target.id==="hw-again"){$("hw-res").hidden=true;$("hw-play").hidden=true;buildFan();document.querySelector(".hw-pick").scrollIntoView({behavior:"smooth",block:"center"});return}
   if(e.target.id==="hw-share"){var txt=hwText(),msg=$("hw-share-msg");
-    if(navigator.share&&isMobileDevice()){navigator.share({title:"삼신 화투점 결과",text:txt}).then(function(){msg.hidden=false;msg.textContent="카톡으로 결과를 보냈어요."}).catch(function(){});return}
-    var done=function(){msg.hidden=false;msg.textContent="결과를 복사했어요. 카카오톡 대화창에 붙여넣기 하면 보내져요.";copyToast(function(){})};
+    var toMall=function(){document.getElementById("go-mall").click()};
+    if(navigator.share&&isMobileDevice()){navigator.share({title:"삼신 화투점 결과",text:txt}).then(function(){msg.hidden=false;msg.textContent="카톡으로 결과를 보냈어요.";setTimeout(toMall,1000)}).catch(function(){});return}
+    var done=function(){msg.hidden=false;msg.textContent="결과를 복사했어요. 카카오톡 대화창에 붙여넣기 하면 보내져요.";copyToast(toMall)};
     if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(done,function(){copyFallback(txt);done()});else{copyFallback(txt);done()}}
 });
 })();
