@@ -785,7 +785,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
     <h3 class="h2" id="cn-done-t"></h3>
     <p class="lead" id="cn-done-p"></p>
     <p class="note" id="cn-done-note">시범판이라 실제로 전달하지 않고, 입력한 연락처도 저장하지 않아요.</p>
-    <button class="btn" type="button" data-go="inbox">내 연결함 보기</button>
+    <button class="btn" type="button" id="cn-inbox">내 연결함 보기</button>
     <button class="btn ghost" type="button" data-go="match">다른 매칭 상대 보기</button>
   </div>
 </section>
@@ -802,7 +802,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.13-1822</p>
+<p class="ver" id="app-ver">버전 2026.11.13-1826</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -1544,7 +1544,7 @@ document.getElementById("f-connect").addEventListener("submit",function(e){
   if(!sb){finishConnect(pend,"demo");return}
   sb.auth.getSession().then(function(r){
     if(r.data&&r.data.session){saveAll(pend)}
-    else{e.target.hidden=true;showAuth("cn-auth","연결 신청을 저장하려면 로그인해 주세요. 처음이면 회원가입을 눌러주세요. 다음부터는 같은 아이디로 내 연결함에서 수락 여부를 볼 수 있어요.",function(){saveAll(pend)},function(){e.target.hidden=false})}
+    else{e.target.hidden=true;AUTH_START="join";showAuth("cn-auth","연결 신청을 저장하려면 로그인해 주세요. 처음이면 회원가입을 눌러주세요. 다음부터는 같은 아이디로 내 연결함에서 수락 여부를 볼 수 있어요.",function(){saveAll(pend)},function(){e.target.hidden=false})}
   });
 });
 function sajuSummary(){var me=S.me,s=me.s,A=FX.A||analyze(me),sc={};CATS.forEach(function(c){sc[c.k]=lifeOf(A,c.k).score});
@@ -1576,6 +1576,7 @@ function finishConnect(pend,mode){
   document.getElementById("cn-done").hidden=false;
 }
 /* 아이디(이메일)·비밀번호 로그인 + 가입 시 1회 이메일 인증 (Supabase Auth, 무료) */
+var AUTH_START=null; /* 다음에 여는 로그인 창의 첫 탭 (join이면 회원가입부터) */
 function showAuth(boxId,lead,onOk,onCancel){
   var box=document.getElementById(boxId);box.hidden=false;var mode="login";
   function F(id,label,type,ac,ph,extra){return '<div class="field" data-f="'+id+'"><label for="'+boxId+'-'+id+'">'+label+'</label><input class="input" type="'+type+'" id="'+boxId+'-'+id+'" autocomplete="'+ac+'"'+(ph?' placeholder="'+ph+'"':'')+(extra||'')+'></div>'}
@@ -1640,7 +1641,7 @@ function showAuth(boxId,lead,onOk,onCancel){
     (pending==="recovery"?sb.auth.resetPasswordForEmail(em):sb.auth.resend({type:"signup",email:em})).then(function(r){b.disabled=false;
       if(r.error)fail("다시 보내지 못했어요. 1분쯤 뒤에 다시 눌러주세요.");else ok("인증번호를 다시 보냈어요.")})});
   if(onCancel)q("cancel").addEventListener("click",function(){box.hidden=true;box.innerHTML="";onCancel()});
-  setMode("login");
+  var st=AUTH_START||"login";AUTH_START=null;setMode(st);
 }
 /* 내가 본 사주 기록 (로그인한 경우에만, 같은 날 같은 사람은 한 번만) */
 function saveHistory(){
@@ -1655,6 +1656,7 @@ document.getElementById("ib-body").addEventListener("click",function(e){
   S.me={n:h.n,g:h.g,target:h.g==="M"?"F":"M",d:h.d,s:sj};S.match=null;S.face=null;
   renderResult();go("result");
 });
+document.getElementById("cn-inbox").addEventListener("click",function(){AUTH_START="join";go("inbox")});
 /* 내 연결함 */
 function renderInbox(){
   var body=document.getElementById("ib-body"),out=document.getElementById("ib-out");
@@ -1662,7 +1664,7 @@ function renderInbox(){
   body.innerHTML='<p class="note">불러오는 중…</p>';
   sb.auth.getSession().then(function(r){
     if(!(r.data&&r.data.session)){out.hidden=true;body.innerHTML="";showAuth("ib-auth","아이디(이메일)와 비밀번호로 로그인하면 내가 본 사주와 내 연결함이 열려요.",renderInbox);return}
-    out.hidden=false;saveHistory();
+    out.hidden=false;AUTH_START=null;saveHistory();
     body.innerHTML='<div id="ib-hist"><p class="note">사주 기록 불러오는 중…</p></div><div id="ib-req"><p class="note">연결 신청 불러오는 중…</p></div>';
     sb.from("saju_history").select("id,name,gender,birth_date,birth_hour,viewed_at").order("viewed_at",{ascending:false}).limit(50).then(function(h){
       var el=document.getElementById("ib-hist");if(!el)return;
