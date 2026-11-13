@@ -220,6 +220,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 .wc-count{position:absolute;left:50%;top:47%;transform:translate(-50%,-50%);font-size:min(30vw,140px);font-weight:800;line-height:1;color:#F7DE8E;text-shadow:0 4px 24px rgba(0,0,0,.7),0 0 30px rgba(242,206,120,.6);pointer-events:none;font-family:var(--f-display,inherit)}
 .wc-count.pop{animation:wcpop 1s ease-out}
 @keyframes wcpop{0%{transform:translate(-50%,-50%) scale(1.6);opacity:0}20%{opacity:1}100%{transform:translate(-50%,-50%) scale(.9);opacity:.85}}
+.wc-still{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
 .wc-flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
 .wc-flash.on{animation:wcflash .45s ease-out}
 @keyframes wcflash{0%{opacity:.9}100%{opacity:0}}
@@ -671,9 +672,9 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
     <div class="field">
       <span class="upl-row"><span class="upl btn sm">사진 찍기<input type="file" id="fc-cam" accept="image/*" capture="user" aria-label="카메라로 얼굴 사진 찍기"></span><span class="upl btn ghost sm">앨범에서 고르기<input type="file" id="fc-file" accept="image/*" aria-label="가지고 있는 얼굴 사진 고르기"></span></span>
       <div class="wc" id="fc-wc" hidden>
-        <div class="wc-view"><video id="fc-wc-v" playsinline muted></video><i class="wc-oval" aria-hidden="true"></i><b class="wc-count" id="fc-wc-n" aria-hidden="true" hidden></b><i class="wc-flash" id="fc-wc-f" aria-hidden="true"></i></div>
+        <div class="wc-view"><video id="fc-wc-v" playsinline muted></video><i class="wc-oval" aria-hidden="true"></i><b class="wc-count" id="fc-wc-n" aria-hidden="true" hidden></b><i class="wc-flash" id="fc-wc-f" aria-hidden="true"></i><img class="wc-still" id="fc-wc-still" alt="방금 찍은 사진" hidden></div>
         <p class="wc-msg" id="fc-wc-msg" aria-live="polite">카메라를 켜는 중이에요.</p>
-        <div class="wc-btns"><button class="btn sm" type="button" id="fc-wc-shot" hidden>다시 찍기</button><button class="btn ghost sm" type="button" id="fc-wc-x">취소</button></div>
+        <div class="wc-btns"><button class="btn ghost sm" type="button" id="fc-wc-shot" hidden>다시 찍기</button><button class="btn sm" type="button" id="fc-wc-go" hidden>진행시켜</button><button class="btn ghost sm" type="button" id="fc-wc-x">취소</button></div>
       </div>
       <span class="fc-tip">카메라로 바로 찍는 것이 조금 더 정확해요.</span>
       <span class="note">삼신은 <mark class="hl">대한민국 기업</mark>으로 사진은 절대 보관하지 않아요.<br>얼굴이 정면으로 크게, 밝게 나온 사진일수록 정확해요.</span>
@@ -1313,21 +1314,21 @@ document.getElementById("fc-skip").addEventListener("click",function(){
 document.getElementById("fc-file").addEventListener("change",onPhoto);
 document.getElementById("fc-cam").addEventListener("change",onPhoto);
 (function(){
-  var cam=document.getElementById("fc-cam"),box=document.getElementById("fc-wc"),v=document.getElementById("fc-wc-v"),msg=document.getElementById("fc-wc-msg"),shot=document.getElementById("fc-wc-shot"),stream=null,nEl=document.getElementById("fc-wc-n"),fl=document.getElementById("fc-wc-f"),timer=null;
+  var cam=document.getElementById("fc-cam"),box=document.getElementById("fc-wc"),v=document.getElementById("fc-wc-v"),msg=document.getElementById("fc-wc-msg"),shot=document.getElementById("fc-wc-shot"),stream=null,nEl=document.getElementById("fc-wc-n"),fl=document.getElementById("fc-wc-f"),timer=null,still=document.getElementById("fc-wc-still"),goB=document.getElementById("fc-wc-go"),shotImg=null;
   var ua=navigator.userAgent||"",isMob=(navigator.userAgentData&&navigator.userAgentData.mobile)||/Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1),isPC=!isMob&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia;
   if(!isPC)return;
-  function stop(){clearTimeout(timer);if(nEl)nEl.hidden=true;if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}v.srcObject=null;box.hidden=true}
+  function stop(){clearTimeout(timer);if(nEl)nEl.hidden=true;still.hidden=true;shot.hidden=true;goB.hidden=true;shotImg=null;if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}v.srcObject=null;box.hidden=true}
   cam.addEventListener("click",function(e){
-    e.preventDefault();box.hidden=false;shot.disabled=true;msg.textContent="카메라를 켜는 중이에요. 브라우저가 카메라 사용을 물어보면 허용을 눌러주세요.";
+    e.preventDefault();box.hidden=false;msg.textContent="카메라를 켜는 중이에요. 브라우저가 카메라 사용을 물어보면 허용을 눌러주세요.";
     navigator.mediaDevices.getUserMedia({video:{facingMode:"user",width:{ideal:1280},height:{ideal:960}},audio:false}).then(function(st){
       stream=st;v.srcObject=st;v.play();
       box.scrollIntoView({block:"center",behavior:"smooth"});countdown();
     }).catch(function(err){
-      shot.disabled=true;
+      
       msg.textContent=err&&err.name==="NotAllowedError"?"카메라 사용이 막혀 있어요. 주소창 옆 카메라 표시에서 허용하거나, 앨범에서 고르기로 사진을 올려주세요.":"이 컴퓨터에서 카메라를 찾지 못했어요. 앨범에서 고르기로 사진을 올려주세요.";
     });
   });
-  function countdown(){clearTimeout(timer);shot.hidden=true;var n=3;
+  function countdown(){clearTimeout(timer);shot.hidden=true;goB.hidden=true;still.hidden=true;shotImg=null;var n=3;
     msg.textContent="사진을 찍습니다. 얼굴을 동그라미 안에 맞추고 카메라를 바라봐 주세요.";
     (function tick(){if(!stream)return;
       if(n===0){nEl.hidden=true;fl.classList.remove("on");void fl.offsetWidth;fl.classList.add("on");capture();return}
@@ -1338,8 +1339,10 @@ document.getElementById("fc-cam").addEventListener("change",onPhoto);
     if(!stream||!v.videoWidth){timer=setTimeout(capture,200);return}
     var vw=v.videoWidth,vh=v.videoHeight,tw=Math.min(vw,vh*3/4),c=document.createElement("canvas");
     c.width=Math.round(tw);c.height=vh;c.getContext("2d").drawImage(v,(vw-tw)/2,0,tw,vh,0,0,c.width,c.height);
-    var img=new Image();img.onload=function(){stop();runFaceAI(img)};img.src=c.toDataURL("image/jpeg",.92);
+    var img=new Image();img.onload=function(){shotImg=img;still.src=img.src;still.hidden=false;shot.hidden=false;goB.hidden=false;
+      msg.textContent="이 사진으로 할까요? 마음에 안 들면 다시 찍기, 좋으면 진행시켜를 눌러주세요.";goB.focus({preventScroll:true})};img.src=c.toDataURL("image/jpeg",.92);
   }
+  goB.addEventListener("click",function(){if(!shotImg)return;var img=shotImg;stop();runFaceAI(img)});
   document.getElementById("fc-wc-x").addEventListener("click",stop);
   document.addEventListener("visibilitychange",function(){if(document.hidden&&stream)stop()});
   window.__wcStop=stop;
