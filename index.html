@@ -962,7 +962,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-0027</p>
+<p class="ver" id="app-ver">버전 2026.11.14-0030</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -1964,16 +1964,17 @@ function showResult(){
     kind.push("<b>띠가 "+cnt.T+"장</b>"+(r.indexOf("홍단")>=0?", 그중 홍단이 있어 마음을 주고받을 약속이 생기고":"")+(r.indexOf("청단")>=0?", 청단이 있어 공부·명예에 좋은 매듭이 지어지고":"")+(r.indexOf("초단")>=0?", 초단이 있어 묵은 걱정이 풀리고":"")+" 약속·문서 일이 이어지겠네.")}
   if(cnt.P)kind.push("<b>피가 "+cnt.P+"장</b>이니 자잘한 일이 많겠지만, 작은 것이 모여 살림이 되는 법일세.");
   var mine=rem.length?'<div class="hr-cards">'+rem.map(function(c){return mkCard(c,true).outerHTML}).join("")+'</div>':"";
-  $("hw-res").innerHTML='<p class="eyebrow">청학동 삼신할배의 '+tn+' 풀이</p><h3 class="h2" style="font-size:19px">'+tn+' <span class="hr-sc">'+score+'</span><small class="hr-of"> / 100점</small></h3>'+
+  var bt=G.birth?G.birth.split("-").map(Number):null,bs=bt?bt[0]+"년 "+bt[1]+"월 "+bt[2]+"일생 · ":"";
+  $("hw-res").innerHTML='<p class="eyebrow">'+bs+'청학동 삼신할배의 '+tn+' 풀이</p><h3 class="h2" style="font-size:19px">'+tn+' <span class="hr-sc">'+score+'</span><small class="hr-of"> / 100점</small></h3>'+
     '<p class="rm-lead">"'+head+'"</p>'+(k===0?'<div class="rm-box"><h4>'+tn+'</h4><p>'+BIG[t]+'</p></div>':'')+mine+(lines?'<ul class="hr-list">'+lines+'</ul>':'')+(kind.length?'<div class="rm-box"><h4>남은 패의 종류로 보면</h4><p>'+kind.join("</p><p>")+'</p></div>':'')+
     '<p class="note">짝 맞춘 패 '+G.pairs+'쌍'+(G.discard?' · 짝 없이 치운 패 '+G.discard+'장':'')+' · 남은 패 '+k+'장</p>'+
     '<button class="btn gray" type="button" id="hw-share">카톡으로 화투점 결과 보내기</button><p class="note" id="hw-share-msg" hidden></p>'+
     '<button class="btn" type="button" id="hw-again">다른 운도 떼어 보기</button>';
   $("hw-res").hidden=false;$("hw-res").scrollIntoView({behavior:"smooth",block:"start"});
-  G.last={tn:tn,score:score,head:head,ms:k===0?[BIG[t]]:ms.map(function(m){return m+"월 "+HM[m].n+": "+MEAN[t][m]})};
+  G.last={bs:bs,tn:tn,score:score,head:head,ms:k===0?[BIG[t]]:ms.map(function(m){return m+"월 "+HM[m].n+": "+MEAN[t][m]})};
 }
 function hwText(){var L=G.last,U="https://www.3sin.co.kr/";
-  return "[삼신 화투점] 청학동 삼신할배의 "+L.tn+" 풀이\n\n"+L.tn+" "+L.score+"점\n\""+L.head+"\"\n\n"+L.ms.map(function(x){return "· "+x}).join("\n")+
+  return "[삼신 화투점] "+(L.bs||"")+"청학동 삼신할배의 "+L.tn+" 풀이\n\n"+L.tn+" "+L.score+"점\n\""+L.head+"\"\n\n"+L.ms.map(function(x){return "· "+x}).join("\n")+
    "\n\n━━━━━━━━━━━━━━━\n👵 청담동 삼신할매한테 나도 봐달라고 하기\n→ "+U+"\n\n👴 청학동 삼신할배한테 나도 봐달라고 하기\n→ "+U+"\n\n👶 이태원 삼신동자한테 나도 봐달라고 하기\n→ "+U+"\n━━━━━━━━━━━━━━━"}
 (function(){var d=document.getElementById("hwsprite-data");if(!d)return;
   document.documentElement.style.setProperty("--hws",'url("data:image/webp;base64,'+d.textContent.trim()+'")');d.textContent=""})();
@@ -1994,7 +1995,7 @@ async function gatherFan(){var f=$("hw-fan");if(!f||!f.children.length)return;
   f.classList.add("gone");await wait(150);f.style.height="0";f.innerHTML="";
 }
 new MutationObserver(function(){if(!$("s-hwatu").hidden&&!G.running){buildFan()}}).observe($("s-hwatu"),{attributes:true,attributeFilter:["hidden"]});
-$("hw-start").addEventListener("click",function(){play()});
+$("hw-start").addEventListener("click",function(){if(G.running)return;if(window.askBirth)askBirth(function(d){G.birth=d;play()});else play()});
 $("hw-fast").addEventListener("click",function(){G.speed=G.speed>1?.5:1.73;this.textContent=G.speed>1?"빠르게":"천천히"});
 $("hw-skip").addEventListener("click",function(){G.skip=true;G.speed=0;if(G.autoPick&&!$("hw-choose").hidden){G.autoPick()}});
 $("hw-res").addEventListener("click",function(e){
@@ -2470,8 +2471,10 @@ function enhanceWheel(w,H){
     w.addEventListener("keydown",function(e){if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();w.scrollBy({top:e.key==="ArrowDown"?H:-H,behavior:"smooth"})}else if(e.key==="Enter")ok()});
   });
   function open(){wheelTick.open();cur=hid.value||DEF;back.hidden=false;load(cur);wheels.y.focus({preventScroll:true})}
-  function close(){back.hidden=true;btn.focus({preventScroll:true})}
-  function ok(){var y=val("y"),m=val("m"),d=Math.min(val("d"),days(y,m));hid.value=y+"-"+String(m).padStart(2,"0")+"-"+String(d).padStart(2,"0");btn.textContent=y+"년 "+m+"월 "+d+"일";close()}
+  var after=null;
+  function close(){back.hidden=true;if(!after)btn.focus({preventScroll:true});after=null}
+  function ok(){var y=val("y"),m=val("m"),d=Math.min(val("d"),days(y,m));hid.value=y+"-"+String(m).padStart(2,"0")+"-"+String(d).padStart(2,"0");btn.textContent=y+"년 "+m+"월 "+d+"일";var f=after;after=null;close();if(f)f(hid.value)}
+  window.askBirth=function(cb){open();after=cb};
   btn.addEventListener("click",open);
   document.getElementById("wb-ok").addEventListener("click",ok);
   document.getElementById("wb-reset").addEventListener("click",function(){var t=DEF.split("-").map(Number);setTo("y",t[0],true);setTo("m",t[1],true);setTimeout(function(){fixDays();setTo("d",t[2],true);head()},250)});
