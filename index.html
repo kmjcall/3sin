@@ -177,6 +177,21 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 .upl-row{display:flex;flex-wrap:wrap;gap:8px}
 .upl input{position:absolute;inset:0;opacity:0;cursor:pointer}
 .btn{word-break:keep-all}
+.ad{gap:12px}
+.ad-d{font-size:12px;color:var(--muted);font-weight:400;margin-left:6px}
+.ad-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media (min-width:640px){.ad-grid{grid-template-columns:repeat(4,1fr)}}
+.ad-t{padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--paper);display:flex;flex-direction:column;gap:2px}
+.ad-t span{font-size:13px;color:var(--muted)}.ad-t b{font-size:24px;color:#F2CE78;font-variant-numeric:tabular-nums}.ad-t small{font-size:12px;color:var(--muted)}
+.ad-tb{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.ad-tb th,.ad-tb td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right}
+.ad-tb th:first-child,.ad-tb td:first-child{text-align:left}.ad-tb th{font-size:13px;color:var(--muted);font-weight:600}
+.ad-h{margin:4px 0 0;font-size:14px;color:var(--cobalt)}
+.ad-bars{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;height:130px;align-items:end}
+.ad-b{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:3px}
+.ad-b i{display:block;width:70%;background:#C08A1E;border-radius:4px 4px 0 0;min-height:2px}
+.ad-b b{font-size:12px;order:-1;font-variant-numeric:tabular-nums}.ad-b span{font-size:11px;color:var(--muted)}
+
 /* 화투점 */
 .panel,.hw-fan,.charm,.remedy{scroll-margin-top:calc(var(--hd-h,74px) + 12px)}
 .hw-rows{display:flex;flex-direction:column;gap:8px}
@@ -966,7 +981,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-0116</p>
+<p class="ver" id="app-ver">버전 2026.11.14-1450</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -1038,6 +1053,12 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 var SHOP_URL=""; /* 액받이 아이템 쇼핑몰 주소 — 생기면 여기에 넣음, 부족한 오행이 ?el=목/화/토/금/수 로 붙어서 넘어감 */
 var SB_URL="https://hfnofuqvxuorjnogjuhb.supabase.co", SB_KEY="sb_publishable_G4STnZ980ljQbJVJqTYBxQ_BEoIk1Xz";
 var sb=null;try{if(SB_URL&&SB_KEY&&window.supabase)sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true}})}catch(e){sb=null}
+/* 이용 통계: 브라우저별 무작위 번호로 하루 한 번씩만 셈 (개인정보 없음) */
+var SID=(function(){var k="samsin_sid",v=null;try{v=localStorage.getItem(k)}catch(e){}
+  if(!v){v=(Date.now().toString(36)+Math.random().toString(36).slice(2,10));try{localStorage.setItem(k,v)}catch(e){}}return v})();
+var LOGGED={};
+function track(kind){if(!sb||LOGGED[kind])return;LOGGED[kind]=1;try{sb.rpc("log_event",{p_sid:SID,p_kind:kind}).then(function(){},function(){})}catch(e){}}
+track("visit");
 var STEMS="甲乙丙丁戊己庚辛壬癸".split(""), STEMS_KO="갑을병정무기경신임계".split("");
 var BR="子丑寅卯辰巳午未申酉戌亥".split(""), BR_KO="자축인묘진사오미신유술해".split("");
 var ANIMAL=["쥐","소","호랑이","토끼","용","뱀","말","양","원숭이","닭","개","돼지"];
@@ -1190,7 +1211,7 @@ document.getElementById("f-saju").addEventListener("submit",function(e){
   err.hidden=!msg;err.textContent=msg;if(msg)return;
   S.me={n:name,g:f.gender.value,target:f.gender.value==="M"?"F":"M",d:birth,s:sj};
   S.match=null;S.face=null;
-  renderResult();go("result");saveHistory();
+  renderResult();go("result");saveHistory();track("saju");
 });
 
 function renderResult(){
@@ -1245,7 +1266,7 @@ function loadCandidates(){
   },function(){return PROFILES});
 }
 function tierOf(v){return v>=85?{i:0,n:"천생연분"}:v>=75?{i:1,n:"운명"}:v>=65?{i:2,n:"숙명"}:v>=55?{i:3,n:"인연"}:{i:4,n:"호감"}}
-function renderMatches(){
+function renderMatches(){track("match");
   var me=S.me;
   var list=(S.cands||PROFILES).filter(function(p){return p.g===me.target}).map(function(p){
     var c=compat(me.s,p.s), f=faceCompat(S.face,p), ps=p.reg.split(" ")[0];
@@ -1464,7 +1485,7 @@ function renderFaceResult(parts,shape,age){
   document.getElementById("fc-parts").innerHTML=impH+parts.map(function(p){
     return '<article class="fpart"><div class="fhead"><span class="fhj">'+p.hj+'</span><div><h4>'+p.n+'</h4><span class="ftopic">'+p.topic+'</span></div><span class="fsc"><b>'+p.score+'</b><span class="of"> / 100</span>점</span></div><p class="fsum">'+esc(p.txt)+'</p></article>';
   }).join("");
-  renderFaceRemedy(parts);
+  renderFaceRemedy(parts);track("face");
   var out=document.getElementById("fc-out");out.hidden=false;
   setTimeout(function(){out.scrollIntoView({behavior:"smooth",block:"start"})},300);
 }
@@ -1624,7 +1645,7 @@ var EL_ITEM=[
   {c:"흰색·은색",t:"은 장신구, 흰 옷, 금속 열쇠고리",d:"서쪽"},
   {c:"검정·남색",t:"검정·남색 지갑, 어항이나 물 그림, 흑요석 팔찌",d:"북쪽"}];
 function lackEl(){var c=(S.me&&S.me.s&&S.me.s.c)||null,w=0;if(c)for(var i=1;i<5;i++)if(c[i]<c[w])w=i;return w}
-function openShop(w0){
+function openShop(w0){track("mall");
   var w=w0!=null&&!isNaN(w0)?w0:lackEl();
   if(SHOP_URL){location.href=SHOP_URL+(SHOP_URL.indexOf("?")<0?"?":"&")+"el="+encodeURIComponent(EL[w].k);return}
   var card=document.getElementById(document.getElementById("s-face")&&!document.getElementById("s-face").hidden?"fc-charm":"r-charm");
@@ -1740,7 +1761,7 @@ function saveAll(pend){
     uid=r.data.user.id;
     return sb.from("members").upsert({id:uid,name:me.n,gender:me.g,birth_date:me.d,birth_hour:me.s.hour,sido:me.sido,sigungu:me.gu||"",job:me.job,job_detail:me.jobname||null,
       saju:sajuSummary(),face:faceSummary(),first_impression:S.face&&S.face.imp?S.face.imp.keys.join(" · "):null,active:true});
-  }).then(function(r){if(r.error)throw r.error;return sb.rpc("save_contact",{p_method:pend.m,p_value:pend.val})})
+  }).then(function(r){if(r.error)throw r.error;track("connect");return sb.rpc("save_contact",{p_method:pend.m,p_value:pend.val})})
   .then(function(r){if(r.error)throw r.error;return sb.from("consents").insert(["privacy","adult","share"].map(function(k){return {member_id:uid,kind:k}}))})
   .then(function(r){if(r.error)throw r.error;
     if(!S.match.p.real)return {data:null,error:null,example:true};
@@ -1837,7 +1858,7 @@ document.getElementById("ib-body").addEventListener("click",function(e){
   renderResult();go("result");
 });
 document.getElementById("cn-inbox").addEventListener("click",function(){AUTH_START="join";go("inbox")});
-document.getElementById("go-mall").addEventListener("click",function(){
+document.getElementById("go-mall").addEventListener("click",function(){track("mall");
   if(SHOP_URL){var q=S.me&&S.me.s?(SHOP_URL.indexOf("?")<0?"?":"&")+"el="+encodeURIComponent(EL[lackEl()].k):"";location.href=SHOP_URL+q;return}
   var t=document.getElementById("mini-toast");if(!t){t=document.createElement("div");t.id="mini-toast";t.className="mini-toast";t.setAttribute("role","status");document.body.appendChild(t)}
   t.textContent="삼신몰은 곧 문을 열어요. 조금만 기다려 주세요!";t.hidden=false;clearTimeout(t._h);t._h=setTimeout(function(){t.hidden=true},2500);
@@ -1965,7 +1986,7 @@ function choosePick(no){return new Promise(function(res){
   if(G.skip)choose(Math.floor(Math.random()*4));else G.autoPick=function(){choose(Math.floor(Math.random()*4))};
 })}
 async function play(){
-  if(G.running)return;G.running=true;G.skip=false;G.speed=1.73;G.quick=false;G.chosen=[];G.pairs=0;G.discard=0;
+  if(G.running)return;track("hwatu");G.running=true;G.skip=false;G.speed=1.73;G.quick=false;G.chosen=[];G.pairs=0;G.discard=0;
   G.topic=(document.querySelector('input[name=hwt]:checked')||{}).value||"today";
   var td=new Date(),tds=td.getFullYear()+"-"+(td.getMonth()+1)+"-"+td.getDate();G.rng=seedRng((G.birth||"")+"|"+G.topic+"|"+tds);
   $("hw-res").hidden=true;$("hw-fast").textContent="빠르게";$("hw-fast").disabled=false;$("hw-skip").disabled=false;
@@ -2073,6 +2094,19 @@ $("hw-res").addEventListener("click",function(e){
     if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(done,function(){copyFallback(txt);done()});else{copyFallback(txt);done()}}
 });
 })();
+/* 관리자 통계 (관리자 계정으로 로그인했을 때만 서버가 숫자를 돌려줌) */
+function loadAdmin(){if(!sb)return;sb.rpc("admin_stats").then(function(r){var el=document.getElementById("ib-admin");if(!el||r.error||!r.data)return;
+  var d=r.data,tk=d.today_kind||{},tt=d.total_kind||{},n=function(x){return (x||0).toLocaleString("ko-KR")};
+  var tile=function(lbl,big,sub){return '<div class="ad-t"><span>'+lbl+'</span><b>'+big+'</b>'+(sub?'<small>'+sub+'</small>':'')+'</div>'};
+  var rows=[["사주풀이","saju"],["관상보기","face"],["궁합매칭","match"],["연결 신청","connect"],["화투점","hwatu"],["삼신몰 방문","mall"]];
+  var days=d.days||[],mx=Math.max.apply(null,[1].concat(days.map(function(x){return x.visit})));
+  el.innerHTML='<div class="panel ad"><p class="eyebrow">관리자</p><h3 class="h2" style="font-size:18px">삼신 운영 현황 <small class="ad-d">'+d.today+' 기준</small></h3>'+
+    '<div class="ad-grid">'+tile("오늘 방문",n(tk.visit),"누적 "+n(tt.visit))+tile("가입 계정",n(d.accounts_total),"오늘 +"+n(d.accounts_today))+
+      tile("매칭 회원",n(d.members_total),"남 "+n(d.members_m)+" · 여 "+n(d.members_f))+tile("연결 신청",n(d.req_total),"수락 "+n(d.req_accepted)+" · 대기 "+n(d.req_pending))+'</div>'+
+    '<table class="ad-tb"><thead><tr><th>서비스 이용</th><th>오늘</th><th>누적</th></tr></thead><tbody>'+rows.map(function(x){return '<tr><td>'+x[0]+'</td><td>'+n(tk[x[1]])+'</td><td>'+n(tt[x[1]])+'</td></tr>'}).join("")+'</tbody></table>'+
+    '<h4 class="ad-h">최근 7일 방문</h4><div class="ad-bars">'+days.map(function(x){var h=Math.round(x.visit/mx*100);return '<div class="ad-b"><i style="height:'+Math.max(Math.round(h*.9),2)+'px" title="'+x.d+' 방문 '+x.visit+'"></i><b>'+x.visit+'</b><span>'+x.d.slice(5).replace("-","/")+'</span></div>'}).join("")+'</div>'+
+    '<p class="note">방문·이용 수는 같은 기기에서 하루에 한 번만 셉니다. 삼신몰 방문은 헤더 버튼과 액받이 아이템 이동을 합친 수예요.</p></div>';
+  el.hidden=false})}
 /* 내 연결함 */
 function renderInbox(){
   var body=document.getElementById("ib-body"),out=document.getElementById("ib-out");
@@ -2081,7 +2115,8 @@ function renderInbox(){
   sb.auth.getSession().then(function(r){
     if(!(r.data&&r.data.session)){out.hidden=true;body.innerHTML="";showAuth("ib-auth","아이디(이메일)와 비밀번호로 로그인하면 내가 본 사주와 내 연결함이 열려요.",renderInbox);return}
     out.hidden=false;AUTH_START=null;saveHistory();
-    body.innerHTML='<div id="ib-hist"><p class="note">사주 기록 불러오는 중…</p></div><div id="ib-req"><p class="note">연결 신청 불러오는 중…</p></div>';
+    body.innerHTML='<div id="ib-admin" hidden></div><div id="ib-hist"><p class="note">사주 기록 불러오는 중…</p></div><div id="ib-req"><p class="note">연결 신청 불러오는 중…</p></div>';
+    loadAdmin();
     sb.from("saju_history").select("id,name,gender,birth_date,birth_hour,viewed_at").order("viewed_at",{ascending:false}).limit(50).then(function(h){
       var el=document.getElementById("ib-hist");if(!el)return;
       if(h.error){el.innerHTML='<h3 class="h2" style="font-size:16px">내가 본 사주</h3><p class="note">사주 기록을 불러오지 못했어요.</p>';return}
