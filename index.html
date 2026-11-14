@@ -205,8 +205,9 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 .ad-b b{font-size:12px;order:-1;font-variant-numeric:tabular-nums}.ad-b span{font-size:11px;color:var(--muted)}
 
 /* 타로점 질문 고르기 */
-#s-tarot{margin-top:-18px;gap:10px}
+#s-tarot{margin-top:-18px;gap:6px}
 #s-tarot .sec-head{margin-bottom:0}
+#s-tarot:has(#tr-play:not([hidden])) .sec-head{display:none}
 .tq{gap:12px}
 .tq-top{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:32px}
 .tq-no{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
@@ -271,12 +272,12 @@ body.tq-stage .top{z-index:90}
 @media (hover:hover){.tq-skip:hover{background:rgba(20,14,10,.85)}}
 
 /* 타로점 카드 뽑기 */
-.tr-play{gap:12px}
-.tr-ask{font-size:15px;font-weight:700;color:var(--cobalt-deep);text-align:center;line-height:1.5;word-break:keep-all}
+.tr-play{gap:6px;padding:10px 12px 8px}
+.tr-ask{font-size:14px;font-weight:700;color:var(--cobalt-deep);text-align:center;line-height:1.35;word-break:keep-all}
 .tr-ask small{display:block;font-size:12px;font-weight:500;color:var(--muted)}
 .tr-slots{display:grid;grid-template-columns:repeat(var(--n,3),1fr);gap:10px;justify-items:center;transition:all .3s}
-.tr-slot{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%;max-width:104px}
-.tr-slot .lb{font-size:12px;color:var(--muted);text-align:center;line-height:1.3;word-break:keep-all;min-height:2.6em;display:flex;align-items:center}
+.tr-slot{display:flex;flex-direction:column;align-items:center;gap:3px;width:100%;max-width:104px}
+.tr-slot .lb{font-size:11.5px;color:var(--muted);text-align:center;line-height:1.25;word-break:keep-all;min-height:1.25em;white-space:nowrap;display:flex;align-items:center}
 .tr-slot.cur .lb{color:var(--cobalt);font-weight:700}
 .tr-hole{width:min(100%,70px);aspect-ratio:140/242;border-radius:8px;border:1.5px dashed var(--line);display:grid;place-items:center;color:var(--line);font-size:18px;font-weight:700;position:relative}
 .tr-slot.cur .tr-hole{border-color:var(--cobalt);color:var(--cobalt);animation:trpulse 1.4s ease-in-out infinite}
@@ -291,14 +292,14 @@ body.tq-stage .top{z-index:90}
 @keyframes trglow{0%{box-shadow:0 0 0 0 rgba(255,220,140,.9)}40%{box-shadow:0 0 26px 8px rgba(255,220,140,.6)}100%{box-shadow:0 6px 16px rgba(0,0,0,.5)}}
 .tr-b{background:radial-gradient(circle at 50% 50%,#D9AE52 0 7%,transparent 8%),repeating-linear-gradient(45deg,rgba(217,174,82,.22) 0 2px,transparent 2px 9px),repeating-linear-gradient(-45deg,rgba(217,174,82,.22) 0 2px,transparent 2px 9px),#1B2142;border:2px solid #D9AE52;box-shadow:inset 0 0 0 3px #1B2142,inset 0 0 0 4px rgba(217,174,82,.6),0 4px 10px rgba(0,0,0,.45)}
 .tr-b::after{content:"✦";position:absolute;inset:0;display:grid;place-items:center;color:#F3DDA8;font-size:clamp(12px,30%,26px)}
-.tr-bubble{position:relative;background:var(--paper);border:1px solid var(--cobalt);border-radius:14px;padding:12px 14px;min-height:92px}
+.tr-bubble{position:relative;background:var(--paper);border:1px solid var(--cobalt);border-radius:12px;padding:7px 12px;min-height:140px;margin-top:4px}
 .tr-bubble::before{content:"";position:absolute;left:28px;top:-7px;width:12px;height:12px;background:var(--paper);border-left:1px solid var(--cobalt);border-top:1px solid var(--cobalt);transform:rotate(45deg)}
 .tr-who{font-size:12px;font-weight:700;color:var(--cobalt);letter-spacing:.04em}
-.tr-say{font-size:15px;line-height:1.65;margin-top:4px;word-break:keep-all}
+.tr-say{font-size:14px;line-height:1.5;margin-top:1px;word-break:keep-all}
 .tr-say b{color:var(--cobalt-deep)}
-.tr-say .nx{display:block;margin-top:8px;color:var(--cobalt);font-weight:700}
+.tr-say .nx{display:block;margin-top:4px;color:var(--cobalt);font-weight:700}
 .tr-say.pop{animation:tqin .4s ease-out}
-.tr-fan{position:relative;height:238px;margin-top:4px;touch-action:manipulation}
+.tr-fan{position:relative;height:200px;margin-top:0;touch-action:manipulation}
 .tr-fan[hidden]{display:none}
 .tr-fan .tr-card{position:absolute;left:50%;bottom:var(--b,34px);width:52px;transform-origin:50% 50%;transform:translateX(calc(-50% + var(--x,0px))) translateY(calc(var(--y,0px) + var(--ly,0px))) rotate(var(--a,0deg));transition:transform .6s cubic-bezier(.3,.8,.3,1),bottom .6s cubic-bezier(.3,.8,.3,1),opacity .3s}
 .tr-fan.off .tr-card{cursor:default}
@@ -337,9 +338,11 @@ body.tq-stage .top{z-index:90}
 @media (prefers-reduced-motion:reduce){.tr-in,.tr-fan .tr-card,.tr-fly{transition:none}.tr-slot.cur .tr-hole{animation:none}}
 
 /* 타로점 3라운드(9장) */
-.tr-round{display:flex;align-items:center;justify-content:center;gap:8px;font-size:13px;color:var(--muted)}
+.tr-round{display:flex;align-items:center;justify-content:center;gap:3px;font-size:12.5px;color:var(--muted);flex-wrap:nowrap;white-space:nowrap;line-height:1.2;min-height:24px}
+.tr-round span{flex:none;width:14px;aspect-ratio:140/242;border-radius:2px;background-size:1300% 600%;background-repeat:no-repeat;background-color:#fff;cursor:pointer}
+.tr-round em{width:5px;flex:none}
 .tr-round b{color:var(--cobalt);font-size:15px}
-.tr-round i{display:inline-block;width:22px;height:4px;border-radius:2px;background:var(--line)}
+.tr-round i{display:inline-block;width:16px;height:4px;border-radius:2px;background:var(--line)}
 .tr-round i.on{background:var(--cobalt)}
 .tr-past{display:flex;justify-content:center;gap:4px;flex-wrap:wrap}
 .tr-past:empty{display:none}
@@ -1190,7 +1193,7 @@ body.tq-stage .top{z-index:90}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-2030</p>
+<p class="ver" id="app-ver">버전 2026.11.14-2040</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -2801,7 +2804,7 @@ var TAROT_DESC=["절벽 끝에서 하늘만 보며 한 발 내딛는 젊은이 �
   var ORD=["첫 번째","두 번째","세 번째"];
   var REACT={"1":["우와, 좋은 카드다!","히히, 반짝반짝 카드 나왔다!","오오, 이거 엄청 좋은 카드야!"],"0":["흐음… 이건 이렇게 읽혀.","음, 곰곰이 봐야 하는 카드야."],"-1":["앗, 조심하라는 카드야. 그래도 걱정 마!","어라, 살짝 경고 카드네. 미리 알면 피할 수 있어!"]};
   var ROUNDTALK=["좋아, 이번엔 속을 들여다볼 차례야! 카드를 다시 섞을게… 섞섞섞!","마지막이야! 앞으로 어떻게 될지 보여줄 카드를 섞을게… 섞섞섞!"];
-  var ROWLO=34,ROWUP=112;
+  var ROWLO=12,ROWUP=86;
   var T={ask:null,deck:[],picks:[],busy:false,url:""};
   function rnd(n){return Math.floor(Math.random()*n)}
   function jos(w,a,b){var c=w.charCodeAt(w.length-1)-44032;return (c>=0&&c<11172&&c%28)?a:b}
@@ -2818,9 +2821,9 @@ var TAROT_DESC=["절벽 끝에서 하늘만 보며 한 발 내딛는 젊은이 �
   function reading(id,k,n){var c=TAROT_CARDS[id];if(k==="now")return c[3];if(k==="heart")return c[4];if(k==="fut")return c[6];return n===2?c[7]:c[5]}
   function say(h){var e=$("tr-say");e.innerHTML=h;e.classList.remove("pop");void e.offsetWidth;e.classList.add("pop")}
   function head(){var r=round(),L=labels(),h='';for(var i=0;i<3;i++)h+='<i class="'+(i<=r?"on":"")+'"></i>';
-    $("tr-round").innerHTML='<b>'+(r+1)+'라운드</b> / 3 · '+L[r]+' '+h;
-    var p='';T.picks.slice(0,r*3).forEach(function(id,i){if(i&&i%3===0)p+='<em></em>';p+='<span data-id="'+id+'" data-f="'+id+'"></span>'});
-    $("tr-past").innerHTML=p;[].forEach.call($("tr-past").querySelectorAll("[data-f]"),function(e){face(e,+e.dataset.f)})}
+    var p='';T.picks.slice(0,r*3).forEach(function(id,i){if(i%3===0)p+='<em></em>';p+='<span data-id="'+id+'" data-f="'+id+'"></span>'});
+    $("tr-round").innerHTML='<b>'+(r+1)+'라운드</b>/3 · '+L[r]+p;$("tr-past").innerHTML="";
+    [].forEach.call($("tr-round").querySelectorAll("[data-f]"),function(e){face(e,+e.dataset.f)})}
   function slots(){var r=round(),S=subs(r),w=$("tr-slots"),h="",n=T.picks.length-r*3;
     for(var i=0;i<3;i++)h+='<div class="tr-slot'+(i===n?" cur":"")+'"><span class="lb">'+S[i]+'</span><div class="tr-hole">'+(r*3+i+1)+'</div></div>';
     w.style.setProperty("--n",3);w.innerHTML=h;
@@ -2908,7 +2911,7 @@ var TAROT_DESC=["절벽 끝에서 하늘만 보며 한 발 내딛는 젊은이 �
   document.addEventListener("keydown",function(e){if(e.key==="Escape")$("tr-zoom").hidden=true});
   $("tr-fan").addEventListener("click",function(e){var c=e.target.closest(".tr-card");if(c)pick(c)});
   $("tr-slots").addEventListener("click",function(e){var c=e.target.closest(".tr-card.open");if(c)zoom(+c.dataset.id)});
-  $("tr-past").addEventListener("click",function(e){var c=e.target.closest("[data-id]");if(c)zoom(+c.dataset.id)});
+  $("tr-round").addEventListener("click",function(e){var c=e.target.closest("[data-id]");if(c)zoom(+c.dataset.id)});
   $("tr-exp").addEventListener("click",function(e){var c=e.target.closest("[data-id]");if(c)zoom(+c.dataset.id)});
   $("tr-ctrl").addEventListener("click",function(e){
     if(e.target.id==="tr-done"){result();return}
@@ -3648,6 +3651,9 @@ function place(back){var sh=back.querySelector(".wheel-sheet");if(!sh)return;sh.
 document.querySelectorAll(".wheel-back").forEach(function(b){new MutationObserver(function(){if(!b.hidden)place(b)}).observe(b,{attributes:true,attributeFilter:["hidden"]})});
 })();
 </script>
+
+
+
 
 
 
