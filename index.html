@@ -333,7 +333,7 @@ body.tq-stage .top{z-index:90}
 .tr-flow b{color:var(--cobalt-deep)}
 .tr-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
 .tr-list li{display:flex;gap:12px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px}
-.tr-list .th{flex:none;width:52px;aspect-ratio:140/242;border-radius:5px;background-size:1300% 600%;background-repeat:no-repeat;background-color:#fff;cursor:pointer}
+.tr-list .th{flex:none;align-self:flex-start;height:auto;width:52px;aspect-ratio:140/242;border-radius:5px;background-size:1300% 600%;background-repeat:no-repeat;background-color:#fff;cursor:pointer}
 .tr-list .tx{display:flex;flex-direction:column;gap:4px;min-width:0}
 .tr-list .tx small{font-size:12px;color:var(--cobalt);font-weight:700}
 .tr-list .tx strong{font-size:16px}
@@ -1200,7 +1200,7 @@ body.tq-stage .top{z-index:90}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-2050</p>
+<p class="ver" id="app-ver">버전 2026.11.14-2100</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -3658,6 +3658,7 @@ function place(back){var sh=back.querySelector(".wheel-sheet");if(!sh)return;sh.
 document.querySelectorAll(".wheel-back").forEach(function(b){new MutationObserver(function(){if(!b.hidden)place(b)}).observe(b,{attributes:true,attributeFilter:["hidden"]})});
 })();
 </script>
+
 
 
 
