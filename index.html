@@ -1212,7 +1212,7 @@ body.tq-stage .top{z-index:90}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.15-0010</p>
+<p class="ver" id="app-ver">버전 2026.11.15-0040</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -1281,7 +1281,8 @@ body.tq-stage .top{z-index:90}
 (function(){
 "use strict";
 /* ───── 서버(Supabase, 서울 리전) 설정: 프로젝트 주소와 공개 키를 넣으면 실제 저장·매칭이 켜짐 ───── */
-var SHOP_URL=""; /* 액받이 아이템 쇼핑몰 주소 — 생기면 여기에 넣음, 부족한 오행이 ?el=목/화/토/금/수 로 붙어서 넘어감 */
+var SHOP_URL="https://samsinshop.cafe24.com/";
+var SHOP_CATE=[146,51,50,147,54]; /* 카페24 분류 번호: 목·화·토·금·수 (사주 액받이템 하위), 사주 액받이템=42, 화투 액운템=44, 타로 행운템=45 */ /* 액받이 아이템 쇼핑몰 주소 — 생기면 여기에 넣음, 부족한 오행이 ?el=목/화/토/금/수 로 붙어서 넘어감 */
 var SB_URL="https://hfnofuqvxuorjnogjuhb.supabase.co", SB_KEY="sb_publishable_G4STnZ980ljQbJVJqTYBxQ_BEoIk1Xz";
 var sb=null;try{if(SB_URL&&SB_KEY&&window.supabase)sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true}})}catch(e){sb=null}
 /* 이용 통계: 브라우저별 무작위 번호로 하루 한 번씩만 셈 (개인정보 없음) */
@@ -1837,25 +1838,25 @@ function remedyHTML(o){ /* o:{title,lead,w,ex,extra,src} */
    SHOP_ITEMS 한 줄 = 상품 하나. url은 카페24 상품 주소가 생기면 넣음(비어 있으면 '준비 중').
    el: 채워주는 오행(0목 1화 2토 3금 4수), tags: 도와주는 일, r: 추천 이유(오행 번호나 tag 이름으로 찾음) */
 var SHOP_ITEMS=[
- {id:"myeongtae",n:"명태 키링",p:10000,ic:"🐟",el:[4],tags:["액막이","가정","건강","행운"],url:"",
+ {id:"myeongtae",n:"명태 키링",p:10000,ic:"🐟",el:[4],tags:["액막이","가정","건강","행운"],url:"https://samsinshop.cafe24.com/product/detail.html?product_no=51",soldout:true,
   say:"실타래를 감은 명태가 들어올 액을 대신 받아주는 전통 액막이예요.",
   r:{4:"바다에서 온 명태가 모자란 수(水) 기운을 채워줘요.",액막이:"들어올 액을 명태가 대신 받아가요.",가정:"현관에 걸면 잡귀가 집 안에 못 들어와요.",건강:"실타래처럼 길고 탈 없이 지내라는 뜻이에요.",행운:"오늘 하루 액은 명태에게 맡기고 가볍게 다녀요."}},
- {id:"myeongtae_pro",n:"고급 명태 키링",p:20000,ic:"🪵",el:[0,3],tags:["액막이","사업","가정","재물"],url:"",
+ {id:"myeongtae_pro",n:"고급 명태 키링",p:20000,ic:"🪵",el:[0,3],tags:["액막이","사업","가정","재물"],url:"https://samsinshop.cafe24.com/product/detail.html?product_no=52",soldout:true,
   say:"원목 명태에 실타래와 놋방울을 단 고급형이에요. 방울 소리가 잡귀를 쫓아요.",
   r:{0:"원목 명태가 모자란 목(木) 기운을 채워줘요.",3:"놋방울이 모자란 금(金) 기운을 채워줘요.",액막이:"명태와 방울이 함께 액을 막아 효과가 두 배예요.",사업:"가게·사무실 문에 거는 개업 액막이로 좋아요.",가정:"집들이·이사 선물로 집안 액을 막아줘요.",재물:"놋방울 소리로 재물이 새는 걸 막아요."}},
- {id:"hwatu",n:"화투 키링",p:5000,ic:"🎴",el:[1],tags:["재물","행운","기회"],url:"",
+ {id:"hwatu",n:"화투 키링",p:5000,ic:"🎴",el:[1],tags:["재물","행운","기회"],url:"https://samsinshop.cafe24.com/product/detail.html?product_no=53",soldout:true,
   say:"광(光) 패를 담은 화투 키링이에요. 패가 잘 풀리듯 운이 풀리라는 뜻이에요.",
   r:{1:"붉은 화투패가 모자란 화(火) 기운을 채워줘요.",재물:"광 패처럼 큰돈이 들어오라는 뜻을 담았어요.",행운:"패가 술술 풀리듯 운이 풀리라는 뜻이에요.",기회:"좋은 패를 쥐듯 들어온 기회를 놓치지 말라는 뜻이에요."}},
- {id:"bujeok",n:"부적 키링",p:5000,ic:"📜",el:[2],tags:["합격","건강","재물","연애"],url:"",
+ {id:"bujeok",n:"부적 키링",p:5000,ic:"📜",el:[2],tags:["합격","건강","재물","연애"],url:"https://samsinshop.cafe24.com/product/detail.html?product_no=54",soldout:true,
   say:"합격·재물·인연·부상방지 중 원하는 문구를 골라 다는 귀여운 부적이에요.",
   r:{2:"노란 부적지가 모자란 토(土) 기운을 채워줘요.",합격:"'합격 부적'을 골라 가방에 달아요.",건강:"'부상방지 부적'으로 다치는 일을 막아요.",재물:"'재물 부적'으로 새는 돈을 막아요.",연애:"'인연 부적'으로 좋은 사람을 불러요."}},
- {id:"bujeok_pro",n:"고급 부적 키링",p:10000,ic:"🧧",el:[2,1],tags:["액막이","합격","재물","건강"],url:"",
+ {id:"bujeok_pro",n:"고급 부적 키링",p:10000,ic:"🧧",el:[2,1],tags:["액막이","합격","재물","건강"],url:"https://samsinshop.cafe24.com/product/detail.html?product_no=55",soldout:true,
   say:"금박으로 찍은 고급 부적이에요. 오래 들고 다녀도 빛이 바래지 않아요.",
   r:{2:"황금빛 부적이 모자란 토(土) 기운을 채워줘요.",1:"붉은 인주 문양이 모자란 화(火) 기운을 채워줘요.",액막이:"금박 부적이 큰 액을 막아줘요.",합격:"중요한 시험·면접 날 지니는 합격 부적이에요.",재물:"재물 부적으로 들어온 돈을 지켜요.",건강:"부상방지 부적으로 몸을 지켜요."}},
- {id:"haetae",n:"수호신 키링",p:5000,ic:"🦁",el:[4,0,1],tags:["안전","관계","액막이","여행"],url:"",
+ {id:"haetae",n:"수호신 키링",p:5000,ic:"🦁",el:[4,0,1],tags:["안전","관계","액막이","여행"],url:"https://samsinshop.cafe24.com/product/detail.html?product_no=56",soldout:true,
   say:"시비를 가리고 화재를 막는 수호신 해태 키링이에요. 검정·청색·홍색 중 고를 수 있어요.",
   r:{4:"검정 해태를 고르면 모자란 수(水) 기운을 채워줘요.",0:"청색 해태를 고르면 모자란 목(木) 기운을 채워줘요.",1:"홍색 해태를 고르면 모자란 화(火) 기운을 채워줘요.",안전:"해태가 길을 지켜 사고를 막아줘요.",관계:"시비와 구설을 막아 사람 사이를 지켜줘요.",액막이:"해태가 나쁜 기운을 문밖에서 막아줘요.",여행:"먼 길 떠날 때 가방에 달면 길을 지켜줘요."}},
- {id:"mochi",n:"찹쌀떡 귀신 키링",p:10000,ic:"👻",el:[3],tags:["합격","연애","관계"],url:"",
+ {id:"mochi",n:"찹쌀떡 귀신 키링",p:10000,ic:"👻",el:[3],tags:["합격","연애","관계"],url:"https://samsinshop.cafe24.com/product/detail.html?product_no=57",soldout:true,
   say:"말랑한 찹쌀떡 꼬마 귀신이에요. 원하는 일이 찰떡같이 붙으라는 뜻이에요.",
   r:{3:"하얀 찹쌀떡이 모자란 금(金) 기운을 채워줘요.",합격:"찹쌀떡처럼 시험에 착 붙으라는 합격 기원이에요.",연애:"찰떡궁합 인연이 붙으라는 뜻이에요.",관계:"사람들과 찰떡같이 붙어 지내라는 뜻이에요."}}];
 /* 컨셉용 임시 사진(다른 판매자 사진 — 실제 오픈 전에 직접 만든 제품 사진으로 교체해야 함) */
@@ -1878,9 +1879,9 @@ function shopRecoHTML(o){ /* o:{eyebrow,title,lead,el,tags,low} */
   return '<p class="eyebrow">'+(o.eyebrow||"삼신몰 추천 아이템")+'</p><h3 class="h2" style="font-size:17px">'+o.title+'</h3>'+
     (o.lead?'<p class="rm-lead">'+o.lead+'</p>':'')+
     '<ul class="sp-list">'+L.map(function(x){var it=x.it;return '<li><button type="button" class="sp-item" data-item="'+it.id+'">'+
-      '<span class="sp-ic">'+(SHOP_IMG[it.id]?'<img src="'+SHOP_IMG[it.id]+'" alt="'+it.n+'" loading="lazy">':'<span aria-hidden="true">'+it.ic+'</span>')+(it.url?'':'<span class="sp-so">SOLD OUT</span>')+'</span><span class="sp-tx"><span class="sp-top"><b>'+it.n+'</b><span class="sp-pr">'+won(it.p)+'</span></span>'+
+      '<span class="sp-ic">'+(SHOP_IMG[it.id]?'<img src="'+SHOP_IMG[it.id]+'" alt="'+it.n+'" loading="lazy">':'<span aria-hidden="true">'+it.ic+'</span>')+(it.url&&!it.soldout?'':'<span class="sp-so">SOLD OUT</span>')+'</span><span class="sp-tx"><span class="sp-top"><b>'+it.n+'</b><span class="sp-pr">'+won(it.p)+'</span></span>'+
       '<span class="sp-why">'+x.why+'</span></span></button></li>'}).join("")+'</ul>'+
-    '<p class="note">삼신몰은 곧 문을 열어요. 상품이 들어오면 위 아이템을 눌러 바로 볼 수 있어요.</p>'}
+    '<p class="note">삼신몰은 오픈 준비 중이에요. 아이템을 누르면 삼신몰 상품 페이지로 가요.</p>'}
 function shopToast(t){var m=document.getElementById("mini-toast");if(!m){m=document.createElement("div");m.id="mini-toast";m.className="mini-toast";m.setAttribute("role","status");document.body.appendChild(m)}
   m.textContent=t;m.hidden=false;clearTimeout(m._h);m._h=setTimeout(function(){m.hidden=true},2500)}
 document.addEventListener("click",function(e){var b=e.target.closest("[data-item]");if(!b)return;
@@ -1934,7 +1935,7 @@ var EL_ITEM=[
 function lackEl(){var c=(S.me&&S.me.s&&S.me.s.c)||null,w=0;if(c)for(var i=1;i<5;i++)if(c[i]<c[w])w=i;return w}
 function openShop(w0){track("mall");
   var w=w0!=null&&!isNaN(w0)?w0:lackEl();
-  if(SHOP_URL){location.href=SHOP_URL+(SHOP_URL.indexOf("?")<0?"?":"&")+"el="+encodeURIComponent(EL[w].k);return}
+  if(SHOP_URL){location.href=SHOP_URL+"product/list.html?cate_no="+SHOP_CATE[w];return}
   var card=document.getElementById(document.getElementById("s-face")&&!document.getElementById("s-face").hidden?"fc-charm":"r-charm");
   if(!card)return;card.scrollIntoView({behavior:"smooth",block:"center"});
   card.classList.remove("pulse");void card.offsetWidth;card.classList.add("pulse");
@@ -2146,7 +2147,7 @@ document.getElementById("ib-body").addEventListener("click",function(e){
 });
 document.getElementById("cn-inbox").addEventListener("click",function(){AUTH_START="join";go("inbox")});
 document.getElementById("go-mall").addEventListener("click",function(){track("mall");
-  if(SHOP_URL){var q=S.me&&S.me.s?(SHOP_URL.indexOf("?")<0?"?":"&")+"el="+encodeURIComponent(EL[lackEl()].k):"";location.href=SHOP_URL+q;return}
+  if(SHOP_URL){location.href=S.me&&S.me.s?SHOP_URL+"product/list.html?cate_no="+SHOP_CATE[lackEl()]:SHOP_URL;return}
   var t=document.getElementById("mini-toast");if(!t){t=document.createElement("div");t.id="mini-toast";t.className="mini-toast";t.setAttribute("role","status");document.body.appendChild(t)}
   t.textContent="삼신몰은 곧 문을 열어요. 조금만 기다려 주세요!";t.hidden=false;clearTimeout(t._h);t._h=setTimeout(function(){t.hidden=true},2500);
 });
@@ -3730,6 +3731,7 @@ function place(back){var sh=back.querySelector(".wheel-sheet");if(!sh)return;sh.
 document.querySelectorAll(".wheel-back").forEach(function(b){new MutationObserver(function(){if(!b.hidden)place(b)}).observe(b,{attributes:true,attributeFilter:["hidden"]})});
 })();
 </script>
+
 
 
 
