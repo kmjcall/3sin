@@ -981,7 +981,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-1520</p>
+<p class="ver" id="app-ver">버전 2026.11.14-1522</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -2116,7 +2116,9 @@ function loadAdmin(){if(!sb)return;sb.rpc("admin_stats").then(function(r){var el
       if(a.length<8){e.hidden=false;e.textContent="비밀번호는 8자 이상으로 정해주세요.";return}
       if(a!==b){e.hidden=false;e.textContent="비밀번호 확인이 서로 달라요.";return}
       bt.disabled=true;sb.auth.updateUser({password:a}).then(function(r){bt.disabled=false;
-        if(r.error){e.hidden=false;e.textContent="저장하지 못했어요. ("+r.error.message+")";return}
+        if(r.error){e.hidden=false;
+          if(/different from the old|same_password/i.test(r.error.message+(r.error.code||""))){e.textContent="지금 쓰고 있는 비밀번호와 같아요. 바꿀 필요 없이 그대로 쓰면 돼요.";bt.textContent="이 비밀번호 그대로 쓰기";bt.onclick=function(ev){ev.stopImmediatePropagation();m.remove();try{history.replaceState(null,"",location.pathname)}catch(x){}go("inbox")};return}
+          e.textContent=/weak|short|at least/i.test(r.error.message)?"비밀번호가 너무 쉬워요. 숫자·영문을 섞어 8자 이상으로 정해주세요.":"저장하지 못했어요. 잠시 뒤 다시 해주세요. ("+r.error.message+")";return}
         m.remove();try{history.replaceState(null,"",location.pathname)}catch(x){}go("inbox")})});
     setTimeout(function(){document.getElementById("rp-1").focus()},50)}
   sb.auth.onAuthStateChange(function(ev){if(ev==="PASSWORD_RECOVERY")ask()});
