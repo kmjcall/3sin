@@ -1200,7 +1200,7 @@ body.tq-stage .top{z-index:90}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-2100</p>
+<p class="ver" id="app-ver">버전 2026.11.14-2110</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -2905,7 +2905,7 @@ var TAROT_DESC=["절벽 끝에서 하늘만 보며 한 발 내딛는 젊은이 �
       '<h4 class="ad-h" style="margin:0">아홉 장이 들려주는 이야기</h4><div class="tr-story">'+st.map(function(x){return '<section><h5>'+x[0]+'</h5><p>'+x[1]+'</p></section>'}).join("")+'</div>'+
       '<div class="tr-adv"><h4>동자의 결론</h4>'+verdict(sc)+' 그러니까 꼭 기억해! '+adv+(adv2!==adv?' 그리고 '+adv2:'')+'</div>'+
       '<details class="tr-all"><summary>아홉 장 하나씩 다시 보기</summary><ul class="tr-list">'+li+'</ul></details>'+
-      '<button class="btn gray" type="button" id="tr-share">카톡으로 결과 보내고 액운템 받기</button><p class="note" id="tr-share-msg" hidden></p>'+
+      '<button class="btn gray" type="button" id="tr-share">카톡으로 결과 보내고 행운템 받기</button><p class="note" id="tr-share-msg" hidden></p>'+
       '<button class="btn" type="button" id="tr-again">같은 질문으로 다시 뽑기</button><button class="btn ghost" type="button" id="tr-new">다른 질문 고르기</button>';
     [].forEach.call($("tr-res").querySelectorAll("[data-f]"),function(e){face(e,+e.dataset.f)});
     $("tr-play").hidden=true;$("tr-res").hidden=false;$("tr-res").scrollIntoView({block:"start",behavior:"smooth"})}
@@ -3658,6 +3658,7 @@ function place(back){var sh=back.querySelector(".wheel-sheet");if(!sh)return;sh.
 document.querySelectorAll(".wheel-back").forEach(function(b){new MutationObserver(function(){if(!b.hidden)place(b)}).observe(b,{attributes:true,attributeFilter:["hidden"]})});
 })();
 </script>
+
 
 
 
