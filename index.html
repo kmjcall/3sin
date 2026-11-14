@@ -577,7 +577,7 @@ body.tq-stage .top{z-index:90}
 @keyframes ink{60%{opacity:1;filter:blur(0)}100%{opacity:1;transform:none;filter:blur(0)}}
 @media (max-width:600px){.say{font-size:21px}}
 
-@media (prefers-reduced-motion:no-preference){ section:not([hidden]){animation:rise .35s ease-out} @keyframes rise{from{transform:translateY(6px)}to{transform:none}} }
+@media (prefers-reduced-motion:no-preference){ section:not([hidden]){animation:rise .35s ease-out} #s-tarot:not([hidden]){animation:none} @keyframes rise{from{transform:translateY(6px)}to{transform:none}} }
 /* 생년월일 휠 선택상자: 누르면 바로 년·월·일 세 줄 휠이 아래에서 올라옴 */
 .datebtn{text-align:left;cursor:pointer;display:flex;align-items:center;justify-content:space-between}
 .datebtn::after{content:"";width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg) translateY(-3px);flex:none;margin-left:8px}
@@ -1159,7 +1159,7 @@ body.tq-stage .top{z-index:90}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-1910</p>
+<p class="ver" id="app-ver">버전 2026.11.14-1920</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -3588,6 +3588,7 @@ function place(back){var sh=back.querySelector(".wheel-sheet");if(!sh)return;sh.
 document.querySelectorAll(".wheel-back").forEach(function(b){new MutationObserver(function(){if(!b.hidden)place(b)}).observe(b,{attributes:true,attributeFilter:["hidden"]})});
 })();
 </script>
+
 
 
 
