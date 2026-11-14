@@ -239,19 +239,31 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 @media (max-width:380px){.tq-grid{gap:6px}.tq-opt{padding:11px 10px;gap:9px}.tq-opt .hj{width:30px;height:30px;font-size:16px}}
 
 /* 타로점 인트로 영상 */
-.tq-intro{position:fixed;inset:0;z-index:80;background:#000;transition:opacity .45s ease;animation:tqfade .35s ease-out}
+.tq-intro{position:fixed;inset:0;z-index:80;background:#000;overflow:hidden;transition:opacity .45s ease;animation:tqfade .35s ease-out;display:flex;align-items:center;justify-content:center;padding:calc(var(--hd-h,74px) + 12px) 14px calc(14px + env(safe-area-inset-bottom,0px))}
 .tq-intro[hidden]{display:none}
 @keyframes tqfade{from{opacity:0}to{opacity:1}}
-.tq-intro{overflow:hidden}
 .tq-intro::before{content:"";position:absolute;inset:-60px;background:var(--pbg) center/cover no-repeat;filter:blur(36px) brightness(.55)}
-.tq-intro video{position:relative;display:block;width:100%;height:100%;object-fit:cover}
-.tq-intro video{object-position:50% 0;margin-inline:auto}
+.tq-intro video{position:absolute;top:0;bottom:0;left:50%;transform:translateX(-50%);width:100%;height:100%;object-fit:cover;object-position:50% 0;transition:filter .7s ease,opacity .7s ease}
 @media (orientation:landscape){.tq-intro video{width:min(100%,600px)}}
+/* 영상이 끝나면 뒤 영상은 흐리게, 질문 상자는 반투명 팝업으로 위에 띄움 */
+.tq-intro.dim video{filter:brightness(.45) blur(2px) saturate(.85)}
+.tq-intro.dim::before{filter:blur(36px) brightness(.35)}
+body.tq-stage .top{z-index:90}
+.tq-intro .panel{position:relative;z-index:1;width:min(100%,560px);max-height:100%;overflow:auto;
+  --surface:#4E3D2E;--paper:#3B2E23;--line:#7A6347;--muted:#DCCDB2;--cobalt-soft:#5E4A33;--ink:#FBF2E2;
+  background:rgba(78,61,46,.55);backdrop-filter:blur(10px) saturate(1.1);-webkit-backdrop-filter:blur(10px) saturate(1.1);border-color:rgba(230,200,140,.35);box-shadow:0 18px 40px -12px rgba(0,0,0,.7)}
+.tq-intro .tq-opt{background:rgba(59,46,35,.6)}
+@media (hover:hover){.tq-intro .tq-opt:hover{background:rgba(94,74,51,.75)}}
+.tq-intro .tq-crumb button{background:rgba(94,74,51,.7)}
+.tq-intro .panel.tq-pop{animation:tqpop .5s cubic-bezier(.2,.9,.3,1.15)}
+@keyframes tqpop{from{opacity:0;transform:translateY(26px) scale(.94)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.tq-intro .panel.tq-pop{animation:none}}
 /* PC(마우스): 전체 화면 대신 홈의 삼신동자 영상과 같은 크기(본문 폭, 4:5)로 보여줌 */
 @media (hover:hover) and (pointer:fine){
-  .tq-intro{position:relative;inset:auto;z-index:auto;aspect-ratio:4/5;border-radius:18px;border:1px solid #4A3A2B;box-shadow:0 14px 34px -18px rgba(0,0,0,.9)}
+  .tq-intro{position:relative;inset:auto;z-index:auto;aspect-ratio:4/5;border-radius:18px;border:1px solid #4A3A2B;box-shadow:0 14px 34px -18px rgba(0,0,0,.9);padding:16px}
   .tq-intro::before{display:none}
   .tq-intro video{width:100%}
+  body.tq-stage .top{z-index:5}
 }
 .tq-intro.out{opacity:0;pointer-events:none}
 .tq-skip{position:absolute;right:calc(14px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));border:1px solid rgba(255,255,255,.45);background:rgba(20,14,10,.6);color:#fff;border-radius:999px;padding:10px 18px;font-size:15px;font-weight:600;cursor:pointer;backdrop-filter:blur(4px)}
@@ -1146,7 +1158,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-1850</p>
+<p class="ver" id="app-ver">버전 2026.11.14-1900</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -2715,21 +2727,27 @@ var TAROT_Q=[
   ib.style.setProperty("--pbg","url("+iv.getAttribute("poster")+")");
   function loadIntro(){if(iv.src)return;try{var d=$("tq-data"),bin=atob(d.textContent.trim()),u=new Uint8Array(bin.length);
     for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);iv.src=URL.createObjectURL(new Blob([u],{type:"video/mp4"}))}catch(e){}}
+  var anchor=document.createComment("tq");ib.parentNode.insertBefore(anchor,ib.nextSibling);
+  /* 무대 모드: 질문·확인 상자를 영상 위로 옮겨 반투명 팝업으로 보여줌 */
+  function stageOn(){ib.appendChild($("tq-panel"));ib.appendChild($("tq-final"));ib.classList.add("dim");document.body.classList.add("tq-stage")}
+  function stageOff(){var par=anchor.parentNode;par.insertBefore($("tq-final"),anchor.nextSibling);par.insertBefore($("tq-panel"),anchor.nextSibling);
+    ib.classList.remove("dim");document.body.classList.remove("tq-stage");if(!ib.hidden){ib.classList.add("out");setTimeout(function(){ib.hidden=true;ib.classList.remove("out")},450)}}
   function endIntro(){if(idone)return;idone=true;clearTimeout(ito);try{iv.pause()}catch(e){}
-    ib.classList.add("out");setTimeout(function(){ib.hidden=true},500);
-    $("tq-panel").hidden=false;var o=$("tq-panel");o.classList.remove("tq-anim");void o.offsetWidth;o.classList.add("tq-anim")}
+    stageOn();var o=$("tq-panel");o.hidden=false;o.classList.remove("tq-pop");void o.offsetWidth;o.classList.add("tq-pop")}
   function playIntro(){
     var still=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    stageOff();
     if(still){ib.hidden=true;return}
     loadIntro();if(!iv.src){ib.hidden=true;return}
-    idone=false;ib.hidden=false;ib.classList.remove("out");$("tq-panel").hidden=true;$("tq-final").hidden=true;
+    idone=false;ib.hidden=false;ib.classList.remove("out","dim");$("tq-panel").hidden=true;$("tq-final").hidden=true;
     try{iv.currentTime=0}catch(e){}
     var pr=iv.play();if(pr&&pr.catch)pr.catch(function(){endIntro()});
     clearTimeout(ito);ito=setTimeout(endIntro,9000);
   }
   iv.addEventListener("ended",endIntro);
   window.tqReset=function(){st.a=null;st.b=null;render();playIntro()};
-  window.tqStop=function(){if(!idone){idone=true;clearTimeout(ito);try{iv.pause()}catch(e){}}};
+  window.tqStop=function(){if(!idone){idone=true;clearTimeout(ito);try{iv.pause()}catch(e){}}document.body.classList.remove("tq-stage")};
+  window.tqStageOff=stageOff;
   render();
 })();
 
@@ -2801,7 +2819,7 @@ var TAROT_CARDS=[["바보", "새 출발·자유", 1, "새로운 일을 막 시�
     say(h+'<span class="nx">이제 풀이 보러 가자!</span>');$("tr-ctrl").innerHTML='<button class="btn" type="button" id="tr-done">동자의 풀이 보기</button>'}
   function start(ask){if(!ask)return;T.ask=ask;T.picks=[];T.bonus=false;T.busy=true;
     var d=[];for(var i=0;i<78;i++)d.push(i);for(i=77;i>0;i--){var j=rnd(i+1),t=d[i];d[i]=d[j];d[j]=t}T.deck=d;
-    sprite();$("tq-final").hidden=true;$("tr-res").hidden=true;$("tr-play").hidden=false;$("tr-ctrl").innerHTML="";
+    sprite();if(window.tqStageOff)window.tqStageOff();$("tq-final").hidden=true;$("tr-res").hidden=true;$("tr-play").hidden=false;$("tr-ctrl").innerHTML="";
     $("tr-ask").innerHTML='<small>'+ask.topicName+' · '+ask.situation+'</small>“'+ask.question+'”';
     slots();say("카드를 섞을게… 섞섞섞! 질문을 마음속으로 떠올려.");
     $("tr-play").scrollIntoView({block:"start",behavior:"smooth"});
@@ -3569,6 +3587,7 @@ function place(back){var sh=back.querySelector(".wheel-sheet");if(!sh)return;sh.
 document.querySelectorAll(".wheel-back").forEach(function(b){new MutationObserver(function(){if(!b.hidden)place(b)}).observe(b,{attributes:true,attributeFilter:["hidden"]})});
 })();
 </script>
+
 
 
 
