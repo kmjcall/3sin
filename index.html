@@ -260,9 +260,9 @@ body.tq-stage .top{z-index:90}
 @media (prefers-reduced-motion:reduce){.tq-intro .panel.tq-pop{animation:none}}
 /* PC(마우스): 전체 화면 대신 홈의 삼신동자 영상과 같은 크기(본문 폭, 4:5)로 보여줌 */
 @media (hover:hover) and (pointer:fine){
-  .tq-intro{position:relative;inset:auto;z-index:auto;aspect-ratio:4/5;border-radius:18px;border:1px solid #4A3A2B;box-shadow:0 14px 34px -18px rgba(0,0,0,.9);padding:16px}
-  .tq-intro::before{display:none}
-  .tq-intro video{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;object-position:50% 0;border-radius:0;border:0;box-shadow:none}
+  .tq-intro{position:relative;inset:auto;z-index:auto;aspect-ratio:4/5;max-height:max(420px,calc(100vh - var(--hd-h,74px) - 110px));border-radius:18px;border:1px solid #4A3A2B;box-shadow:0 14px 34px -18px rgba(0,0,0,.9);padding:16px}
+  /* 위아래·좌우 여백을 두고, 아래 카드 줄까지 보이게(식탁보 아래쪽만 살짝 잘림) */
+  .tq-intro video{position:relative;height:calc(100% - 36px);width:auto;max-width:calc(100% - 36px);aspect-ratio:9/12.8;object-fit:cover;object-position:50% 0}
   .tq-intro .panel{inset:16px;max-height:calc(100% - 32px);width:min(calc(100% - 32px),560px)}
   body.tq-stage .top{z-index:5}
 }
@@ -1159,7 +1159,7 @@ body.tq-stage .top{z-index:90}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-1920</p>
+<p class="ver" id="app-ver">버전 2026.11.14-1940</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -3588,6 +3588,9 @@ function place(back){var sh=back.querySelector(".wheel-sheet");if(!sh)return;sh.
 document.querySelectorAll(".wheel-back").forEach(function(b){new MutationObserver(function(){if(!b.hidden)place(b)}).observe(b,{attributes:true,attributeFilter:["hidden"]})});
 })();
 </script>
+
+
+
 
 
 
