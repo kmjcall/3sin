@@ -1200,7 +1200,7 @@ body.tq-stage .top{z-index:90}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-2110</p>
+<p class="ver" id="app-ver">버전 2026.11.14-2120</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -2250,10 +2250,13 @@ function showResult(){
   var bt=G.birth?G.birth.split("-").map(Number):null;
   var zH="";if(bt){var zy=(bt[1]<2||(bt[1]===2&&bt[2]<4))?bt[0]-1:bt[0],zi=((zy-4)%12+12)%12,Z=function(x){return ZOD[x]+"띠"};
     var grp=SAMHAP.filter(function(g){return g.indexOf(zi)>=0})[0].filter(function(x){return x!==zi}),yh=YUKHAP[zi],ch=(zi+6)%12,tb=todayBranch();
+    /* 그 띠에 해당하는 해를 내 출생 연도 앞으로 2개, 뒤로 2개 보여줌 (예: 뱀띠(65년생, 77년생, 89년생, 01년생)) */
+    var ZY=function(x){var b=[],a=[];for(var y=zy-1;b.length<2;y--)if(((y-4)%12+12)%12===x)b.unshift(y);for(y=zy+1;a.length<2;y++)if(((y-4)%12+12)%12===x)a.push(y);
+      return Z(x)+'('+b.concat(a).map(function(y){return String(y%100).padStart(2,"0")+"년생"}).join(", ")+')'};
     var good=[yh].concat(grp),tday=good.indexOf(tb)>=0||tb===zi?"오늘은 일진(日辰)이 "+Z(tb)+" 날이라 너와 기운이 잘 맞는 날일세. ":tb===ch?"오늘은 일진이 "+Z(tb)+" 날이라 너와 부딪히는 기운이 있으니 한 박자 쉬어 가게. ":"오늘 일진은 "+Z(tb)+" 날이라 무난하게 흘러가겠네. ";
     zH='<div class="rm-box"><h4>'+Z(zi)+'로 보면</h4><p>'+zy+'년생 '+Z(zi)+'는 '+ZTRAIT[zi]+' 기운을 타고났네. '+tday+tn+'은 이 타고난 기운을 살릴수록 더 잘 풀리느니라.</p>'+
-      '<p><b>오늘 곁에 두면 좋은 띠</b> '+Z(yh)+' (육합, 마음이 척척 맞는 짝), '+grp.map(Z).join("·")+' (삼합, 일을 함께하면 힘이 되는 사이)</p>'+
-      '<p><b>오늘 부딪히기 쉬운 띠</b> '+Z(ch)+' (충), 다투기보다 한 발 물러서면 오히려 득이 되네.</p>'+
+      '<p><b>오늘 곁에 두면 좋은 띠</b><br>· '+ZY(yh)+' — 육합<br>'+grp.map(function(x){return '· '+ZY(x)+' — 삼합'}).join("<br>")+'<br><small style="color:var(--muted)">육합은 마음이 척척 맞는 짝, 삼합은 일을 함께하면 힘이 되는 사이일세.</small></p>'+
+      '<p><b>오늘 부딪히기 쉬운 띠</b><br>· '+ZY(ch)+' — 충, 다투기보다 한 발 물러서면 오히려 득이 되네.</p>'+
       '<p><b>행운의 숫자</b> '+(bt[1]%9+1)+', '+(bt[2]%9+1)+'</p></div>'}
   var luckM=(G.chosen&&G.chosen[0])?G.chosen[0].m:(rem[0]?rem[0].m:((bt?bt[1]:1)));
   var tip=TIP[t]||TIP.today;
@@ -3658,6 +3661,7 @@ function place(back){var sh=back.querySelector(".wheel-sheet");if(!sh)return;sh.
 document.querySelectorAll(".wheel-back").forEach(function(b){new MutationObserver(function(){if(!b.hidden)place(b)}).observe(b,{attributes:true,attributeFilter:["hidden"]})});
 })();
 </script>
+
 
 
 
