@@ -981,7 +981,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-1522</p>
+<p class="ver" id="app-ver">버전 2026.11.14-1524</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -2110,8 +2110,12 @@ function loadAdmin(){if(!sb)return;sb.rpc("admin_stats").then(function(r){var el
 /* 메일의 'Reset password' 링크로 들어온 경우: 새 비밀번호 정하기 창 */
 (function(){if(!sb)return;var shown=false;
   function ask(){if(shown)return;shown=true;
-    var m=document.createElement("div");m.className="ct-back";m.innerHTML='<div class="ct-panel" role="dialog" aria-modal="true" aria-labelledby="rp-t"><h3 id="rp-t">새 비밀번호 정하기</h3><p class="ct-sub">메일 링크로 본인 확인이 됐어요. 새 비밀번호를 정해 주세요.</p><div class="field" style="text-align:left"><label for="rp-1">새 비밀번호 (8자 이상)</label><input class="input" type="password" id="rp-1" autocomplete="new-password"></div><div class="field" style="text-align:left"><label for="rp-2">새 비밀번호 확인</label><input class="input" type="password" id="rp-2" autocomplete="new-password"></div><p class="err" id="rp-e" hidden></p><button class="btn" type="button" id="rp-ok">저장하기</button></div>';
+    var m=document.createElement("div");m.className="ct-back";m.innerHTML='<div class="ct-panel" role="dialog" aria-modal="true" aria-labelledby="rp-t" style="position:relative"><button class="shop-x" type="button" id="rp-x" aria-label="닫기">×</button><h3 id="rp-t">새 비밀번호 정하기</h3><p class="ct-sub">메일 링크로 본인 확인이 됐어요. 새 비밀번호를 정해 주세요.</p><div class="field" style="text-align:left"><label for="rp-1">새 비밀번호 (8자 이상)</label><input class="input" type="password" id="rp-1" autocomplete="new-password"></div><div class="field" style="text-align:left"><label for="rp-2">새 비밀번호 확인</label><input class="input" type="password" id="rp-2" autocomplete="new-password"></div><p class="err" id="rp-e" hidden></p><button class="btn" type="button" id="rp-ok">저장하기</button></div>';
     document.body.appendChild(m);
+    var closeRp=function(){m.remove();try{history.replaceState(null,"",location.pathname)}catch(x){}};
+    document.getElementById("rp-x").addEventListener("click",closeRp);
+    m.addEventListener("click",function(e){if(e.target===m)closeRp()});
+    document.addEventListener("keydown",function k(e){if(e.key==="Escape"&&document.body.contains(m)){closeRp();document.removeEventListener("keydown",k)}});
     document.getElementById("rp-ok").addEventListener("click",function(){var a=document.getElementById("rp-1").value,b=document.getElementById("rp-2").value,e=document.getElementById("rp-e"),bt=this;
       if(a.length<8){e.hidden=false;e.textContent="비밀번호는 8자 이상으로 정해주세요.";return}
       if(a!==b){e.hidden=false;e.textContent="비밀번호 확인이 서로 달라요.";return}
