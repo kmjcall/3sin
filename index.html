@@ -186,7 +186,8 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 @media (max-width:600px){.ad-scroll{border:0;overflow:visible}.ad-tb.ad-mem thead{display:none}.ad-tb.ad-mem,.ad-tb.ad-mem tbody,.ad-tb.ad-mem tr{display:block;white-space:normal}
  .ad-tb.ad-mem tr{border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin-bottom:8px;background:var(--paper);display:grid;grid-template-columns:1fr 1fr;gap:2px 10px}
  .ad-tb.ad-mem td{border:0;padding:3px 0;display:flex;flex-direction:column}.ad-tb.ad-mem td::before{content:attr(data-l);font-size:11px;color:var(--muted)}
- .ad-tb.ad-mem td[data-l="사는 곳"],.ad-tb.ad-mem td[data-l="첫인상"],.ad-tb.ad-mem td[data-l="아이디"]{grid-column:span 2}}
+ .ad-tb.ad-mem td[data-l="사는 곳"],.ad-tb.ad-mem td[data-l="첫인상"],.ad-tb.ad-mem td[data-l="아이디(이메일)"]{grid-column:span 2}}
+.ad-mem a{color:#F2CE78;text-decoration:underline;text-underline-offset:2px;word-break:break-all}
 .ad-pg{display:flex;gap:8px;justify-content:flex-end}
 
 .ad-d{font-size:12px;color:var(--muted);font-weight:400;margin-left:6px}
@@ -992,7 +993,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-1555</p>
+<p class="ver" id="app-ver">버전 2026.11.14-1600</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -2134,11 +2135,11 @@ function loadMembers(){var box=document.getElementById("ad-list");if(!box)return
     if(!rows.length){box.innerHTML='<p class="note">조건에 맞는 회원이 없어요.</p>';return}
     var f=function(t){var d=new Date(t);return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0')};
     box.innerHTML='<p class="note">총 '+Number(tot).toLocaleString("ko-KR")+'명 중 '+(ADM.off+1)+'–'+(ADM.off+rows.length)+'번째 · 최근 가입 순</p>'+
-      '<div class="ad-scroll"><table class="ad-tb ad-mem"><thead><tr><th>가입일</th><th>이름</th><th>성별</th><th>생년월일</th><th>나이</th><th>사는 곳</th><th>직업</th><th>첫인상</th><th>신청 보냄/받음/성사</th><th>아이디</th></tr></thead><tbody>'+
-      rows.map(function(m){var c=function(l,v){return '<td data-l="'+l+'">'+v+'</td>'};return '<tr'+(m.active?'':' class="off"')+'>'+c("가입일",f(m.joined_at))+c("이름",'<b>'+esc(m.name)+'</b>')+c("성별",m.gender==="M"?"남":"여")+c("생년월일",m.birth_date.replace(/-/g,".")+(m.birth_hour>=0?' '+HOUR_KO[m.birth_hour]:''))+c("나이",m.age+"세")+c("사는 곳",esc(m.sido+' '+m.sigungu))+c("직업",esc(m.job_detail||m.job))+c("첫인상",esc(m.first_impression||"-"))+c("신청 보냄/받음/성사",m.sent+' / '+m.received+' / '+m.accepted)+c("아이디",esc(m.email_masked||"-"))+'</tr>'}).join("")+
+      '<div class="ad-scroll"><table class="ad-tb ad-mem"><thead><tr><th>가입일</th><th>이름</th><th>성별</th><th>생년월일</th><th>나이</th><th>사는 곳</th><th>직업</th><th>첫인상</th><th>신청 보냄/받음/성사</th><th>아이디(이메일)</th></tr></thead><tbody>'+
+      rows.map(function(m){var c=function(l,v){return '<td data-l="'+l+'">'+v+'</td>'};return '<tr'+(m.active?'':' class="off"')+'>'+c("가입일",f(m.joined_at))+c("이름",'<b>'+esc(m.name)+'</b>')+c("성별",m.gender==="M"?"남":"여")+c("생년월일",m.birth_date.replace(/-/g,".")+(m.birth_hour>=0?' '+HOUR_KO[m.birth_hour]:''))+c("나이",m.age+"세")+c("사는 곳",esc(m.sido+' '+m.sigungu))+c("직업",esc(m.job_detail||m.job))+c("첫인상",esc(m.first_impression||"-"))+c("신청 보냄/받음/성사",m.sent+' / '+m.received+' / '+m.accepted)+c("아이디(이메일)",m.email_masked?'<a href="mailto:'+esc(m.email_masked)+'">'+esc(m.email_masked)+'</a>':"-")+'</tr>'}).join("")+
       '</tbody></table></div>'+
       '<div class="ad-pg"><button class="btn ghost sm" type="button" id="ad-prev"'+(ADM.off?'':' disabled')+'>이전</button><button class="btn ghost sm" type="button" id="ad-next"'+(ADM.off+rows.length<tot?'':' disabled')+'>다음</button></div>'+
-      '<p class="note">연락처와 사진은 보안상 관리자에게도 보이지 않아요. 흐린 줄은 매칭에서 빠진(비활성) 회원이에요.</p>';
+      '<p class="note">이메일을 누르면 메일 쓰기 창이 열려요. 연락처(휴대폰·카톡·인스타)와 사진은 보안상 관리자에게도 보이지 않아요. 흐린 줄은 매칭에서 빠진(비활성) 회원이에요.</p>';
     document.getElementById("ad-prev").onclick=function(){ADM.off=Math.max(0,ADM.off-ADM.lim);loadMembers()};
     document.getElementById("ad-next").onclick=function(){ADM.off+=ADM.lim;loadMembers()};
   })}
