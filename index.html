@@ -243,13 +243,13 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 .tq-intro[hidden]{display:none}
 @keyframes tqfade{from{opacity:0}to{opacity:1}}
 .tq-intro::before{content:"";position:absolute;inset:-60px;background:var(--pbg) center/cover no-repeat;filter:blur(36px) brightness(.55)}
-.tq-intro video{position:absolute;top:0;bottom:0;left:50%;transform:translateX(-50%);width:100%;height:100%;object-fit:cover;object-position:50% 0;transition:filter .7s ease,opacity .7s ease}
-@media (orientation:landscape){.tq-intro video{width:min(100%,600px)}}
+/* 휴대폰: 영상이 잘리지 않게 위아래·좌우 여백을 두고 9:16 그대로 보여줌 */
+.tq-intro video{position:relative;display:block;width:min(100%,calc((100dvh - var(--hd-h,74px) - 26px - env(safe-area-inset-bottom,0px)) * 9 / 16));aspect-ratio:9/16;height:auto;object-fit:cover;border-radius:16px;border:1px solid rgba(230,200,140,.3);box-shadow:0 18px 40px -14px rgba(0,0,0,.8);transition:filter .7s ease,opacity .7s ease}
 /* 영상이 끝나면 뒤 영상은 흐리게, 질문 상자는 반투명 팝업으로 위에 띄움 */
 .tq-intro.dim video{filter:brightness(.45) blur(2px) saturate(.85)}
 .tq-intro.dim::before{filter:blur(36px) brightness(.35)}
 body.tq-stage .top{z-index:90}
-.tq-intro .panel{position:relative;z-index:1;width:min(100%,560px);max-height:100%;overflow:auto;
+.tq-intro .panel{position:absolute;z-index:1;inset:calc(var(--hd-h,74px) + 12px) 14px calc(14px + env(safe-area-inset-bottom,0px));margin:auto;height:fit-content;width:min(calc(100% - 28px),560px);max-height:calc(100% - var(--hd-h,74px) - 26px);overflow:auto;
   --surface:#4E3D2E;--paper:#3B2E23;--line:#7A6347;--muted:#DCCDB2;--cobalt-soft:#5E4A33;--ink:#FBF2E2;
   background:rgba(78,61,46,.55);backdrop-filter:blur(10px) saturate(1.1);-webkit-backdrop-filter:blur(10px) saturate(1.1);border-color:rgba(230,200,140,.35);box-shadow:0 18px 40px -12px rgba(0,0,0,.7)}
 .tq-intro .tq-opt{background:rgba(59,46,35,.6)}
@@ -262,7 +262,8 @@ body.tq-stage .top{z-index:90}
 @media (hover:hover) and (pointer:fine){
   .tq-intro{position:relative;inset:auto;z-index:auto;aspect-ratio:4/5;border-radius:18px;border:1px solid #4A3A2B;box-shadow:0 14px 34px -18px rgba(0,0,0,.9);padding:16px}
   .tq-intro::before{display:none}
-  .tq-intro video{width:100%}
+  .tq-intro video{position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;object-position:50% 0;border-radius:0;border:0;box-shadow:none}
+  .tq-intro .panel{inset:16px;max-height:calc(100% - 32px);width:min(calc(100% - 32px),560px)}
   body.tq-stage .top{z-index:5}
 }
 .tq-intro.out{opacity:0;pointer-events:none}
@@ -1158,7 +1159,7 @@ body.tq-stage .top{z-index:90}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-1900</p>
+<p class="ver" id="app-ver">버전 2026.11.14-1910</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -2739,7 +2740,7 @@ var TAROT_Q=[
     stageOff();
     if(still){ib.hidden=true;return}
     loadIntro();if(!iv.src){ib.hidden=true;return}
-    idone=false;ib.hidden=false;ib.classList.remove("out","dim");$("tq-panel").hidden=true;$("tq-final").hidden=true;
+    idone=false;ib.hidden=false;ib.classList.remove("out","dim");document.body.classList.add("tq-stage");$("tq-panel").hidden=true;$("tq-final").hidden=true;
     try{iv.currentTime=0}catch(e){}
     var pr=iv.play();if(pr&&pr.catch)pr.catch(function(){endIntro()});
     clearTimeout(ito);ito=setTimeout(endIntro,9000);
@@ -3587,6 +3588,7 @@ function place(back){var sh=back.querySelector(".wheel-sheet");if(!sh)return;sh.
 document.querySelectorAll(".wheel-back").forEach(function(b){new MutationObserver(function(){if(!b.hidden)place(b)}).observe(b,{attributes:true,attributeFilter:["hidden"]})});
 })();
 </script>
+
 
 
 
