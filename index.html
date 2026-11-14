@@ -981,7 +981,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-1450</p>
+<p class="ver" id="app-ver">버전 2026.11.14-1520</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -1822,7 +1822,7 @@ function showAuth(boxId,lead,onOk,onCancel){
         if(r.data&&r.data.session){done();return}
         if(r.data&&r.data.user&&r.data.user.identities&&r.data.user.identities.length===0){setMode("login");I("em").value=em;fail("이미 가입된 아이디예요. 비밀번호로 로그인해 주세요.");return}
         askCode("signup","메일로 보낸 인증번호를 넣으면 가입이 끝나요. 메일이 안 보이면 스팸함도 확인해주세요.")});return}
-    btn.disabled=true;sb.auth.resetPasswordForEmail(em).then(function(r){btn.disabled=false;
+    btn.disabled=true;sb.auth.resetPasswordForEmail(em,{redirectTo:location.origin+location.pathname}).then(function(r){btn.disabled=false;
       if(r.error){fail("인증번호를 보내지 못했어요. ("+r.error.message+")");return}
       askCode("recovery","메일로 보낸 인증번호와 새 비밀번호를 넣어주세요.")});
   });
@@ -1839,7 +1839,7 @@ function showAuth(boxId,lead,onOk,onCancel){
     });
   });
   q("resend").addEventListener("click",function(){var em=emailOk();if(!em)return;var b=q("resend");b.disabled=true;
-    (pending==="recovery"?sb.auth.resetPasswordForEmail(em):sb.auth.resend({type:"signup",email:em})).then(function(r){b.disabled=false;
+    (pending==="recovery"?sb.auth.resetPasswordForEmail(em,{redirectTo:location.origin+location.pathname}):sb.auth.resend({type:"signup",email:em})).then(function(r){b.disabled=false;
       if(r.error)fail("다시 보내지 못했어요. 1분쯤 뒤에 다시 눌러주세요.");else ok("인증번호를 다시 보냈어요.")})});
   if(onCancel)q("cancel").addEventListener("click",function(){box.hidden=true;box.innerHTML="";onCancel()});
   var st=AUTH_START||"login";AUTH_START=null;setMode(st);
@@ -2107,6 +2107,21 @@ function loadAdmin(){if(!sb)return;sb.rpc("admin_stats").then(function(r){var el
     '<h4 class="ad-h">최근 7일 방문</h4><div class="ad-bars">'+days.map(function(x){var h=Math.round(x.visit/mx*100);return '<div class="ad-b"><i style="height:'+Math.max(Math.round(h*.9),2)+'px" title="'+x.d+' 방문 '+x.visit+'"></i><b>'+x.visit+'</b><span>'+x.d.slice(5).replace("-","/")+'</span></div>'}).join("")+'</div>'+
     '<p class="note">방문·이용 수는 같은 기기에서 하루에 한 번만 셉니다. 삼신몰 방문은 헤더 버튼과 액받이 아이템 이동을 합친 수예요.</p></div>';
   el.hidden=false})}
+/* 메일의 'Reset password' 링크로 들어온 경우: 새 비밀번호 정하기 창 */
+(function(){if(!sb)return;var shown=false;
+  function ask(){if(shown)return;shown=true;
+    var m=document.createElement("div");m.className="ct-back";m.innerHTML='<div class="ct-panel" role="dialog" aria-modal="true" aria-labelledby="rp-t"><h3 id="rp-t">새 비밀번호 정하기</h3><p class="ct-sub">메일 링크로 본인 확인이 됐어요. 새 비밀번호를 정해 주세요.</p><div class="field" style="text-align:left"><label for="rp-1">새 비밀번호 (8자 이상)</label><input class="input" type="password" id="rp-1" autocomplete="new-password"></div><div class="field" style="text-align:left"><label for="rp-2">새 비밀번호 확인</label><input class="input" type="password" id="rp-2" autocomplete="new-password"></div><p class="err" id="rp-e" hidden></p><button class="btn" type="button" id="rp-ok">저장하기</button></div>';
+    document.body.appendChild(m);
+    document.getElementById("rp-ok").addEventListener("click",function(){var a=document.getElementById("rp-1").value,b=document.getElementById("rp-2").value,e=document.getElementById("rp-e"),bt=this;
+      if(a.length<8){e.hidden=false;e.textContent="비밀번호는 8자 이상으로 정해주세요.";return}
+      if(a!==b){e.hidden=false;e.textContent="비밀번호 확인이 서로 달라요.";return}
+      bt.disabled=true;sb.auth.updateUser({password:a}).then(function(r){bt.disabled=false;
+        if(r.error){e.hidden=false;e.textContent="저장하지 못했어요. ("+r.error.message+")";return}
+        m.remove();try{history.replaceState(null,"",location.pathname)}catch(x){}go("inbox")})});
+    setTimeout(function(){document.getElementById("rp-1").focus()},50)}
+  sb.auth.onAuthStateChange(function(ev){if(ev==="PASSWORD_RECOVERY")ask()});
+  if(/type=recovery/.test(location.hash))setTimeout(function(){sb.auth.getSession().then(function(r){if(r.data&&r.data.session)ask()})},800);
+})();
 /* 내 연결함 */
 function renderInbox(){
   var body=document.getElementById("ib-body"),out=document.getElementById("ib-out");
