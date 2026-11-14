@@ -231,9 +231,9 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 .hw-done b{font-size:24px;color:#F2CE78}.hw-done small{color:var(--muted);font-size:12px;margin-top:2px}
 .hw-say{font-size:16px}
 .hw-say.pop{animation:hwsaypop .9s cubic-bezier(.2,.9,.3,1.2)}
-@keyframes hwsaypop{0%{transform:translateY(10px);opacity:0;font-size:16px}30%{transform:translateY(-4px);opacity:1;font-size:20px}70%{transform:none;font-size:20px}100%{transform:none;font-size:16px}}
+@keyframes hwsaypop{0%{transform:translateY(10px) scale(1);opacity:0}30%{transform:translateY(-4px) scale(1.25);opacity:1}70%{transform:scale(1.25)}100%{transform:none}}
 @media (prefers-reduced-motion:reduce){.hw-say.pop{animation:none}}
-.hw-say{margin:0;text-align:center;min-height:1.6em;color:#F2CE78;font-weight:600;word-break:keep-all}
+.hw-say{margin:0;text-align:center;min-height:3.4em;display:flex;align-items:center;justify-content:center;transform-origin:center;color:#F2CE78;font-weight:600;word-break:keep-all}
 .hw-board{display:grid;grid-template-columns:repeat(4,1fr);row-gap:clamp(10px,3vw,16px);column-gap:clamp(22px,7vw,40px);max-width:396px;width:92%;margin:0 auto}
 .hw-cell{aspect-ratio:2/3;border-radius:8px;background:rgba(0,0,0,.18);position:relative}
 .hw-ctrl{display:flex;justify-content:center;gap:8px}
@@ -993,7 +993,7 @@ input[type=date].input::-webkit-datetime-edit{padding:0}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-1610</p>
+<p class="ver" id="app-ver">버전 2026.11.14-1620</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -2824,6 +2824,7 @@ function place(back){var sh=back.querySelector(".wheel-sheet");if(!sh)return;sh.
 document.querySelectorAll(".wheel-back").forEach(function(b){new MutationObserver(function(){if(!b.hidden)place(b)}).observe(b,{attributes:true,attributeFilter:["hidden"]})});
 })();
 </script>
+
 
 
 </html>
