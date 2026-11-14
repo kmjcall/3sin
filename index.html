@@ -510,6 +510,17 @@ body.tq-stage .top{z-index:90}
 
 .charm{display:flex;flex-direction:column;gap:10px;word-break:keep-all;border-color:rgba(242,206,120,.45)}
 .charm .note{margin:0}
+.sp-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.sp-item{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:12px;cursor:pointer;color:inherit;font:inherit;transition:border-color .15s,background .15s}
+@media (hover:hover){.sp-item:hover{border-color:var(--cobalt)}}
+.sp-ic{position:relative;flex:none;width:56px;height:56px;border-radius:10px;display:grid;place-items:center;font-size:28px;background:radial-gradient(circle at 50% 40%,rgba(242,206,120,.22),rgba(242,206,120,.05));border:1px solid rgba(242,206,120,.35)}
+.sp-tx{display:flex;flex-direction:column;gap:4px;min-width:0}
+.sp-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sp-top b{font-size:15.5px}
+.sp-pr{font-size:14px;color:var(--cobalt);font-weight:700}
+.sp-so{position:absolute;left:50%;bottom:-7px;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.04em;font-weight:800;color:#F3DDA8;background:#1E1712;border:1px solid rgba(242,206,120,.5);border-radius:4px;padding:1px 5px;line-height:1.3}
+.sp-why{font-size:14px;line-height:1.55;color:var(--ink);word-break:keep-all}
+.hw-reco,.tr-reco{margin:4px 0}
 .charm .eyebrow{font-size:14px}
 .charm.pulse{animation:charmpulse 1.6s ease-out}
 @keyframes charmpulse{0%{box-shadow:0 0 0 0 rgba(242,206,120,.8)}40%{box-shadow:0 0 0 6px rgba(242,206,120,.35)}100%{box-shadow:0 0 0 0 rgba(242,206,120,0)}}
@@ -1200,7 +1211,7 @@ body.tq-stage .top{z-index:90}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-2130</p>
+<p class="ver" id="app-ver">버전 2026.11.14-2350</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -1821,11 +1832,64 @@ function remedyHTML(o){ /* o:{title,lead,w,ex,extra,src} */
     '</div>'+
     '<p class="note rm-fine">재미로 보는 풀이예요. 건강이 걱정되면 꼭 병원에 가보세요.</p>';
 }
-function charmHTML(w){var it=EL_ITEM[w],nm=S.me?S.me.n:"";
-  return '<p class="eyebrow">액받이 아이템</p><h3 class="h2" style="font-size:17px">'+(nm?esc(nm)+'님은 ':'')+EL[w].k+'('+EL[w].h+') 기운을 채우면 좋아요</h3>'+
-    '<p class="rm-lead">"'+EL[w].k+' 기운이 모자라니 이걸 곁에 두거라. 액은 막고 복은 들어오느니라."</p>'+
-    '<dl class="shop-dl"><dt>행운의 색</dt><dd>'+it.c+'</dd><dt>곁에 둘 물건</dt><dd>'+it.t+'</dd><dt>좋은 방향</dt><dd>'+it.d+'</dd></dl>'+
-    '<p class="note">삼신 액받이 아이템 가게는 곧 문을 열어요. 열리면 아래 버튼에서 바로 들어갈 수 있어요.</p>'}
+/* ───────── 삼신몰 상품과 추천 규칙 ─────────
+   SHOP_ITEMS 한 줄 = 상품 하나. url은 카페24 상품 주소가 생기면 넣음(비어 있으면 '준비 중').
+   el: 채워주는 오행(0목 1화 2토 3금 4수), tags: 도와주는 일, r: 추천 이유(오행 번호나 tag 이름으로 찾음) */
+var SHOP_ITEMS=[
+ {id:"myeongtae",n:"명태 키링",p:10000,ic:"🐟",el:[4],tags:["액막이","가정","건강","행운"],url:"",
+  say:"실타래를 감은 명태가 들어올 액을 대신 받아주는 전통 액막이예요.",
+  r:{4:"바다에서 온 명태가 모자란 수(水) 기운을 채워줘요.",액막이:"들어올 액을 명태가 대신 받아가요.",가정:"현관에 걸면 잡귀가 집 안에 못 들어와요.",건강:"실타래처럼 길고 탈 없이 지내라는 뜻이에요.",행운:"오늘 하루 액은 명태에게 맡기고 가볍게 다녀요."}},
+ {id:"myeongtae_pro",n:"고급 명태 키링",p:20000,ic:"🪵",el:[0,3],tags:["액막이","사업","가정","재물"],url:"",
+  say:"원목 명태에 실타래와 놋방울을 단 고급형이에요. 방울 소리가 잡귀를 쫓아요.",
+  r:{0:"원목 명태가 모자란 목(木) 기운을 채워줘요.",3:"놋방울이 모자란 금(金) 기운을 채워줘요.",액막이:"명태와 방울이 함께 액을 막아 효과가 두 배예요.",사업:"가게·사무실 문에 거는 개업 액막이로 좋아요.",가정:"집들이·이사 선물로 집안 액을 막아줘요.",재물:"놋방울 소리로 재물이 새는 걸 막아요."}},
+ {id:"hwatu",n:"화투 키링",p:5000,ic:"🎴",el:[1],tags:["재물","행운","기회"],url:"",
+  say:"광(光) 패를 담은 화투 키링이에요. 패가 잘 풀리듯 운이 풀리라는 뜻이에요.",
+  r:{1:"붉은 화투패가 모자란 화(火) 기운을 채워줘요.",재물:"광 패처럼 큰돈이 들어오라는 뜻을 담았어요.",행운:"패가 술술 풀리듯 운이 풀리라는 뜻이에요.",기회:"좋은 패를 쥐듯 들어온 기회를 놓치지 말라는 뜻이에요."}},
+ {id:"bujeok",n:"부적 키링",p:5000,ic:"📜",el:[2],tags:["합격","건강","재물","연애"],url:"",
+  say:"합격·재물·인연·부상방지 중 원하는 문구를 골라 다는 귀여운 부적이에요.",
+  r:{2:"노란 부적지가 모자란 토(土) 기운을 채워줘요.",합격:"'합격 부적'을 골라 가방에 달아요.",건강:"'부상방지 부적'으로 다치는 일을 막아요.",재물:"'재물 부적'으로 새는 돈을 막아요.",연애:"'인연 부적'으로 좋은 사람을 불러요."}},
+ {id:"bujeok_pro",n:"고급 부적 키링",p:10000,ic:"🧧",el:[2,1],tags:["액막이","합격","재물","건강"],url:"",
+  say:"금박으로 찍은 고급 부적이에요. 오래 들고 다녀도 빛이 바래지 않아요.",
+  r:{2:"황금빛 부적이 모자란 토(土) 기운을 채워줘요.",1:"붉은 인주 문양이 모자란 화(火) 기운을 채워줘요.",액막이:"금박 부적이 큰 액을 막아줘요.",합격:"중요한 시험·면접 날 지니는 합격 부적이에요.",재물:"재물 부적으로 들어온 돈을 지켜요.",건강:"부상방지 부적으로 몸을 지켜요."}},
+ {id:"haetae",n:"수호신 키링",p:5000,ic:"🦁",el:[4,0,1],tags:["안전","관계","액막이","여행"],url:"",
+  say:"시비를 가리고 화재를 막는 수호신 해태 키링이에요. 검정·청색·홍색 중 고를 수 있어요.",
+  r:{4:"검정 해태를 고르면 모자란 수(水) 기운을 채워줘요.",0:"청색 해태를 고르면 모자란 목(木) 기운을 채워줘요.",1:"홍색 해태를 고르면 모자란 화(火) 기운을 채워줘요.",안전:"해태가 길을 지켜 사고를 막아줘요.",관계:"시비와 구설을 막아 사람 사이를 지켜줘요.",액막이:"해태가 나쁜 기운을 문밖에서 막아줘요.",여행:"먼 길 떠날 때 가방에 달면 길을 지켜줘요."}},
+ {id:"mochi",n:"찹쌀떡 귀신 키링",p:10000,ic:"👻",el:[3],tags:["합격","연애","관계"],url:"",
+  say:"말랑한 찹쌀떡 꼬마 귀신이에요. 원하는 일이 찰떡같이 붙으라는 뜻이에요.",
+  r:{3:"하얀 찹쌀떡이 모자란 금(金) 기운을 채워줘요.",합격:"찹쌀떡처럼 시험에 착 붙으라는 합격 기원이에요.",연애:"찰떡궁합 인연이 붙으라는 뜻이에요.",관계:"사람들과 찰떡같이 붙어 지내라는 뜻이에요."}}];
+/* 운세 주제 → 도와줄 일 */
+var SHOP_TOPIC={today:["행운","액막이"],money:["재물","기회"],love:["연애","관계"],work:["합격","사업","재물"],health:["건강","액막이"],
+  rel:["관계","안전"],travel:["안전","여행","액막이"],home:["가정","액막이"],chance:["기회","행운"],wish:["행운","합격"]};
+/* 관상 약한 자리 → 도와줄 일 */
+var SHOP_FACE={"이마":["합격"],"눈·눈썹":["연애"],"코":["재물"],"광대":["관계"],"입·입술":["관계"],"턱":["가정"]};
+function shopPick(o){ /* o:{el, tags, low} → 이유가 붙은 상품 3개 */
+  var tags=o.tags||[];
+  return SHOP_ITEMS.map(function(it,ix){var sc=0,why=null;
+    if(o.el!=null&&it.el.indexOf(o.el)>=0){sc+=4-it.el.indexOf(o.el);why=it.r[o.el]}
+    tags.forEach(function(t,k){if(it.tags.indexOf(t)>=0){sc+=3-k*.5;if(!why)why=it.r[t]}});
+    if(o.low&&it.tags.indexOf("액막이")>=0){sc+=2.5;if(!why||o.el==null)why=it.r["액막이"]}
+    return {it:it,sc:sc-ix*.01,why:why||it.say}}).filter(function(x){return x.sc>0}).sort(function(a,b){return b.sc-a.sc}).slice(0,3)}
+function won(n){return n.toLocaleString("ko-KR")+"원"}
+function shopRecoHTML(o){ /* o:{eyebrow,title,lead,el,tags,low} */
+  var L=shopPick(o);
+  return '<p class="eyebrow">'+(o.eyebrow||"삼신몰 추천 아이템")+'</p><h3 class="h2" style="font-size:17px">'+o.title+'</h3>'+
+    (o.lead?'<p class="rm-lead">'+o.lead+'</p>':'')+
+    '<ul class="sp-list">'+L.map(function(x){var it=x.it;return '<li><button type="button" class="sp-item" data-item="'+it.id+'">'+
+      '<span class="sp-ic"><span aria-hidden="true">'+it.ic+'</span>'+(it.url?'':'<span class="sp-so">SOLD OUT</span>')+'</span><span class="sp-tx"><span class="sp-top"><b>'+it.n+'</b><span class="sp-pr">'+won(it.p)+'</span></span>'+
+      '<span class="sp-why">'+x.why+'</span></span></button></li>'}).join("")+'</ul>'+
+    '<p class="note">삼신몰은 곧 문을 열어요. 상품이 들어오면 위 아이템을 눌러 바로 볼 수 있어요.</p>'}
+function shopToast(t){var m=document.getElementById("mini-toast");if(!m){m=document.createElement("div");m.id="mini-toast";m.className="mini-toast";m.setAttribute("role","status");document.body.appendChild(m)}
+  m.textContent=t;m.hidden=false;clearTimeout(m._h);m._h=setTimeout(function(){m.hidden=true},2500)}
+document.addEventListener("click",function(e){var b=e.target.closest("[data-item]");if(!b)return;
+  var it=SHOP_ITEMS.filter(function(x){return x.id===b.dataset.item})[0];if(!it)return;track("mall");
+  if(it.url){location.href=it.url;return}
+  shopToast(it.n+"은(는) 아직 준비 중이에요. 곧 삼신몰에서 만나요!")});
+function charmHTML(w){var nm=S.me?S.me.n:"";
+  return shopRecoHTML({eyebrow:"액받이 아이템",title:(nm?esc(nm)+'님은 ':'')+EL[w].k+'('+EL[w].h+') 기운을 채우면 좋아요',
+    lead:'"'+EL[w].k+' 기운이 모자라니 이걸 곁에 두거라. 액은 막고 복은 들어오느니라."',el:w,tags:["액막이"]})}
+function charmFaceHTML(w,part){
+  return shopRecoHTML({eyebrow:"액받이 아이템",title:part+' 기운을 받쳐줄 아이템',
+    lead:'"'+part+'의 빈 곳은 '+EL[w].k+'('+EL[w].h+') 기운으로 메우거라. 이걸 곁에 두면 얼굴의 복이 새지 않느니라."',el:w,tags:SHOP_FACE[part]||[]})}
 function renderRemedy(){
   var s=S.me.s,c=s.c,w=lackEl(),mx=0;for(var i=1;i<5;i++)if(c[i]>c[mx])mx=i;
   var empt=c.map(function(n,i){return n===0?i:-1}).filter(function(i){return i>=0});
@@ -1854,7 +1918,7 @@ function renderFaceRemedy(parts){
   var low=parts.slice().sort(function(a,b){return a.score-b.score})[0],w=FACE_EL[low.n];if(w==null)w=lackEl();
   var lead="네 얼굴에서 가장 기운이 약한 자리는 <b>"+low.n+"</b>("+low.topic.split(" · ")[0]+")이니라. 관상에서 "+jo(low.n,"은","는")+" "+EL[w].k+"("+EL[w].h+") 기운의 자리라, 이 기운을 곁에 채우면 얼굴의 빈 곳이 메워지느니라.";
   var extra='<p>'+FACE_CARE[low.n]+'</p><p class="rm-fix"><b>얼굴로 채우는 법</b> '+FACE_FIX[low.n]+'</p>';
-  document.getElementById("fc-charm").innerHTML=charmHTML(w);
+  document.getElementById("fc-charm").innerHTML=charmFaceHTML(w,low.n);
   document.getElementById("fc-remedy").innerHTML=remedyHTML({src:"관상으로 본 부족한 기운",title:low.n+" 기운 보완하기",lead:lead,w:w,ex:null,extra:extra});
 }
 document.addEventListener("click",function(e){var b=e.target.closest("[data-shop]");if(b)openShop(+b.dataset.shop)});
@@ -2267,6 +2331,7 @@ function showResult(){
     '<p class="rm-lead">"'+head+'"</p>'+'<div class="rm-box"><h4>'+tn+' 총평</h4><p>'+(k===0?BIG[t]+' ':'')+over+'</p></div>'+
     (mine?'<h4 class="hr-h">끝까지 남은 패</h4>'+mine:'')+(lines?'<ul class="hr-list">'+lines+'</ul>':'')+(kind.length?'<div class="rm-box"><h4>남은 패의 종류로 보면</h4><p>'+kind.join("</p><p>")+'</p></div>':'')+
     (picksH?'<h4 class="hr-h">네가 직접 고른 패</h4><ul class="hr-list">'+picksH+'</ul>':'')+zH+adv+
+    '<div class="panel charm hw-reco">'+shopRecoHTML({eyebrow:"할배가 골라준 액운템",title:tn+"에 힘이 되는 아이템",lead:score<70?'"막힌 데가 좀 있으니 액부터 막고 가세."':'"좋은 운일 때 복을 꽉 붙들어 두게."',tags:SHOP_TOPIC[t]||[],low:score<70})+'</div>'+
     '<p class="note">짝 맞춘 패 '+G.pairs+'쌍'+(G.discard?' · 짝 없이 치운 패 '+G.discard+'장':'')+' · 남은 패 '+k+'장</p>'+
     '<button class="btn gray" type="button" id="hw-share">카톡으로 결과 보내고 액운템 받기</button><p class="note" id="hw-share-msg" hidden></p>'+
     '<button class="btn" type="button" id="hw-again">다른 운도 떼어 보기</button>';
@@ -2907,6 +2972,7 @@ var TAROT_DESC=["절벽 끝에서 하늘만 보며 한 발 내딛는 젊은이 �
       '<div class="tr-flow"><b>동자의 대답</b><br>'+verdict(sc)+'</div>'+
       '<h4 class="ad-h" style="margin:0">아홉 장이 들려주는 이야기</h4><div class="tr-story">'+st.map(function(x){return '<section><h5>'+x[0]+'</h5><p>'+x[1]+'</p></section>'}).join("")+'</div>'+
       '<div class="tr-adv"><h4>동자의 결론</h4>'+verdict(sc)+' 그러니까 꼭 기억해! '+adv+(adv2!==adv?' 그리고 '+adv2:'')+'</div>'+
+      '<div class="panel charm tr-reco">'+shopRecoHTML({eyebrow:"동자가 골라준 행운템",title:T.ask.topicName+"에 행운을 더해 줄 아이템",lead:sc<50?'"조심할 카드가 많았으니까 액막이부터 챙겨!"':'"좋은 흐름을 꽉 붙잡아 줄 거야!"',tags:SHOP_TOPIC[T.ask.topic]||[],low:sc<50})+'</div>'+
       '<details class="tr-all"><summary>아홉 장 하나씩 다시 보기</summary><ul class="tr-list">'+li+'</ul></details>'+
       '<button class="btn gray" type="button" id="tr-share">카톡으로 결과 보내고 행운템 받기</button><p class="note" id="tr-share-msg" hidden></p>'+
       '<button class="btn" type="button" id="tr-again">같은 질문으로 다시 뽑기</button><button class="btn ghost" type="button" id="tr-new">다른 질문 고르기</button>';
@@ -3661,6 +3727,7 @@ function place(back){var sh=back.querySelector(".wheel-sheet");if(!sh)return;sh.
 document.querySelectorAll(".wheel-back").forEach(function(b){new MutationObserver(function(){if(!b.hidden)place(b)}).observe(b,{attributes:true,attributeFilter:["hidden"]})});
 })();
 </script>
+
 
 
 
