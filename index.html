@@ -299,8 +299,15 @@ body.tq-stage .top{z-index:90}
 .tr-say b{color:var(--cobalt-deep)}
 .tr-say .nx{display:block;margin-top:4px;color:var(--cobalt);font-weight:700}
 .tr-say.pop{animation:tqin .4s ease-out}
-.tr-fan{position:relative;height:200px;margin-top:0;touch-action:manipulation}
+.tr-fan{position:relative;height:200px;margin-top:8px;touch-action:manipulation}
 .tr-fan[hidden]{display:none}
+/* 카드 더미 바로 위 반투명 안내 */
+.tr-fan::before{content:"카드를 골라 봐! ↓";position:absolute;left:50%;top:-12px;transform:translateX(-50%);z-index:300;pointer-events:none;white-space:nowrap;
+  padding:5px 14px;border-radius:999px;background:rgba(30,23,18,.72);border:1px solid rgba(217,174,82,.55);color:#F3DDA8;font-size:13.5px;font-weight:700;
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;transition:opacity .4s}
+.tr-fan.on::before{opacity:.92;animation:trhint 1.8s ease-in-out infinite}
+@keyframes trhint{50%{opacity:.65;transform:translateX(-50%) translateY(3px)}}
+@media (prefers-reduced-motion:reduce){.tr-fan.on::before{animation:none}}
 .tr-fan .tr-card{position:absolute;left:50%;bottom:var(--b,34px);width:52px;transform-origin:50% 50%;transform:translateX(calc(-50% + var(--x,0px))) translateY(calc(var(--y,0px) + var(--ly,0px))) rotate(var(--a,0deg));transition:transform .6s cubic-bezier(.3,.8,.3,1),bottom .6s cubic-bezier(.3,.8,.3,1),opacity .3s}
 .tr-fan.off .tr-card{cursor:default}
 .tr-fan.on .tr-card{--ly:0px}
@@ -1193,7 +1200,7 @@ body.tq-stage .top{z-index:90}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-2040</p>
+<p class="ver" id="app-ver">버전 2026.11.14-2050</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -3651,6 +3658,8 @@ function place(back){var sh=back.querySelector(".wheel-sheet");if(!sh)return;sh.
 document.querySelectorAll(".wheel-back").forEach(function(b){new MutationObserver(function(){if(!b.hidden)place(b)}).observe(b,{attributes:true,attributeFilter:["hidden"]})});
 })();
 </script>
+
+
 
 
 
