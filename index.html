@@ -300,7 +300,7 @@ body.tq-stage .top{z-index:90}
 .tr-say.pop{animation:tqin .4s ease-out}
 .tr-fan{position:relative;height:238px;margin-top:4px;touch-action:manipulation}
 .tr-fan[hidden]{display:none}
-.tr-fan .tr-card{position:absolute;left:50%;bottom:var(--b,34px);width:52px;transform-origin:50% 500%;transform:translateX(-50%) rotate(var(--a,0deg)) translateY(var(--ly,0px));transition:transform .6s cubic-bezier(.3,.8,.3,1),bottom .6s cubic-bezier(.3,.8,.3,1),opacity .3s}
+.tr-fan .tr-card{position:absolute;left:50%;bottom:var(--b,34px);width:52px;transform-origin:50% 50%;transform:translateX(calc(-50% + var(--x,0px))) translateY(calc(var(--y,0px) + var(--ly,0px))) rotate(var(--a,0deg));transition:transform .6s cubic-bezier(.3,.8,.3,1),bottom .6s cubic-bezier(.3,.8,.3,1),opacity .3s}
 .tr-fan.off .tr-card{cursor:default}
 .tr-fan.on .tr-card{--ly:0px}
 @media (hover:hover){.tr-fan.on .tr-card:hover{--ly:-14px;transition-duration:.18s}}
@@ -1190,7 +1190,7 @@ body.tq-stage .top{z-index:90}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.14-2010</p>
+<p class="ver" id="app-ver">버전 2026.11.14-2020</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -2829,9 +2829,10 @@ var TAROT_DESC=["절벽 끝에서 하늘만 보며 한 발 내딛는 젊은이 �
   function prompt(){var r=round(),n=T.picks.length-r*3,lb=subs(r)[n];
     return '<span class="nx">'+ORD[n]+' 카드! \''+lb+'\''+jos(lb,"을","를")+' 보여줄 카드를 골라 ↓</span>'}
   function layout(spread){var f=$("tr-fan"),cs=f.children,n=cs.length,W=f.clientWidth||320,cw=52,ch=cw*1.73,r=ch*5-ch;
-    var per=Math.ceil(n/2),max=Math.min(22,Math.asin(Math.min(.95,(W/2-cw/2-4)/(r+ch)))*180/Math.PI);
-    for(var i=0;i<n;i++){var row=i<per?0:1,j=row?i-per:i,m=row?n-per:per,a=spread?(m<2?0:-max+2*max*j/(m-1)):(rnd(9)-4);
-      cs[i].style.setProperty("--a",a.toFixed(2)+"deg");cs[i].style.setProperty("--b",(spread&&!row?ROWUP:ROWLO)+"px");cs[i].style.zIndex=row*100+j}}
+    /* 좌우 폭을 다 쓰도록 카드 간격을 넓히고, 살짝만 기울여 부채 모양 유지 */
+    var per=Math.ceil(n/2),max=10,span=Math.max(0,W/2-cw/2-10);
+    for(var i=0;i<n;i++){var row=i<per?0:1,j=row?i-per:i,m=row?n-per:per,t=m<2?0:-1+2*j/(m-1),a=spread?max*t:(rnd(9)-4),x=spread?span*t:0,y=spread?-16*(1-t*t):0;
+      cs[i].style.setProperty("--a",a.toFixed(2)+"deg");cs[i].style.setProperty("--y",y.toFixed(1)+"px");cs[i].style.setProperty("--x",x.toFixed(1)+"px");cs[i].style.setProperty("--b",(spread&&!row?ROWUP:ROWLO)+"px");cs[i].style.zIndex=row*100+j}}
   function buildFan(cb){var f=$("tr-fan");f.hidden=false;f.innerHTML="";f.className="tr-fan off";
     for(var i=0;i<22;i++)f.appendChild(cardEl(null));
     layout(false);
@@ -3647,6 +3648,7 @@ function place(back){var sh=back.querySelector(".wheel-sheet");if(!sh)return;sh.
 document.querySelectorAll(".wheel-back").forEach(function(b){new MutationObserver(function(){if(!b.hidden)place(b)}).observe(b,{attributes:true,attributeFilter:["hidden"]})});
 })();
 </script>
+
 
 
 
