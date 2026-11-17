@@ -1,0 +1,41 @@
+<!--@layout(/layout/basic/layout.html)--> 
+
+<!-- 삼신몰 메인: 액받이 북어인형 · 행운 도깨비인형 2분할 (카페24 디자인 편집 > 메인(index.html)의 본문 맨 위에 붙여 넣기) -->
+<style>
+.ss-two{display:grid;margin-top:0;grid-template-columns:1fr 1fr;gap:0;max-width:1200px;margin:0 auto;background:#120D0A}
+.ss-two a{display:flex;flex-direction:column;text-decoration:none;color:#F4E9D6}
+.ss-two .pic{aspect-ratio:1/1;overflow:hidden}
+.ss-two .pic img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+.ss-two a:hover .pic img{transform:scale(1.04)}
+.ss-two .info{padding:22px 20px 30px;text-align:center;font-family:'Pretendard','Noto Sans KR',sans-serif}
+.ss-two .tag{font-size:13px;font-weight:800;letter-spacing:.12em}
+.ss-two .ak .tag{color:#F08A92}.ss-two .lk .tag{color:#F2CE78}
+.ss-two h2{font-size:22px;margin:8px 0 6px;color:#fff}
+.ss-two .desc{font-size:14px;line-height:1.6;color:#CDBFA6;margin:0 0 12px;word-break:keep-all}
+.ss-two .price{font-size:20px;font-weight:800;color:#F2CE78}
+.ss-two .soon{display:inline-block;margin-top:10px;font-size:12px;font-weight:700;color:#F3DDA8;border:1px solid rgba(242,206,120,.5);border-radius:999px;padding:3px 12px}
+@media (max-width:640px){.ss-two .info{padding:14px 10px 22px}.ss-two h2{font-size:17px}.ss-two .desc{font-size:12.5px}.ss-two .price{font-size:16px}}
+</style>
+<div class="ss-two">
+  <a class="ak" href="/product/detail.html?product_no=58">
+    <div class="pic"><img src="https://www.3sin.co.kr/shop/bugeo.jpg" alt="액받이 북어인형"></div>
+    <div class="info">
+      <p class="tag">액은 막고</p>
+      <h2>액받이 북어인형</h2>
+      <p class="desc">실타래를 감은 북어가 들어올 액을 대신 받아줘요.<br>현관·가방에 걸어 두세요.</p>
+      <p class="price">15,000원</p>
+      <span class="soon">오픈 준비 중</span>
+    </div>
+  </a>
+  <a class="lk" href="/product/detail.html?product_no=59">
+    <div class="pic"><img src="https://www.3sin.co.kr/shop/dokkaebi.jpg" alt="행운 도깨비인형"></div>
+    <div class="info">
+      <p class="tag">복은 붙잡고</p>
+      <h2>행운 도깨비인형</h2>
+      <p class="desc">도깨비방망이로 복을 불러오고 꽉 붙잡아 줘요.<br>책상·머리맡에 두세요.</p>
+      <p class="price">15,000원</p>
+      <span class="soon">오픈 준비 중</span>
+    </div>
+  </a>
+</div>
+
