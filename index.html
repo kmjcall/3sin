@@ -396,6 +396,8 @@ body.tq-stage .top{z-index:90}
 .doll-img{border-radius:14px;object-fit:cover;aspect-ratio:1/1}
 .mall-pic,.sp-pic{aspect-ratio:1/1!important}
 .mall-pr{font-size:17px;font-weight:800;color:#F2CE78;margin:0}
+.mall-pr s{font-size:13px;font-weight:400;color:rgba(244,233,214,.5);margin-right:6px}
+.mall-pr .off{color:#FF7A7F;margin-right:5px}
 .mall-sz{font-size:12px;color:var(--muted);margin:0}
 .dl-ak .doll-svg{transform-origin:50% 0%;animation:dlsway 2.6s ease-in-out infinite}
 .dl-lk .doll-img{animation:dljump 1.7s cubic-bezier(.3,.6,.4,1) infinite;transform-origin:50% 100%}
@@ -1264,7 +1266,7 @@ body.tq-stage .top{z-index:90}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.17-1820</p>
+<p class="ver" id="app-ver">버전 2026.11.17-1835</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -1889,9 +1891,9 @@ function remedyHTML(o){ /* o:{title,lead,w,ex,extra,src} */
 /* ───────── 삼신몰: 액받이 인형 · 행운 인형 두 가지만 팜 ─────────
    url: 카페24 상품 주소가 생기면 넣음(비어 있으면 삼신몰 첫 화면으로 감). soldout:true면 '오픈 준비 중' 표시 */
 var SHOP_ITEMS=[
- {id:"ak",n:"액받이",p:18000,tag:"액은 막고",sub:"등에 업은 북어가 들어올 액을 대신 받아줘요",url:"https://samsinshop.cafe24.com/product/detail.html?product_no=60",soldout:true,doll:"ak",
+ {id:"ak",n:"액받이",p:18000,o:35000,tag:"액은 막고",sub:"등에 업은 북어가 들어올 액을 대신 받아줘요",url:"https://samsinshop.cafe24.com/product/detail.html?product_no=60",soldout:true,doll:"ak",
   pts:["현관·가방에 두면 나쁜 기운을 먼저 받아줘요","실타래 감은 북어와 방울을 등에 업은 꼬마","사주에 모자란 기운을 메워줘요"]},
- {id:"lk",n:"행운이",p:18000,tag:"복은 붙잡고",sub:"품에 안은 부적이 들어온 복을 꽉 붙잡아줘요",url:"https://samsinshop.cafe24.com/product/detail.html?product_no=61",soldout:true,doll:"lk",
+ {id:"lk",n:"행운이",p:18000,o:35000,tag:"복은 붙잡고",sub:"품에 안은 부적이 들어온 복을 꽉 붙잡아줘요",url:"https://samsinshop.cafe24.com/product/detail.html?product_no=61",soldout:true,doll:"lk",
   pts:["책상·머리맡에 두면 좋은 기운이 머물러요","행운 부적을 꼭 안은 하얀 강아지","좋은 운일 때 복을 꽉 붙잡아줘요"]}];
 /* 인형 그림(직접 그린 SVG) */
 var DOLL_AK='<svg viewBox="0 0 200 230" class="doll-svg" aria-hidden="true"><ellipse cx="100" cy="220" rx="52" ry="7" fill="rgba(0,0,0,.35)"/>'+
@@ -1925,7 +1927,7 @@ function openMall(focus){MALL_FOCUS=focus||null;go("mall")}
 function renderMall(){track("mall");
   document.getElementById("mall-split").innerHTML=SHOP_ITEMS.map(function(it){return '<article class="mall-p '+it.id+(MALL_FOCUS===it.id?' focus':'')+'" id="mall-'+it.id+'">'+
     '<p class="mall-tag">'+it.tag+'</p><div class="mall-pic dl-'+it.id+'">'+dollSVG(it.id)+'</div><h3>'+it.n+'</h3><p class="mall-sub">'+it.sub+'</p>'+
-    '<p class="mall-pr">'+it.p.toLocaleString("ko-KR")+'원</p><p class="mall-sz">가로 10cm × 세로 7cm</p><ul>'+it.pts.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul>'+(it.soldout?'<span class="sp-so2">오픈 준비 중</span>':'')+
+    '<p class="mall-pr">'+(it.o?'<s>'+it.o.toLocaleString("ko-KR")+'원</s><b class="off">'+Math.floor((1-it.p/it.o)*100)+'%</b>':'')+it.p.toLocaleString("ko-KR")+'원</p><p class="mall-sz">가로 10cm × 세로 7cm</p><ul>'+it.pts.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul>'+(it.soldout?'<span class="sp-so2">오픈 준비 중</span>':'')+
     '<button class="btn" type="button" data-buy="'+it.id+'">'+(it.soldout?'삼신몰에서 보기':'삼신몰에서 사기')+'</button></article>'}).join("");
   if(MALL_FOCUS){var f=document.getElementById("mall-"+MALL_FOCUS);setTimeout(function(){f.scrollIntoView({behavior:"smooth",block:"center"})},200)}}
 document.addEventListener("click",function(e){var b=e.target.closest("[data-item]");if(b){openMall(b.dataset.item);return}
