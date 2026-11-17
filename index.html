@@ -1257,7 +1257,7 @@ body.tq-stage .top{z-index:90}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.16-1640</p>
+<p class="ver" id="app-ver">버전 2026.11.17-1130</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -2177,7 +2177,7 @@ document.getElementById("ib-body").addEventListener("click",function(e){
   renderResult();go("result");
 });
 document.getElementById("cn-inbox").addEventListener("click",function(){AUTH_START="join";go("inbox")});
-document.getElementById("go-mall").addEventListener("click",function(){openMall(null)});
+document.getElementById("go-mall").addEventListener("click",function(){track("mall");location.href=SHOP_URL});
 /* ===== 청학동 삼신할배 화투점 ===== */
 (function(){
 var HM=[null,
@@ -3760,6 +3760,7 @@ function place(back){var sh=back.querySelector(".wheel-sheet");if(!sh)return;sh.
 document.querySelectorAll(".wheel-back").forEach(function(b){new MutationObserver(function(){if(!b.hidden)place(b)}).observe(b,{attributes:true,attributeFilter:["hidden"]})});
 })();
 </script>
+
 
 
 
