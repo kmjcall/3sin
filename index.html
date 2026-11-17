@@ -394,6 +394,7 @@ body.tq-stage .top{z-index:90}
 .doll-img{border-radius:14px;object-fit:cover;aspect-ratio:1/1}
 .mall-pic,.sp-pic{aspect-ratio:1/1!important}
 .mall-pr{font-size:17px;font-weight:800;color:#F2CE78;margin:0}
+.mall-sz{font-size:12px;color:var(--muted);margin:0}
 .dl-ak .doll-svg{transform-origin:50% 0%;animation:dlsway 2.6s ease-in-out infinite}
 .dl-lk .doll-img{animation:dljump 1.7s cubic-bezier(.3,.6,.4,1) infinite;transform-origin:50% 100%}
 .dl-ak .dl-charm{animation:dlglow 2.6s ease-in-out infinite}
@@ -1261,7 +1262,7 @@ body.tq-stage .top{z-index:90}
 </section>
 
 <p class="foot">삼신은 사주명리학의 전통 해석을 재미와 만남의 계기로 쓰는 서비스예요. 궁합 점수는 참고용이며 사람의 가치를 판단하지 않아요.</p>
-<p class="ver" id="app-ver">버전 2026.11.17-1710</p>
+<p class="ver" id="app-ver">버전 2026.11.17-1705</p>
 </main>
 
 <div class="fx-back" id="fx" hidden>
@@ -1922,7 +1923,7 @@ function openMall(focus){MALL_FOCUS=focus||null;go("mall")}
 function renderMall(){track("mall");
   document.getElementById("mall-split").innerHTML=SHOP_ITEMS.map(function(it){return '<article class="mall-p '+it.id+(MALL_FOCUS===it.id?' focus':'')+'" id="mall-'+it.id+'">'+
     '<p class="mall-tag">'+it.tag+'</p><div class="mall-pic dl-'+it.id+'">'+dollSVG(it.id)+'</div><h3>'+it.n+'</h3><p class="mall-sub">'+it.sub+'</p>'+
-    '<p class="mall-pr">'+it.p.toLocaleString("ko-KR")+'원</p><ul>'+it.pts.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul>'+(it.soldout?'<span class="sp-so2">오픈 준비 중</span>':'')+
+    '<p class="mall-pr">'+it.p.toLocaleString("ko-KR")+'원</p><p class="mall-sz">가로 10cm × 세로 7cm</p><ul>'+it.pts.map(function(x){return '<li>'+x+'</li>'}).join("")+'</ul>'+(it.soldout?'<span class="sp-so2">오픈 준비 중</span>':'')+
     '<button class="btn" type="button" data-buy="'+it.id+'">'+(it.soldout?'삼신몰에서 보기':'삼신몰에서 사기')+'</button></article>'}).join("");
   if(MALL_FOCUS){var f=document.getElementById("mall-"+MALL_FOCUS);setTimeout(function(){f.scrollIntoView({behavior:"smooth",block:"center"})},200)}}
 document.addEventListener("click",function(e){var b=e.target.closest("[data-item]");if(b){openMall(b.dataset.item);return}
@@ -3764,6 +3765,7 @@ function place(back){var sh=back.querySelector(".wheel-sheet");if(!sh)return;sh.
 document.querySelectorAll(".wheel-back").forEach(function(b){new MutationObserver(function(){if(!b.hidden)place(b)}).observe(b,{attributes:true,attributeFilter:["hidden"]})});
 })();
 </script>
+
 
 
 
